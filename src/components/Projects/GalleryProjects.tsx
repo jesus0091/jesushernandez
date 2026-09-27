@@ -1,13 +1,10 @@
 "use client";
 
+import { onIntroReveal, setupGsap } from "@/lib/motion";
 import { useLayoutEffect, useRef } from "react";
 
 import Image from "next/image";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SignatureIcon } from "../AboutMe/SkillsIcons";
-import gsap from "gsap";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const AMPLITUDE = 140;
 export default function GalleryProjects() {
@@ -16,107 +13,99 @@ export default function GalleryProjects() {
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    const cards = gsap.utils.toArray<HTMLElement>(".g-item");
-    if (!cards.length || prefersReduced) return;
+    const gsap = setupGsap();
+    const cards = gsap.utils.toArray<HTMLElement>(".g-item", root);
+    if (!cards.length) return;
+
     const center = (cards.length - 1) / 2;
-    const curveY = (i: number, amp: number) => {
+    const curveY = (i: number) => {
       const x = i - center;
-      return (amp * (x * x)) / (center * center || 1);
+      return (AMPLITUDE * (x * x)) / (center * center || 1);
     };
 
-    const isDesktop = window.matchMedia(
-      "(hover: hover) and (pointer: fine)"
-    ).matches;
-    const isMobile = window.innerWidth < 768;
+    // The entrance owns opacity + yPercent and the scroll curve owns y, so
+    // they compose instead of overwriting each other (the entrance used to
+    // tween y back to 0 and flatten the curve until the first scroll).
+    const mm = gsap.matchMedia(root);
+    mm.add(
+      {
+        desktop: "(min-width: 768px)",
+        finePointer: "(hover: hover) and (pointer: fine)",
+        reduce: "(prefers-reduced-motion: reduce)",
+      },
+      (context) => {
+        const { desktop, finePointer, reduce } = context.conditions!;
+        if (reduce) return;
 
-    const ctx = gsap.context(() => {
-      cards.forEach((el, i) => {
-        gsap.set(el, {
-          opacity: 0,
-          y: isMobile ? 40 : -curveY(i, AMPLITUDE) + 100,
-        });
-      });
-      gsap.to(cards, {
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        delay: 2,
-        stagger: 0.15,
-        ease: "power3.out",
-      });
-      if (!isMobile) {
-        const tl = gsap.timeline({
-          defaults: { ease: "none" },
-          scrollTrigger: {
-            trigger: root,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
-        tl.to(cards, { y: 0, duration: 1 }, 0);
-        tl.to(cards, { y: (i) => curveY(i, AMPLITUDE), duration: 1 }, 1);
-      }
-    }, root);
-
-    const cleanups: (() => void)[] = [];
-
-    if (isDesktop) {
-      cards.forEach((card) => {
-        const xTo = gsap.quickTo(card, "rotateY", {
-          duration: 0.4,
-          ease: "power3.out",
-        });
-        const yTo = gsap.quickTo(card, "rotateX", {
-          duration: 0.4,
-          ease: "power3.out",
-        });
-
-        const onMouseMove = (e: MouseEvent) => {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          const rotateY = ((x - centerX) / centerX) * 8;
-          const rotateX = -((y - centerY) / centerY) * 6;
-          xTo(rotateY);
-          yTo(rotateX);
-        };
-
-        const onMouseEnter = () => {
-          gsap.to(card, { scale: 1.02, duration: 0.3, ease: "power3.out" });
-        };
-
-        const onMouseLeave = () => {
-          gsap.to(card, {
-            rotateX: 0,
-            rotateY: 0,
-            scale: 1,
-            duration: 0.6,
+        gsap.set(cards, { autoAlpha: 0, yPercent: desktop ? 30 : 15 });
+        const stopWaiting = onIntroReveal(() => {
+          gsap.to(cards, {
+            autoAlpha: 1,
+            yPercent: 0,
+            duration: 1.2,
+            delay: 0.6,
+            stagger: 0.08,
             ease: "power3.out",
           });
-        };
-
-        card.addEventListener("mousemove", onMouseMove);
-        card.addEventListener("mouseenter", onMouseEnter);
-        card.addEventListener("mouseleave", onMouseLeave);
-
-        cleanups.push(() => {
-          card.removeEventListener("mousemove", onMouseMove);
-          card.removeEventListener("mouseenter", onMouseEnter);
-          card.removeEventListener("mouseleave", onMouseLeave);
         });
-      });
-    }
 
-    return () => {
-      ctx.revert();
-      cleanups.forEach((fn) => fn());
-    };
+        if (desktop) {
+          // Rendered immediately at the current scroll position, so the
+          // curve is already there on load.
+          gsap
+            .timeline({
+              defaults: { ease: "none" },
+              scrollTrigger: {
+                trigger: root,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+              },
+            })
+            .fromTo(cards, { y: (i) => 100 - curveY(i) }, { y: 0, duration: 1 })
+            .to(cards, { y: (i) => curveY(i), duration: 1 });
+        }
+
+        if (!finePointer) return stopWaiting;
+
+        gsap.set(cards, { transformPerspective: 900 });
+        const cleanups = cards.map((card) => {
+          const rotY = gsap.quickTo(card, "rotateY", { duration: 0.4, ease: "power3.out" });
+          const rotX = gsap.quickTo(card, "rotateX", { duration: 0.4, ease: "power3.out" });
+
+          const onMouseMove = (e: MouseEvent) => {
+            const rect = card.getBoundingClientRect();
+            const nx = (e.clientX - rect.left) / rect.width - 0.5;
+            const ny = (e.clientY - rect.top) / rect.height - 0.5;
+            rotY(nx * 16);
+            rotX(-ny * 12);
+          };
+          const onMouseEnter = () =>
+            gsap.to(card, { scale: 1.02, duration: 0.3, ease: "power3.out" });
+          const onMouseLeave = () => {
+            rotY(0);
+            rotX(0);
+            gsap.to(card, { scale: 1, duration: 0.6, ease: "power3.out" });
+          };
+
+          card.addEventListener("mousemove", onMouseMove);
+          card.addEventListener("mouseenter", onMouseEnter);
+          card.addEventListener("mouseleave", onMouseLeave);
+          return () => {
+            card.removeEventListener("mousemove", onMouseMove);
+            card.removeEventListener("mouseenter", onMouseEnter);
+            card.removeEventListener("mouseleave", onMouseLeave);
+          };
+        });
+
+        return () => {
+          stopWaiting();
+          cleanups.forEach((fn) => fn());
+        };
+      }
+    );
+
+    return () => mm.revert();
   }, []);
 
   const gallery = [
@@ -144,6 +133,7 @@ export default function GalleryProjects() {
               src={item.urlImage}
               alt={`Gallery image ${item.id}`}
               fill
+              sizes="(min-width: 768px) max(15vw, 260px), max(15vw, 110px)"
               className="object-top object-cover"
             />
           </div>

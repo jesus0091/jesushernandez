@@ -3,14 +3,14 @@
 import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { IconArrowLeft, IconBrandBehance, IconBrandGithub, IconArrowUpRight } from "@tabler/icons-react";
+import { ArrowLeft, BehanceLogo, GithubLogo, ArrowUpRight } from "@/components/icons";
 import gsap from "gsap";
 import type { Work } from "@/data/works";
 
 const LINK_ICONS = {
-  behance: IconBrandBehance,
-  github: IconBrandGithub,
-  website: IconArrowUpRight,
+  behance: BehanceLogo,
+  github: GithubLogo,
+  website: ArrowUpRight,
 };
 
 function Chip({ children }: { children: React.ReactNode }) {
@@ -47,7 +47,7 @@ export default function WorkDetail({ work }: { work: Work }) {
           href="/works"
           className="inline-flex items-center gap-2 text-sm font-medium text-[var(--muted)] hover:text-[var(--black)] transition mb-8"
         >
-          <IconArrowLeft size={16} />
+          <ArrowLeft size={16} />
           Back to all works
         </Link>
 

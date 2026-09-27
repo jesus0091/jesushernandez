@@ -2,17 +2,21 @@
 "use client";
 
 import {
-  IconBrandBehance,
-  IconBrandGithub,
-  IconBrandLinkedin,
-  IconMail,
-} from "@tabler/icons-react";
+  ArrowUp,
+  ArrowUpRight,
+  BehanceLogo,
+  GithubLogo,
+  LinkedinLogo,
+  Envelope,
+} from "@/components/icons";
 import { useEffect, useRef, useState } from "react";
 
-import AuroraGlow from "./AuroraGlow";
+import CtaTunnel from "./motion/CtaTunnel";
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+import { getLenis, setupGsap } from "@/lib/motion";
 import SectionLabel from "./SectionLabel";
 import gsap from "gsap";
 import { useIsMobile } from "@/app/utils/useIsMobile";
@@ -25,37 +29,63 @@ type FooterProps = {
   quickLinks?: FooterLink[];
   social?: SocialLink[];
   email?: string;
+  contactEmail?: string;
 };
 
 export default function Footer({
   className = "",
   email = "hello @jesus",
+  contactEmail = "jesushernandez120491@gmail.com",
   quickLinks = [
+    { label: "Home", href: "/" },
     { label: "Projects", href: "/works" },
   ],
   social = [
     {
       label: "LinkedIn",
       href: "https://www.linkedin.com/in/jesushernandez91/",
-      icon: <IconBrandLinkedin />,
+      icon: <LinkedinLogo />,
     },
     {
       label: "Behance",
       href: "https://www.behance.net/devjesushernandez#",
-      icon: <IconBrandBehance />,
+      icon: <BehanceLogo />,
     },
     {
       label: "GitHub",
       href: "https://github.com/jesus0091",
-      icon: <IconBrandGithub />,
+      icon: <GithubLogo />,
     },
   ],
 }: FooterProps) {
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const footerRef = useRef<HTMLElement | null>(null);
   const ctaBtnRef = useRef<HTMLAnchorElement | null>(null);
+  const wordmarkRef = useRef<HTMLParagraphElement | null>(null);
+  const wordmarkBoxRef = useRef<HTMLDivElement | null>(null);
+
+  const [localTime, setLocalTime] = useState<string | null>(null);
 
   useEffect(() => setYear(new Date().getFullYear()), []);
+
+  // Live Buenos Aires clock; client-only to avoid a hydration mismatch.
+  useEffect(() => {
+    const fmt = new Intl.DateTimeFormat("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "America/Argentina/Buenos_Aires",
+    });
+    const tick = () => setLocalTime(fmt.format(new Date()));
+    tick();
+    const id = window.setInterval(tick, 15_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const scrollToTop = () => {
+    const lenis = getLenis();
+    if (lenis) lenis.scrollTo(0, { duration: 1.6 });
+    else window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -74,6 +104,22 @@ export default function Footer({
       const ctas = footer.querySelectorAll<HTMLElement>("[data-cta]");
       const cols = footer.querySelectorAll<HTMLElement>("[data-footer-col]");
       const glow = footer.querySelector<HTMLElement>("[data-aurora]");
+      const inner = footer.querySelector<HTMLElement>("[data-footer-inner]");
+      const body = footer.querySelector<HTMLElement>("[data-footer-body]");
+
+      // Curtain reveal: content counter-scrolls so the page seems to slide off it.
+      gsap.matchMedia().add("(min-width: 768px)", () => {
+        gsap.from(inner, {
+          yPercent: -100,
+          ease: "none",
+          scrollTrigger: {
+            trigger: body,
+            start: "clamp(top bottom)",
+            end: "clamp(top top)",
+            scrub: true,
+          },
+        });
+      });
 
       // Estado inicial
       gsap.set([label, title, ...ctas, ...cols], {
@@ -131,7 +177,14 @@ export default function Footer({
       }
 
       if (cols.length) {
-        tl.to(cols, { opacity: 1, y: 0, duration: 0.6, stagger: 0.08 }, 0.55);
+        gsap.to(cols, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.08,
+          ease: "power3.out",
+          scrollTrigger: { trigger: body, start: "top 85%", toggleActions: "play none none reverse" },
+        });
       }
 
       const burst = () => {
@@ -180,6 +233,60 @@ export default function Footer({
     return () => ctx.revert();
   }, []);
   useEffect(() => {
+    const text = wordmarkRef.current;
+    const box = wordmarkBoxRef.current;
+    if (!text || !box) return;
+
+    // Fit the wordmark exactly to the container width.
+    let lastWidth = 0;
+    const fit = () => {
+      if (box.clientWidth === lastWidth) return;
+      lastWidth = box.clientWidth;
+      text.style.fontSize = "100px";
+      const w = text.offsetWidth;
+      if (w) text.style.fontSize = `${(100 * box.clientWidth) / w}px`;
+      ScrollTrigger.refresh();
+    };
+
+    let split: SplitText | null = null;
+    let tween: gsap.core.Tween | null = null;
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setupGsap();
+      split = SplitText.create(text, { type: "chars" });
+      // Char boxes are only 0.8em tall (leading-[0.8]) but glyphs + accents
+      // reach ~1em above the baseline, so push well past the box to hide them.
+      tween = gsap.from(split.chars, {
+        yPercent: 180,
+        ease: "none",
+        stagger: 0.06,
+        // The body wrapper isn't transformed by the curtain, so its
+        // positions are stable; letters land exactly at the page end.
+        scrollTrigger: {
+          trigger: box.closest("[data-footer-body]"),
+          start: "center bottom",
+          end: "bottom bottom",
+          scrub: true,
+        },
+      });
+    }
+
+    fit();
+    document.fonts?.ready.then(() => {
+      lastWidth = 0;
+      fit();
+    });
+    const ro = new ResizeObserver(fit);
+    ro.observe(box);
+
+    return () => {
+      ro.disconnect();
+      tween?.scrollTrigger?.kill();
+      tween?.kill();
+      split?.revert();
+    };
+  }, []);
+
+  useEffect(() => {
     const btn = ctaBtnRef.current;
     if (!btn) return;
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
@@ -217,89 +324,67 @@ export default function Footer({
     <footer
       ref={footerRef}
       id="contact"
-      className={`relative overflow-hidden flex flex-col bg-[var(--background)] ${className}`}
+      className={`relative flex flex-col ${className}`}
     >
-      {/* CTA como card */}
-      <div className="max-w-[1280px] mx-auto w-full px-6 md:px-8 pt-16 pb-8">
-        <div className="relative overflow-hidden rounded-3xl z-10" style={{ background: "linear-gradient(135deg, #1e293b 0%, #0f172a 40%, #1e293b 60%, #f97316 100%)" }}>
-          {/* Noise overlay */}
-          <svg className="absolute inset-0 w-full h-full z-[1] pointer-events-none opacity-[0.12]" aria-hidden="true">
-            <filter id="cta-noise">
-              <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-              <feColorMatrix type="saturate" values="0" />
-            </filter>
-            <rect width="100%" height="100%" filter="url(#cta-noise)" />
-          </svg>
-          {/* Glow accent */}
-          <div className="absolute -top-1/3 -right-1/4 w-[600px] h-[600px] rounded-full z-[2] pointer-events-none" style={{ background: "radial-gradient(circle, #f9731640 0%, transparent 70%)" }} />
-          <div className="absolute -bottom-1/3 -left-1/4 w-[500px] h-[500px] rounded-full z-[2] pointer-events-none" style={{ background: "radial-gradient(circle, #2563eb30 0%, transparent 70%)" }} />
-          <div className="relative z-10 py-20 flex flex-col items-center gap-4 text-center">
-            <div data-cta-label>
-              <SectionLabel align="center">From Concept to Code</SectionLabel>
-            </div>
-            <h3
-              data-cta-title
-              className="text-3xl sm:text-4xl md:text-7xl font-semibold tracking-tight text-white"
+      <CtaTunnel>
+        <div className="flex flex-col items-center gap-4 text-center px-6">
+          <div data-cta-label className="[&_span]:text-white/80 [&_span[aria-hidden]]:bg-white/50">
+            <SectionLabel align="center">From Concept to Code</SectionLabel>
+          </div>
+          <h3
+            data-cta-title
+            className="text-3xl sm:text-4xl md:text-7xl font-semibold tracking-tight text-white [text-shadow:0_2px_24px_rgba(15,23,42,0.45)]"
+          >
+            Let&apos;s build something <br /> great together
+          </h3>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              ref={ctaBtnRef}
+              href={`mailto:${contactEmail}`}
+              data-cta
+              data-sfx="cta"
+              className="relative inline-flex items-center rounded-full gap-2 border border-white/20 bg-[#050b3a]/40 backdrop-blur-sm px-6 py-3 text-base cursor-pointer font-medium text-white hover:bg-white/10 transition active:scale-[0.96]"
+              aria-label="Send me an email"
             >
-              Let&apos;s build something <br /> great together
-            </h3>
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                ref={ctaBtnRef}
-                href={`mailto:${email}`}
-                data-cta
-                className="relative inline-flex items-center rounded-full gap-2 border border-white/20 px-6 py-3 text-base cursor-pointer font-medium text-white hover:bg-white/10 transition active:scale-[0.96]"
-                aria-label="Send me an email"
-              >
-                <IconMail size={18} />
-                {email}
-              </Link>
-            </div>
+              <Envelope size={18} />
+              {email}
+            </Link>
           </div>
         </div>
-      </div>
+      </CtaTunnel>
 
+      <div data-footer-body className="overflow-hidden">
+      <div data-footer-inner>
       {/* Cuerpo */}
-      <div className="pb-10 z-10">
-        <div className="flex flex-col md:grid md:grid-cols-12 gap-8 py-8 max-w-[1280px] mx-auto px-6 md:px-8">
-          <div
-            data-footer-col
-            className="w-full md:col-span-5 flex flex-col items-center md:items-start"
-          >
-            <Link
-              href="/"
-              className="flex flex-col items-center w-full md:items-start gap-2 font-bold text-xl text-[var(--black)]"
-              aria-label="Go to home"
-            >
-              <Image
-                src={"/images/facebrand.png"}
-                className="border border-black/10 rounded-lg bg-black/5 object-contain"
-                width={50}
-                height={50}
-                alt="Logo"
-              />
-              <span>Jesús Hernández</span>
-            </Link>
-            <p className="text-sm md:text-base text-gray-700 leading-relaxed max-w-xs text-center md:text-left">
-              Frontend Developer & UX/UI Designer. <br />I build cohesive,
-              scalable and delightful digital products.
-            </p>
-          </div>
-          <div className="md:hidden block w-full border-t border-black/10 md:col-span-1 mx-auto" />
-          <div
-            data-footer-col
-            className="flex flex-col md:flex-row gap-8 col-span-7"
-          >
-            <nav className="space-y-3 flex-1 flex flex-col items-center md:items-start">
-              <h4 className="text-base font-semibold tracking-wide text-gray-700">
-                Quick Links
+      <div className="z-10 flex flex-col pt-16 md:pt-24">
+        <div className="w-full max-w-[1280px] mx-auto px-6 md:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-12 gap-x-6 gap-y-10">
+            <div data-footer-col className="col-span-2 md:col-span-5 flex items-start gap-4">
+              <Link href="/" aria-label="Go to home" className="shrink-0">
+                <Image
+                  src={"/images/facebrand.png"}
+                  className="border border-black/10 rounded-lg bg-black/5 object-contain"
+                  width={48}
+                  height={48}
+                  alt="Logo"
+                />
+              </Link>
+              <p className="text-base text-[var(--color-ink-3)] leading-relaxed max-w-sm">
+                AI-Driven Engineer &amp; Product Designer. I build cohesive,
+                scalable and delightful digital products.
+              </p>
+            </div>
+
+            <nav data-footer-col aria-label="Footer" className="md:col-span-2 md:col-start-7 flex flex-col gap-3">
+              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-ink-4)]">
+                Navigation
               </h4>
-              <ul className="space-y-2 flex flex-col items-center md:items-start">
+              <ul className="flex flex-col gap-2">
                 {quickLinks.map((l) => (
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      className="text-base text-center text-gray-700 hover:text-[var(--black)] transition"
+                      className="text-base text-[var(--color-ink-3)] hover:text-[var(--color-ink-1)] transition-colors"
                     >
                       {l.label}
                     </Link>
@@ -307,44 +392,76 @@ export default function Footer({
                 ))}
               </ul>
             </nav>
-            <div
-              data-footer-col
-              className="space-y-3 flex-1 flex flex-col items-center md:items-start"
-            >
-              <h4 className="text-base font-semibold tracking-wide text-gray-700">
+
+            <div data-footer-col className="md:col-span-2 flex flex-col gap-3">
+              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-ink-4)]">
                 Connect
               </h4>
-              <ul className="flex flex-wrap justify-center md:justify-start gap-3">
+              <ul className="flex flex-col gap-2">
                 {social.map((s) => (
                   <li key={s.label}>
                     <Link
                       href={s.href}
                       target="_blank"
                       rel="noreferrer"
-                      aria-label={s.label}
-                      className="inline-flex items-center gap-2 rounded-full border border-black/15 px-3 py-2 text-sm text-[var(--black)] hover:bg-black/5 transition"
+                      className="group inline-flex items-center gap-1 text-base text-[var(--color-ink-3)] hover:text-[var(--color-ink-1)] transition-colors"
                     >
-                      <span className="[&>svg]:h-5 [&>svg]:w-5">{s.icon}</span>
-                      <span>{s.label}</span>
+                      {s.label}
+                      <ArrowUpRight
+                        size={14}
+                        className="opacity-0 -translate-x-1 transition duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0"
+                      />
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
+
+            <div data-footer-col className="md:col-span-2 flex flex-col gap-3">
+              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-ink-4)]">
+                Location
+              </h4>
+              <p className="text-base text-[var(--color-ink-3)]">Argentina</p>
+              <p className="text-base tabular-nums text-[var(--color-ink-1)]">
+                {localTime ? `${localTime} ART` : "\u00a0"}
+              </p>
+            </div>
           </div>
         </div>
+
+        {/* Wordmark: sized to fill the container, letters rise in with scroll */}
+        <div className="mt-16 md:mt-24 w-full max-w-[1280px] mx-auto px-6 md:px-8">
+          <div ref={wordmarkBoxRef} className="overflow-hidden pt-[0.1em]">
+            <p
+              ref={wordmarkRef}
+              className="inline-block whitespace-nowrap font-semibold tracking-[-0.05em] leading-[0.8] text-[var(--black)] text-[12vw] md:text-[10vw] pb-[0.12em]"
+            >
+              Jesús Hernández
+            </p>
+          </div>
+        </div>
+
         <div
           data-footer-col
-          className="flex flex-col-reverse pb-6 md:pb-4 max-w-[1280px] mx-auto px-6 md:px-8 sm:flex-row items-center justify-between gap-3 border-t border-black/10 pt-4"
+          className="w-full flex flex-col-reverse pb-6 md:pb-8 max-w-[1280px] mx-auto px-6 md:px-8 sm:flex-row items-center justify-between gap-3 pt-5 relative before:absolute before:top-0 before:inset-x-6 md:before:inset-x-8 before:h-px before:bg-black/15"
         >
-          <p className="text-sm md:text-base text-center text-gray-700">
+          <p className="text-sm text-center text-[var(--color-ink-3)]">
             © {year} Jesús Hernández. All rights reserved.
           </p>
-          <p className="md:whitespace-nowrap text-sm md:text-base text-center text-gray-700">
-            Built with: <br className="inline md:hidden" /> ReactJS · Next.JS ·
-            TypeScript · TailwindCSS
-          </p>
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className="group inline-flex items-center gap-1.5 text-sm text-[var(--color-ink-3)] hover:text-[var(--color-ink-1)] transition-colors"
+          >
+            Back to top
+            <ArrowUp
+              size={14}
+              className="transition-transform duration-200 ease-out group-hover:-translate-y-0.5"
+            />
+          </button>
         </div>
+      </div>
+      </div>
       </div>
       <div className="dark-bottom-sentinel h-10 w-full absolute bottom-0" />
     </footer>

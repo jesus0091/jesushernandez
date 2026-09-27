@@ -1,5 +1,5 @@
-import AboutMeSkillsBarChart from "@/components/AboutMe/AboutMeSkillsBarChart";
 import AboutText from "@/components/AboutMe/AboutText";
+import Skills from "@/components/AboutMe/Skills";
 import Footer from "@/components/Footer";
 import GalleryProjects from "@/components/Projects/GalleryProjects";
 import HomePage from "@/components/HomePage";
@@ -15,7 +15,7 @@ export default function LandingPage() {
         <HomePage />
         <GalleryProjects />
         <AboutText />
-        <AboutMeSkillsBarChart />
+        <Skills />
         <WSMAQuote />
         <LatestsProjects />
       </main>

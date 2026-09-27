@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { IconArrowUpRight } from "@tabler/icons-react";
+import { ArrowUpRight } from "@/components/icons";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { WORKS } from "@/data/works";
@@ -49,7 +49,8 @@ export default function WorksList() {
             href={`/works/${work.id}`}
             className="work-card group relative flex flex-col overflow-hidden rounded-2xl bg-white/70 backdrop-blur-sm border border-white/50 transition-all duration-300 hover:bg-white/90 hover:-translate-y-1 hover:shadow-lg"
           >
-            <div className="relative aspect-[16/10] w-full bg-zinc-100 overflow-hidden">
+            {/* Covers are exported at 1600×707. */}
+            <div className="relative aspect-[1600/707] w-full bg-zinc-100 overflow-hidden">
               <Image
                 src={work.cover}
                 alt={work.title}
@@ -66,37 +67,21 @@ export default function WorksList() {
                   {work.year}
                 </span>
               </div>
-              <div className="absolute bottom-4 right-4 h-10 w-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                <IconArrowUpRight size={18} className="text-[var(--black)]" />
-              </div>
             </div>
 
-            <div className="flex flex-col gap-2 px-5 py-4 flex-1">
+            <div className="flex items-center justify-between gap-4 px-5 py-4">
               <div>
-                <p className="text-sm font-semibold text-[var(--orange)]">{work.productName}</p>
                 <h3 className="text-xl md:text-2xl font-bold text-[var(--black)] tracking-tight leading-tight">
-                  {work.title}
+                  {work.productName}
                 </h3>
-                <p className="text-sm text-[var(--muted)]">{work.role}</p>
+                <p className="mt-1 text-sm text-[var(--muted)]">{work.role}</p>
               </div>
-              <p className="text-sm leading-relaxed text-[var(--foreground)] line-clamp-2">
-                {work.description}
-              </p>
-              <div className="flex flex-wrap gap-1.5 mt-auto pt-3">
-                {work.technologies.slice(0, 4).map((t) => (
-                  <span
-                    key={t}
-                    className="inline-flex items-center rounded-full border border-black/10 bg-white/60 px-2.5 py-0.5 text-xs font-medium text-[var(--black)]"
-                  >
-                    {t}
-                  </span>
-                ))}
-                {work.technologies.length > 4 && (
-                  <span className="inline-flex items-center rounded-full border border-black/10 bg-white/60 px-2.5 py-0.5 text-xs font-medium text-[var(--muted)]">
-                    +{work.technologies.length - 4}
-                  </span>
-                )}
-              </div>
+              <span
+                aria-hidden
+                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--black)] text-white opacity-0 translate-y-2 transition-[opacity,translate] duration-300 group-hover:opacity-100 group-hover:translate-y-0"
+              >
+                <ArrowUpRight size={18} />
+              </span>
             </div>
           </Link>
         ))}

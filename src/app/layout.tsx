@@ -4,6 +4,10 @@ import type { Metadata, Viewport } from "next";
 
 import { Inter, JetBrains_Mono } from "next/font/google";
 
+import IntroOverlay from "@/components/motion/IntroOverlay";
+import SmoothScroll from "@/components/motion/SmoothScroll";
+import UiSounds from "@/components/UiSounds";
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -23,15 +27,18 @@ const CANONICAL = "https://jesushernandez.vercel.app";
 export const metadata: Metadata = {
   metadataBase: new URL(CANONICAL),
   title: {
-    default: "Jesus Hernandez | Front-End Developer & UX/UI Designer",
+    default: "Jesus Hernandez | AI-Driven Engineer & Product Designer",
     template: "%s | Jesus Hernandez",
   },
   description:
-    "Portfolio of Jesus Hernandez, Front-End Developer & UX/UI Designer specialized in React, Next.js, and crafting polished digital experiences.",
+    "Portfolio of Jesus Hernandez, AI-Driven Engineer & Product Designer who designs and ships full-stack products end to end with React, Next.js, and AI agents built into every step of the workflow.",
   keywords: [
-    "Front-End Developer",
+    "AI-Driven Engineer",
+    "Design Engineer",
+    "Product Designer",
+    "AI Engineer",
     "Frontend Engineer",
-    "UX/UI Designer",
+    "Full-Stack Developer",
     "React",
     "Next.js",
     "TypeScript",
@@ -57,23 +64,23 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "Jesus Hernandez Portfolio",
     url: CANONICAL,
-    title: "Jesus Hernandez | Front-End Developer & UX/UI Designer",
+    title: "Jesus Hernandez | AI-Driven Engineer & Product Designer",
     description:
-      "Explore the portfolio of Jesus Hernandez: front-end engineering, UX/UI design, and crafted digital experiences.",
+      "Explore the portfolio of Jesus Hernandez: AI-driven engineering, product design, and full-stack products shipped end to end.",
     images: [
       {
         url: "/images/share.png",
         width: 1200,
         height: 630,
-        alt: "Portfolio | Jesus Hernandez | Front-End Developer & UX/UI Designer",
+        alt: "Portfolio | Jesus Hernandez | AI-Driven Engineer & Product Designer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jesus Hernandez | Front-End Developer & UX/UI Designer",
+    title: "Jesus Hernandez | AI-Driven Engineer & Product Designer",
     description:
-      "Front-end development and UX/UI design portfolio by Jesus Hernandez.",
+      "AI-driven engineering and product design portfolio by Jesus Hernandez.",
     images: ["/images/share.png"],
   },
   icons: {
@@ -100,7 +107,7 @@ export default function RootLayout({
     "@type": "Person",
     name: "Jesus Hernandez",
     url: CANONICAL,
-    jobTitle: "Front-End Developer & UX/UI Designer",
+    jobTitle: "AI-Driven Engineer & Product Designer",
     sameAs: [
       "https://www.linkedin.com/in/jesushernandez91/",
       "https://github.com/jesus0091",
@@ -150,6 +157,10 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
+
+        <SmoothScroll />
+        <UiSounds />
+        <IntroOverlay />
 
         {children}
       </body>

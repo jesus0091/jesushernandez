@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { IconHome, IconArrowLeft } from "@tabler/icons-react";
+import { House, ArrowLeft } from "@/components/icons";
 
 export default function NotFound() {
   const [mounted, setMounted] = useState(false);
@@ -59,14 +59,14 @@ export default function NotFound() {
             href="/"
             className="group flex items-center gap-2 px-6 py-3 bg-[var(--black)] text-[var(--white)] rounded-full font-semibold transition-all hover:scale-105 hover:shadow-lg active:scale-95"
           >
-            <IconHome size={20} />
+            <House size={20} />
             Go Home
           </Link>
           <button
             onClick={() => window.history.back()}
             className="group flex items-center gap-2 px-6 py-3 border-2 border-[var(--black)] text-[var(--black)] rounded-full font-semibold transition-all hover:scale-105 hover:shadow-lg active:scale-95"
           >
-            <IconArrowLeft size={20} />
+            <ArrowLeft size={20} />
             Go Back
           </button>
         </div>

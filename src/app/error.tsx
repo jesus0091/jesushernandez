@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { IconAlertTriangle, IconRefresh, IconHome } from "@tabler/icons-react";
+import { Warning, ArrowClockwise, House } from "@/components/icons";
 import Link from "next/link";
 
 export default function Error({
@@ -23,12 +23,12 @@ export default function Error({
         <div className="flex justify-center">
           <div className="relative">
             <div className="absolute inset-0 animate-ping">
-              <IconAlertTriangle
+              <Warning
                 size={80}
                 className="text-red-500 opacity-20"
               />
             </div>
-            <IconAlertTriangle size={80} className="text-red-500 relative" />
+            <Warning size={80} className="text-red-500 relative" />
           </div>
         </div>
 
@@ -62,14 +62,14 @@ export default function Error({
             onClick={reset}
             className="group flex items-center gap-2 px-6 py-3 bg-[var(--black)] text-[var(--white)] rounded-full font-semibold transition-all hover:scale-105 hover:shadow-lg active:scale-95"
           >
-            <IconRefresh size={20} className="group-hover:rotate-180 transition-transform duration-500" />
+            <ArrowClockwise size={20} className="group-hover:rotate-180 transition-transform duration-500" />
             Try Again
           </button>
           <Link
             href="/"
             className="group flex items-center gap-2 px-6 py-3 border-2 border-[var(--black)] text-[var(--black)] rounded-full font-semibold transition-all hover:scale-105 hover:shadow-lg active:scale-95"
           >
-            <IconHome size={20} />
+            <House size={20} />
             Go Home
           </Link>
         </div>

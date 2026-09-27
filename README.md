@@ -1,6 +1,6 @@
 # 🎨 Jesus Hernandez - Portfolio
 
-Portfolio personal de Jesus Hernandez, Front-End Developer & UX/UI Designer especializado en React, Next.js, y la creación de experiencias digitales pulidas.
+Portfolio personal de Jesus Hernandez, AI-Driven Engineer & Product Designer especializado en React, Next.js, y la creación de experiencias digitales pulidas.
 
 ![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black?style=flat-square&logo=next.js)
 ![React](https://img.shields.io/badge/React-19.1.0-blue?style=flat-square&logo=react)

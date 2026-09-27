@@ -2,8 +2,9 @@
 
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 
-import { IconSparkles } from "@tabler/icons-react";
+import { Sparkle } from "@/components/icons";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SectionHeading from "../motion/SectionHeading";
 import SectionLabel from "../SectionLabel";
 import gsap from "gsap";
 
@@ -200,7 +201,7 @@ const SkillsCursor: React.FC<{ sectionRef: React.RefObject<HTMLElement | null> }
 /* ─── "always learning" phrase ─── */
 const LearningPhrase: React.FC = () => (
   <p className="mt-8 flex items-center gap-2 text-xl font-medium select-none" style={{ cursor: "none" }}>
-    <IconSparkles size={16} className="shrink-0" style={{ color: "rgba(0,0,0,0.25)" }} />
+    <Sparkle size={16} className="shrink-0" style={{ color: "rgba(0,0,0,0.25)" }} />
     <span className="skills-learning-text">always learning, always growing.</span>
   </p>
 );
@@ -209,7 +210,6 @@ const LearningPhrase: React.FC = () => (
 const AboutMeSkills: React.FC = () => {
   const sectionRef  = useRef<HTMLElement | null>(null);
   const labelRef    = useRef<HTMLDivElement | null>(null);
-  const titleRef    = useRef<HTMLHeadingElement | null>(null);
   const dividerRef  = useRef<HTMLDivElement | null>(null);
   const rowsRef     = useRef<HTMLDivElement | null>(null);
   const contentRef  = useRef<HTMLDivElement | null>(null);
@@ -225,21 +225,19 @@ const AboutMeSkills: React.FC = () => {
     const ctx = gsap.context(() => {
       const section   = sectionRef.current!;
       const label     = labelRef.current!;
-      const title     = titleRef.current!;
       const divider   = dividerRef.current!;
       const rows      = rowsRef.current!.querySelectorAll<HTMLElement>("[data-row]");
       const rowLabels = rowsRef.current!.querySelectorAll<HTMLElement>("[data-row-label]");
       const chips     = rowsRef.current!.querySelectorAll<HTMLElement>("[data-chip]");
 
       if (reduce) {
-        gsap.set([label, title, divider, rows, rowLabels, chips], {
+        gsap.set([label, divider, rows, rowLabels, chips], {
           autoAlpha: 1, x: 0, y: 0, skewX: 0, skewY: 0, scale: 1,
         });
         return;
       }
 
       gsap.set(label,     { autoAlpha: 0, x: -24, skewX: -4 });
-      gsap.set(title,     { autoAlpha: 0, y: 48, scale: 0.93 });
       gsap.set(divider,   { scaleX: 0, transformOrigin: "left center" });
       gsap.set(rows,      { autoAlpha: 0, y: 30, skewY: 1 });
       gsap.set(rowLabels, { autoAlpha: 0, x: -20 });
@@ -254,7 +252,6 @@ const AboutMeSkills: React.FC = () => {
         },
       })
         .to(label,     { autoAlpha: 1, x: 0, skewX: 0, duration: 0.5 }, 0)
-        .to(title,     { autoAlpha: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(1.3)" }, 0.1)
         .to(divider,   { scaleX: 1, duration: 0.6, ease: "power2.inOut" }, 0.3)
         .to(rows,      { autoAlpha: 1, y: 0, skewY: 0, duration: 0.5, stagger: 0.1 }, 0.4)
         .to(rowLabels, { autoAlpha: 1, x: 0, duration: 0.4, stagger: 0.1 }, 0.45)
@@ -315,9 +312,9 @@ const AboutMeSkills: React.FC = () => {
       >
         <div className="mb-10 flex flex-col gap-3">
           <SectionLabel ref={labelRef}>Skills</SectionLabel>
-          <h2 ref={titleRef} className="text-3xl md:text-6xl font-semibold text-[var(--black)] leading-tighter tracking-tight">
+          <SectionHeading className="text-3xl md:text-6xl font-semibold text-[var(--black)] leading-tighter tracking-tight">
             What I bring to the table.
-          </h2>
+          </SectionHeading>
         </div>
 
         <div ref={rowsRef} className="border-t-2 border-black/20">

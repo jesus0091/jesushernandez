@@ -1,7 +1,9 @@
 "use client";
 
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
-import { IconMail } from "@tabler/icons-react";
+import { getLenis } from "@/lib/motion";
+import { Envelope } from "@/components/icons";
+import SoundToggle from "@/components/SoundToggle";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
@@ -9,6 +11,20 @@ import gsap from "gsap";
 const links = [
   { href: "/works", label: "Projects", sectionId: undefined },
 ];
+
+// Vertical center of the navbar; a dark section counts once it covers it.
+const NAV_PROBE_Y = 36;
+
+function isDarkBehindNav() {
+  const els = document.querySelectorAll<HTMLElement>(
+    '[data-nav-dark]:not([data-nav-dark="false"])'
+  );
+  for (const el of els) {
+    const r = el.getBoundingClientRect();
+    if (r.top <= NAV_PROBE_Y && r.bottom >= NAV_PROBE_Y) return true;
+  }
+  return false;
+}
 
 export default function Navbar() {
   const headerRef = useRef<HTMLElement | null>(null);
@@ -19,6 +35,8 @@ export default function Navbar() {
 
   const [open, setOpen] = useState(false);
   const [elevated, setElevated] = useState(false);
+  // True while a dark section ([data-nav-dark]) sits behind the navbar.
+  const [dark, setDark] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("hero");
 
   const getScrollbarW = () =>
@@ -39,6 +57,7 @@ export default function Navbar() {
     body.style.right = "0";
     body.style.width = "100%";
     body.style.overflow = "hidden";
+    getLenis()?.stop();
   }, []);
 
   const unlockScroll = useCallback(() => {
@@ -52,6 +71,7 @@ export default function Navbar() {
     body.style.overflow = "";
     body.style.paddingRight = prevBodyPaddingRightRef.current || "";
     window.scrollTo(0, scrollYRef.current || 0);
+    getLenis()?.start();
   }, []);
 
   useEffect(() => {
@@ -75,11 +95,13 @@ export default function Navbar() {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     rafRef.current = requestAnimationFrame(() => {
       setElevated(window.scrollY > 8);
+      setDark(isDarkBehindNav());
     });
   }, []);
 
   useEffect(() => {
     window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
     return () => {
@@ -113,21 +135,29 @@ export default function Navbar() {
         className={[
           "w-full hidden md:block fixed top-0 left-0 right-0 z-50",
           "transition-all duration-300 ease-out",
-          elevated
-            ? "bg-white/80 backdrop-blur-md border-b border-black/[0.08] shadow-sm"
-            : "bg-transparent",
+          !elevated
+            ? "bg-transparent border-b border-transparent"
+            : dark
+              ? "bg-[var(--color-ink-1)] border-b border-white/[0.08]"
+              : "grain-surface border-b border-black/[0.08]",
         ].join(" ")}
       >
         <nav className="max-w-[1280px] mx-auto px-8 flex items-center justify-between h-[72px]">
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="flex items-center gap-2.5 font-semibold text-[var(--black)] shrink-0"
+              className={[
+                "flex items-center gap-2.5 font-semibold shrink-0 transition-colors duration-300",
+                dark ? "text-white" : "text-[var(--black)]",
+              ].join(" ")}
             >
               <Image
                 src="/images/facebrand.png"
                 alt="Logo"
-                className="border border-black/10 rounded-lg bg-black/5 object-contain w-10 h-10"
+                className={[
+                  "border rounded-lg object-contain w-10 h-10 transition-colors duration-300",
+                  dark ? "border-white/20 bg-white/10" : "border-black/10 bg-black/5",
+                ].join(" ")}
                 width={40}
                 height={40}
                 priority
@@ -144,12 +174,17 @@ export default function Navbar() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
+                      data-sfx="nav"
                       aria-current={selected ? "page" : undefined}
                       className={[
                         "px-4 py-2 rounded-full text-[15px] font-medium transition-all duration-200",
-                        selected
-                          ? "text-[var(--black)] bg-black/[0.08]"
-                          : "text-[var(--muted)] hover:text-[var(--black)] hover:bg-black/[0.05]",
+                        dark
+                          ? selected
+                            ? "text-white bg-white/15"
+                            : "text-white/70 hover:text-white hover:bg-white/10"
+                          : selected
+                            ? "text-[var(--black)] bg-black/[0.08]"
+                            : "text-[var(--muted)] hover:text-[var(--black)] hover:bg-black/[0.05]",
                       ].join(" ")}
                     >
                       {link.label}
@@ -160,13 +195,22 @@ export default function Navbar() {
             </ul>
           </div>
 
-          <Link
-            href="mailto:jesushernandez120491@gmail.com"
-            className="flex items-center gap-2 rounded-full font-medium transition-all duration-200 bg-[var(--black)] text-white hover:bg-zinc-800 px-5 py-2 text-[15px]"
-          >
-            <IconMail size={16} />
-            hello @jesus
-          </Link>
+          <div className="flex items-center gap-2">
+            <SoundToggle dark={dark} />
+            <Link
+              href="mailto:jesushernandez120491@gmail.com"
+              data-sfx="cta"
+              className={[
+                "flex items-center gap-2 rounded-full font-medium transition-all duration-300 px-5 py-2 text-[15px]",
+                dark
+                  ? "bg-white text-[var(--black)] hover:bg-white/85"
+                  : "bg-[var(--black)] text-white hover:bg-zinc-800",
+              ].join(" ")}
+            >
+              <Envelope size={16} />
+              hello @jesus
+            </Link>
+          </div>
         </nav>
       </header>
 
@@ -201,8 +245,8 @@ export default function Navbar() {
         style={{
           top: "calc(env(safe-area-inset-top, 0px) + 12px)",
           right: "calc(env(safe-area-inset-right, 0px) + 16px)",
-          background: open ? "rgba(255,255,255,0.15)" : "var(--black)",
-          color: "white",
+          background: open ? "rgba(255,255,255,0.15)" : dark ? "white" : "var(--black)",
+          color: open || !dark ? "white" : "var(--black)",
         }}
       >
         <span className="sr-only">{open ? "Cerrar" : "Menú"}</span>
@@ -267,7 +311,7 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
               className="flex items-center gap-3 text-white/50 text-base font-medium hover:text-white transition-colors duration-200"
             >
-              <IconMail size={18} />
+              <Envelope size={18} />
               jesushernandez120491@gmail.com
             </Link>
           </div>

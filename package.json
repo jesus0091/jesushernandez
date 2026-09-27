@@ -1,7 +1,7 @@
 {
   "name": "my-portfolio-web",
   "version": "1.0.0",
-  "description": "Portfolio personal de Jesus Hernandez - Front-End Developer & UX/UI Designer",
+  "description": "Portfolio personal de Jesus Hernandez - AI-Driven Engineer & Product Designer",
   "author": {
     "name": "Jesus Hernandez",
     "email": "jesushernandez120491@gmail.com",
@@ -18,9 +18,10 @@
     "clean": "rm -rf .next out coverage"
   },
   "dependencies": {
-    "@tabler/icons-react": "^3.35.0",
+    "@phosphor-icons/react": "^2.1.10",
     "embla-carousel-react": "^8.6.0",
     "gsap": "^3.13.0",
+    "lenis": "^1.3.26",
     "next": "15.5.9",
     "react": "19.1.0",
     "react-dom": "19.1.0"

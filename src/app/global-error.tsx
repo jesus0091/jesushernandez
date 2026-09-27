@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { IconAlertTriangle } from "@tabler/icons-react";
+import { Warning } from "@/components/icons";
 
 export default function GlobalError({
   error,
@@ -20,7 +20,7 @@ export default function GlobalError({
         <div className="min-h-screen w-full flex items-center justify-center px-4 bg-gradient-to-br from-slate-50 to-red-50">
           <div className="max-w-2xl w-full text-center space-y-8">
             <div className="flex justify-center">
-              <IconAlertTriangle size={80} className="text-red-500" />
+              <Warning size={80} className="text-red-500" />
             </div>
 
             <div className="space-y-4">

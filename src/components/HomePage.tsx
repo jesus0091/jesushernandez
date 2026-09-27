@@ -2,14 +2,15 @@
 
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
-  IconBrandBehance,
-  IconBrandGithub,
-  IconBrandLinkedin,
-} from "@tabler/icons-react";
+  BehanceLogo,
+  GithubLogo,
+  LinkedinLogo,
+} from "@/components/icons";
 
 import AuroraGlow from "./AuroraGlow";
 import Link from "next/link";
 import gsap from "gsap";
+import { onIntroReveal } from "@/lib/motion";
 
 function splitToChars(el: HTMLElement): HTMLElement[] {
   const text = el.textContent ?? "";
@@ -30,6 +31,12 @@ function splitToChars(el: HTMLElement): HTMLElement[] {
     chars.push(inner);
   }
   return chars;
+}
+
+// Put the plain text back once the entrance is done, so effects that need
+// whole words (the AI sheen's background-clip) render cleanly.
+function unsplitChars(el: HTMLElement | null) {
+  if (el) el.textContent = el.textContent ?? "";
 }
 
 export default function HomePage() {
@@ -69,7 +76,7 @@ export default function HomePage() {
       [greetRef, titleRef, subtitleRef, footerSocialRef].forEach(
         (r) =>
           r?.current &&
-          gsap.set(r.current, { autoAlpha: 1, y: 0, clearProps: "all" })
+          gsap.set(r.current, { autoAlpha: 1, y: 0, clearProps: "opacity,visibility,transform" })
       );
       const angleEls = Array.from(
         frontendRowRef.current?.querySelectorAll<Element>(".angle") ?? []
@@ -77,10 +84,12 @@ export default function HomePage() {
       const ampEls = Array.from(
         designerRowRef.current?.querySelectorAll<Element>(".amp") ?? []
       );
-      gsap.set([...angleEls, ...ampEls], { autoAlpha: 1, y: 0, clearProps: "all" });
+      gsap.set([...angleEls, ...ampEls], { autoAlpha: 1, y: 0, clearProps: "opacity,visibility,transform" });
+      frontendStrongRef.current?.classList.add("ai-glow");
       return;
     }
 
+    let stopWaiting = () => {};
     const ctx = gsap.context(() => {
       const line1Chars: HTMLElement[] = [];
       const line2Chars: HTMLElement[] = [];
@@ -105,31 +114,34 @@ export default function HomePage() {
 
       gsap.set(greetRef.current, { autoAlpha: 0, y: 16 });
       gsap.set(titleRef.current, { autoAlpha: 1 });
-      gsap.set(line1Chars, { yPercent: 110 });
-      gsap.set(line2Chars, { yPercent: 110 });
+      // Letters are traced in as outlines, left to right like a pen, then
+      // the first line fills in.
+      const title = titleRef.current;
+      title?.classList.add("hero-drawing");
+      gsap.set([...line1Chars, ...line2Chars], { clipPath: "inset(-20% 100% -20% 0%)" });
       gsap.set(angleEls, { autoAlpha: 0, y: 20 });
       gsap.set(ampEl, { autoAlpha: 0, y: 20 });
       gsap.set(subtitleRef.current, { autoAlpha: 0, y: 16 });
       gsap.set(socialLinks, { autoAlpha: 0, y: 10, scale: 0.96 });
 
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+      stopWaiting = onIntroReveal(() => tl.play());
 
       tl.to(greetRef.current, { autoAlpha: 1, y: 0, duration: 0.4 })
         .to(angleEls, { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.06 }, ">-0.1")
+        .addLabel("draw", "<0.1")
         .to(
           line1Chars,
-          { yPercent: 0, duration: 0.7, stagger: 0.02, ease: "power3.out" },
-          "<0.1"
+          { clipPath: "inset(-20% -20% -20% 0%)", duration: 0.45, stagger: 0.045, ease: "power2.inOut" },
+          "draw"
         )
-        .to(
-          ampEl,
-          { autoAlpha: 1, y: 0, duration: 0.4, ease: "power3.out" },
-          "<" + (line1Chars.length * 0.02 * 0.5).toFixed(3)
-        )
+        // Fill line 1 once it's drawn (the CSS transition does the fade).
+        .call(() => title?.classList.remove("hero-drawing"))
+        .to(ampEl, { autoAlpha: 1, y: 0, duration: 0.4, ease: "power3.out" }, "draw+=0.3")
         .to(
           line2Chars,
-          { yPercent: 0, duration: 0.7, stagger: 0.02, ease: "power3.out" },
-          "<0.05"
+          { clipPath: "inset(-20% -20% -20% 0%)", duration: 0.45, stagger: 0.045, ease: "power2.inOut" },
+          "draw+=0.35"
         )
         .to(
           subtitleRef.current,
@@ -140,10 +152,19 @@ export default function HomePage() {
           socialLinks,
           { autoAlpha: 1, y: 0, scale: 1, duration: 0.4, stagger: 0.06, ease: "power3.out" },
           ">0.05"
-        );
+        )
+        .call(() => {
+          [frontendStrongRef, frontendLightRef, designerLightRef, designerStrongRef].forEach(
+            (r) => unsplitChars(r.current)
+          );
+          frontendStrongRef.current?.classList.add("ai-glow");
+        });
     }, section);
 
-    return () => ctx.revert();
+    return () => {
+      stopWaiting();
+      ctx.revert();
+    };
   }, []);
 
   return (
@@ -168,6 +189,32 @@ export default function HomePage() {
         }
         .hero-row[data-ready="true"] .word + .word {
           transition-delay: .04s;
+        }
+        /* Entrance: every word is an outline until its line is drawn. */
+        .hero-drawing .hero-row .word {
+          color: transparent;
+          -webkit-text-stroke: 1.2px var(--color-ink-1);
+        }
+
+        /* AI sheen: a band of warm-to-violet light travels inside the letters. */
+        .hero-row[data-filled="true"] .ai-glow {
+          background-image: linear-gradient(100deg,
+            var(--color-ink-1) 0%, var(--color-ink-1) 34%,
+            #ff6600 42%, #ffb46b 48%, #ff5fa2 53%, #8b5cf6 59%,
+            var(--color-ink-1) 68%, var(--color-ink-1) 100%);
+          background-size: 300% 100%;
+          background-position: 100% 0;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: ai-sheen 4.5s var(--ease-out) infinite;
+        }
+        @keyframes ai-sheen {
+          0% { background-position: 100% 0; }
+          55%, 100% { background-position: 0% 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-row[data-filled="true"] .ai-glow { animation: none; }
         }
         .hero-row .strong { font-weight: 900; }
         .hero-row .light { font-weight: 300; }
@@ -261,14 +308,14 @@ export default function HomePage() {
                   key={i}
                   className="shrink-0 flex items-baseline gap-3 pr-3"
                   style={{
-                    fontSize: "clamp(44px, 14vw, 68px)",
+                    fontSize: "clamp(36px, 11vw, 54px)",
                     lineHeight: 1.1,
                     letterSpacing: "-0.03em",
                   }}
                   aria-hidden={i > 0}
                 >
-                  <span className="font-black hero-gradient-text">FrontEnd</span>
-                  <span className="font-light text-(--color-ink-1)">Developer</span>
+                  <span className="font-black hero-gradient-text">AI-Driven</span>
+                  <span className="font-light text-(--color-ink-1)">Engineer</span>
                   <span className="text-black/15 font-light select-none">·</span>
                 </span>
               ))}
@@ -279,7 +326,7 @@ export default function HomePage() {
                   key={i}
                   className="shrink-0 flex items-baseline gap-3 pr-3"
                   style={{
-                    fontSize: "clamp(44px, 14vw, 68px)",
+                    fontSize: "clamp(36px, 11vw, 54px)",
                     lineHeight: 1.1,
                     letterSpacing: "-0.03em",
                   }}
@@ -321,7 +368,7 @@ export default function HomePage() {
               onMouseLeave={() => setHovered("frontend")}
               className="flex flex-col items-center gap-0 leading-none whitespace-nowrap select-none"
               style={{
-                fontSize: "clamp(28px, 8vw, 120px)",
+                fontSize: "clamp(28px, 6.5vw, 96px)",
                 letterSpacing: "-0.02em",
               }}
             >
@@ -331,14 +378,14 @@ export default function HomePage() {
                 data-filled={isFrontendFilled}
                 data-ready={ready}
                 onMouseEnter={() => setHovered("frontend")}
-                aria-label="Frontend Developer"
+                aria-label="AI-Driven Engineer"
               >
                 <span className="angle left">&lt;</span>
                 <span ref={frontendStrongRef} className="word strong">
-                  FrontEnd
+                  AI-Driven
                 </span>
                 <span ref={frontendLightRef} className="word light">
-                  Developer
+                  Engineer
                 </span>
                 <span className="angle right">/&gt;</span>
               </span>
@@ -375,30 +422,33 @@ export default function HomePage() {
           <div ref={footerSocialRef} className="flex flex-row gap-1 mt-4">
             <Link
               href="https://www.linkedin.com/in/jesushernandez91/"
+              data-sfx="social"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn profile"
               className="flex w-10 h-10 items-center justify-center rounded-full hover:bg-black/5 transition text-(--color-ink-3) hover:text-(--color-ink-1)"
             >
-              <IconBrandLinkedin size={20} />
+              <LinkedinLogo size={20} />
             </Link>
             <Link
               href="https://github.com/jesus0091"
+              data-sfx="social"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub profile"
               className="flex w-10 h-10 items-center justify-center rounded-full hover:bg-black/5 transition text-(--color-ink-3) hover:text-(--color-ink-1)"
             >
-              <IconBrandGithub size={20} />
+              <GithubLogo size={20} />
             </Link>
             <Link
               href="https://www.behance.net/devjesushernandez"
+              data-sfx="social"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Behance profile"
               className="flex w-10 h-10 items-center justify-center rounded-full hover:bg-black/5 transition text-(--color-ink-3) hover:text-(--color-ink-1)"
             >
-              <IconBrandBehance size={20} />
+              <BehanceLogo size={20} />
             </Link>
           </div>
         </div>

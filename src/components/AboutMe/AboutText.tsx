@@ -1,16 +1,17 @@
 "use client";
 
 import {
-  IconArrowRight,
-  IconBrandBehance,
-  IconBrandGithub,
-  IconBrandLinkedin,
-} from "@tabler/icons-react";
+  ArrowRight,
+  BehanceLogo,
+  GithubLogo,
+  LinkedinLogo,
+} from "@/components/icons";
 import React, { useLayoutEffect, useRef } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SectionHeading from "../motion/SectionHeading";
 import SectionLabel from "../SectionLabel";
 import gsap from "gsap";
 
@@ -29,15 +30,14 @@ const AboutText: React.FC<AboutTextProps> = ({
 }) => {
   const sectionRef = useRef<HTMLElement | null>(null);
   const paraRef = useRef<HTMLParagraphElement | null>(null);
-  const titleRef = useRef<HTMLHeadingElement | null>(null);
   const boxRef = useRef<HTMLDivElement | null>(null);
   const rightColRef = useRef<HTMLDivElement | null>(null);
   const gridRef = useRef<HTMLDivElement | null>(null);
   const segments: { text: string; bold?: boolean }[] = [
     { text: "I'm a " },
-    { text: "Frontend Developer", bold: true },
+    { text: "AI-Driven Engineer", bold: true },
     { text: " and " },
-    { text: "UX/UI Designer", bold: true },
+    { text: "Product Designer", bold: true },
     { text: " based in " },
     { text: "Buenos Aires, Argentina.", bold: true },
     { text: " I combine " },
@@ -66,18 +66,15 @@ const AboutText: React.FC<AboutTextProps> = ({
     const ctx = gsap.context(() => {
       const section = sectionRef.current!;
       const para = paraRef.current!;
-      const title = titleRef.current!;
       const box = boxRef.current!;
       const words = Array.from(para.querySelectorAll<HTMLElement>("[data-word]"));
 
       if (reduce) {
-        gsap.set([title, box, words], { opacity: 1, x: 0, y: 0, clipPath: "none", scale: 1, rotateX: 0, yPercent: 0 });
+        gsap.set([box, words], { opacity: 1, x: 0, y: 0, clipPath: "none", scale: 1, rotateX: 0, yPercent: 0 });
         return;
       }
 
       gsap.set(box,   { clipPath: "inset(100% 0 0 0)", willChange: "transform,opacity" });
-      gsap.set(title, { opacity: 0, y: 40, scale: 0.96 });
-      gsap.set(words, { opacity: 0, yPercent: 120, rotateX: -35, display: "inline-block", willChange: "transform,opacity" });
 
       gsap.timeline({
         defaults: { ease: "power3.out" },
@@ -87,9 +84,19 @@ const AboutText: React.FC<AboutTextProps> = ({
           once: true,
         },
       })
-        .to(box,   { clipPath: "inset(0% 0 0 0)", duration: 0.9, ease: "power4.out" }, 0)
-        .to(title, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(1.4)" }, 0.2)
-        .to(words, { opacity: 1, yPercent: 0, rotateX: 0, duration: wordDuration, stagger: wordStagger, ease: "power2.out" }, 0.4);
+        .to(box,   { clipPath: "inset(0% 0 0 0)", duration: 0.9, ease: "power4.out" }, 0);
+
+      // Text "writes itself": words go from faint to full ink, scrubbed with scroll.
+      gsap.fromTo(
+        words,
+        { opacity: 0.15 },
+        {
+          opacity: 1,
+          stagger: 0.1,
+          ease: "none",
+          scrollTrigger: { trigger: para, start: "top 95%", end: "center center", scrub: true },
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -116,27 +123,30 @@ const AboutText: React.FC<AboutTextProps> = ({
             <div className="absolute bottom-0 left-0 right-0 flex flex-row gap-1 p-4 justify-end">
               <Link
                 href="https://www.linkedin.com/in/jesushernandez91/"
+                data-sfx="social"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex w-12 h-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
               >
-                <IconBrandLinkedin />
+                <LinkedinLogo />
               </Link>
               <Link
                 href="https://github.com/jesus0091"
+                data-sfx="social"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex w-12 h-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
               >
-                <IconBrandGithub />
+                <GithubLogo />
               </Link>
               <Link
                 href="https://www.behance.net/devjesushernandez"
+                data-sfx="social"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex w-12 h-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
               >
-                <IconBrandBehance />
+                <BehanceLogo />
               </Link>
             </div>
           </div>
@@ -146,12 +156,9 @@ const AboutText: React.FC<AboutTextProps> = ({
 
           <div className="flex flex-col gap-3">
             <SectionLabel>About Me</SectionLabel>
-            <h2
-              ref={titleRef}
-              className="select-none text-3xl md:text-6xl leading-tighter font-semibold text-[var(--black)]"
-            >
+            <SectionHeading className="select-none text-3xl md:text-6xl leading-tighter font-semibold text-[var(--black)]">
               The Creative Mind Behind the Code
-            </h2>
+            </SectionHeading>
           </div>
           <p
             ref={paraRef}
@@ -236,9 +243,9 @@ const AboutText: React.FC<AboutTextProps> = ({
             }
           `}</style>
           <div className="btn-border-wrap w-fit">
-            <Link href="#projects" className="group flex flex-row items-center gap-2 px-5 py-3 rounded-full font-semibold text-base transition-colors hover:bg-black hover:text-white">
+            <Link href="#projects" data-sfx="cta" className="group flex flex-row items-center gap-2 px-5 py-3 rounded-full font-semibold text-base transition-colors hover:bg-black hover:text-white">
               <span className="btn-text-shine">Look at My Work</span>
-              <IconArrowRight className="transition-transform duration-200 group-hover:rotate-90" />
+              <ArrowRight className="transition-transform duration-200 group-hover:rotate-90" />
             </Link>
           </div>
         </div>

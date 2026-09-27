@@ -16,6 +16,9 @@
   --color-accent: #ff6600;
   --color-accent-soft: #fff3eb;
 
+  /* Section surface (brush transition), not a second accent */
+  --color-blue: #1f3bd6;
+
   --color-line-1: #e5e1d8;
   --color-line-2: #d4cfc4;
 
@@ -75,7 +78,6 @@
 }
 
 html {
-  scroll-behavior: smooth;
   color-scheme: light;
   background: var(--color-bg);
   -webkit-text-size-adjust: 100%;
@@ -83,7 +85,8 @@ html {
 }
 
 body {
-  background: var(--color-bg);
+  /* No background here: the page color lives on <html> so the grain
+     (body::after, z-index -1) sits between it and all content. */
   color: var(--color-ink-2);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -133,25 +136,6 @@ hr,
   display: none;
 }
 
-@keyframes wsma-gradient {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.wsma-phrase {
-  background: linear-gradient(120deg, #ff6600, #f97316, #1e293b, #334155, #475569, #f97316, #ff6600, #ff6600);
-  background-size: 400% 400%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: wsma-gradient 6s ease infinite;
-}
-
-.wsma-phrase:hover {
-  animation-play-state: paused;
-}
-
 /* ---------------- Skip link for keyboard users ---------------- */
 .skip-link {
   position: absolute;
@@ -168,4 +152,102 @@ hr,
 }
 .skip-link:focus-visible {
   transform: translateY(0);
+}
+
+/* ---------------- Lenis smooth scroll ---------------- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.lenis) {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ---------------- Intro overlay (signature + brush wipe) ---------------- */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  overflow: clip;
+  pointer-events: none;
+}
+.intro__wipe {
+  position: absolute;
+  top: -15%;
+  left: -15%;
+  width: 130%;
+  height: 130%;
+  color: var(--color-ink-1);
+}
+.intro__signature {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(40vw, 20rem);
+  transform: translate(-50%, -50%);
+  color: color-mix(in oklab, var(--color-bg) 90%, var(--color-ink-4)); /* chalk white, slightly grey */
+  visibility: hidden;
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
+}
+
+/* ---------------- Film grain (page background only) ---------------- */
+:root {
+  /* Shared by body::after and .grain-surface so they always match. */
+  --grain-opacity: 0.18;
+  /* Tile size: bigger tiles scale up the (vector) noise, so bigger grains. */
+  --grain-size: 220px;
+  --grain-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1; /* above the <html> background, below all content */
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: multiply;
+  background-image: var(--grain-image);
+  background-size: var(--grain-size) var(--grain-size);
+}
+
+/* An opaque page-colored surface (for sections that slide over others) that
+   keeps the grain. Fixed attachment lines its noise up with body::after, so
+   there is no seam where it meets the regular page background. Lives in the
+   components layer so utilities (e.g. `fixed` on the navbar) win over its
+   `position: relative`. */
+@layer components {
+  .grain-surface {
+    position: relative;
+    isolation: isolate;
+    background-color: var(--color-bg);
+  }
+  .grain-surface::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    mix-blend-mode: multiply;
+    background-image: var(--grain-image);
+    background-size: var(--grain-size) var(--grain-size);
+    background-attachment: fixed;
+  }
 }
