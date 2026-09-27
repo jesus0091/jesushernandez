@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     "max-video-preview": -1,
   },
   alternates: {
-    canonical: CANONICAL,
+    canonical: "/",
   },
   openGraph: {
     type: "website",
@@ -67,34 +67,20 @@ export const metadata: Metadata = {
     title: "Jesus Hernandez | AI-Driven Engineer & Product Designer",
     description:
       "Explore the portfolio of Jesus Hernandez: AI-driven engineering, product design, and full-stack products shipped end to end.",
-    images: [
-      {
-        url: "/images/share.png",
-        width: 1200,
-        height: 630,
-        alt: "Portfolio | Jesus Hernandez | AI-Driven Engineer & Product Designer",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Jesus Hernandez | AI-Driven Engineer & Product Designer",
     description:
       "AI-driven engineering and product design portfolio by Jesus Hernandez.",
-    images: ["/images/share.png"],
   },
-  icons: {
-    icon: [
-      { url: "/icon.png", type: "image/png" },
-      { url: "/images/facebrand.png", type: "image/png", sizes: "184x184" },
-    ],
-    apple: "/icon.png",
-  },
+  category: "technology",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#f4f1ea",
 };
 
 export default function RootLayout({
@@ -108,6 +94,24 @@ export default function RootLayout({
     name: "Jesus Hernandez",
     url: CANONICAL,
     jobTitle: "AI-Driven Engineer & Product Designer",
+    description:
+      "AI-Driven Engineer & Product Designer who designs and ships full-stack digital products end to end.",
+    image: `${CANONICAL}/images/about_me.webp`,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Buenos Aires",
+      addressCountry: "AR",
+    },
+    knowsAbout: [
+      "Product Design",
+      "UX/UI Design",
+      "Design Systems",
+      "React",
+      "Next.js",
+      "TypeScript",
+      "React Native",
+      "AI Engineering",
+    ],
     sameAs: [
       "https://www.linkedin.com/in/jesushernandez91/",
       "https://github.com/jesus0091",
@@ -120,6 +124,8 @@ export default function RootLayout({
     "@type": "WebSite",
     name: "Jesus Hernandez Portfolio",
     url: CANONICAL,
+    inLanguage: "en",
+    author: { "@type": "Person", name: "Jesus Hernandez", url: CANONICAL },
   };
 
   return (
@@ -128,22 +134,6 @@ export default function RootLayout({
       data-color-scheme="light"
       className={`${inter.variable} ${jetbrainsMono.variable} scrollbar-hide`}
     >
-      <head>
-        <meta id="theme-color" name="theme-color" content="#f4f1ea" />
-
-        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
-        <meta httpEquiv="X-Frame-Options" content="DENY" />
-        <meta
-          httpEquiv="Referrer-Policy"
-          content="strict-origin-when-cross-origin"
-        />
-        <meta
-          httpEquiv="Permissions-Policy"
-          content="camera=(), microphone=(), geolocation=()"
-        />
-        <meta httpEquiv="Cross-Origin-Opener-Policy" content="same-origin" />
-      </head>
-
       <body className="antialiased w-full">
         <a href="#main-content" className="skip-link">
           Skip to content

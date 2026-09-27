@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       url: `${CANONICAL}/works/${work.id}`,
-      images: [{ url: work.cover, width: 1200, height: 630, alt: title }],
+      images: [{ url: work.cover, alt: title }],
       type: "article",
     },
     twitter: {

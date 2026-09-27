@@ -14,6 +14,7 @@ export const metadata: Metadata = {
       "All projects by Jesús Hernández — frontend development, UX/UI design, and full-stack digital products.",
     url: "https://jesushernandez.vercel.app/works",
     type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
   alternates: {
     canonical: "https://jesushernandez.vercel.app/works",
