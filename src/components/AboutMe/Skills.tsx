@@ -125,7 +125,7 @@ export default function Skills() {
   }, []);
 
   return (
-    <section id="skills" ref={rootRef} className="relative py-20 md:py-28">
+    <section id="skills" ref={rootRef} className="relative pt-12 pb-20 md:py-28">
       <div className="mx-auto w-full max-w-[1280px] px-6 md:px-8">
         <div className="mb-10 md:mb-14 flex flex-col gap-3">
           <SectionLabel>Skills</SectionLabel>

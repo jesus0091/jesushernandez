@@ -220,7 +220,7 @@ export default function WSMAQuote() {
         ref={sectionRef}
         data-section="wsma-quote"
         data-nav-dark
-        className="relative flex h-svh w-full items-center overflow-x-clip bg-[var(--color-ink-1)]"
+        className="relative flex h-lvh w-full items-center overflow-x-clip bg-[var(--color-ink-1)]"
       >
         <svg
           ref={tunnelRef}

@@ -9,7 +9,9 @@ const RINGS = 10;
 // Card size before it grows to fill the viewport.
 const CARD_MAX_W = 1216;
 const CARD_GUTTER = 24;
-const CARD_H = () => Math.min(Math.max(window.innerHeight * 0.55, 420), 560);
+// Portrait screens get a taller card so it doesn't float in empty space.
+const CARD_H = (vw: number, vh: number) =>
+  vh > vw ? Math.min(vh * 0.72, 640) : Math.min(Math.max(vh * 0.55, 420), 560);
 const CARD_RADIUS = 24;
 // Share of the scroll spent growing the card; the rest flies through the tunnel.
 const EXPAND_END = 0.4;
@@ -89,10 +91,12 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
     const render = (progress: number) => {
       // Card → full screen
       const e = gsap.parseEase("brand")(gsap.utils.clamp(0, 1, progress / EXPAND_END));
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
+      // Measure the stage (100lvh), not innerHeight: on mobile innerHeight
+      // changes every time the address bar shows or hides.
+      const vw = layer.clientWidth;
+      const vh = layer.clientHeight;
       const x = Math.max(CARD_GUTTER, (vw - CARD_MAX_W) / 2) * (1 - e);
-      const y = Math.max(0, (vh - CARD_H()) / 2) * (1 - e);
+      const y = Math.max(0, (vh - CARD_H(vw, vh)) / 2) * (1 - e);
       layer.style.clipPath = `inset(${y}px ${x}px round ${CARD_RADIUS * (1 - e)}px)`;
       // The navbar goes dark once the card has grown under it.
       layer.dataset.navDark = y < 36 ? "true" : "false";
@@ -135,7 +139,10 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
 
       // Words ride the same perspective as the rings, but pass only once each.
       const t = gsap.utils.clamp(0, 1, (progress - EXPAND_END * 0.75) / (1 - EXPAND_END * 0.75));
-      const spread = Math.max(vw, vh) * 0.55;
+      // Portrait: fly mostly up and down, so words clear the full-width title.
+      const portrait = vh > vw;
+      const spreadX = portrait ? vw * 0.5 : Math.max(vw, vh) * 0.55;
+      const spreadY = portrait ? vh * 0.6 : Math.max(vw, vh) * 0.55 * 0.7;
       words.forEach((word, i) => {
         const z = t * (1 + (WORDS.length - 1) * WORD_GAP) - i * WORD_GAP;
         if (z <= 0 || z >= 1) {
@@ -144,8 +151,8 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
         }
         const scale = 0.04 * Math.pow(60, z);
         const a = (WORD_ANGLES[i % WORD_ANGLES.length] * Math.PI) / 180;
-        const dx = Math.cos(a) * spread * scale;
-        const dy = Math.sin(a) * spread * scale * 0.7;
+        const dx = Math.cos(a) * spreadX * scale;
+        const dy = Math.sin(a) * spreadY * scale;
         const fade = gsap.utils.clamp(0, 1, (z - 0.45) / 0.15) * gsap.utils.clamp(0, 1, (1 - z) / 0.15);
         word.style.transform = `translate(-50%, -50%) translate(${dx}px, ${dy}px) scale(${scale})`;
         word.style.opacity = String(fade);
@@ -187,7 +194,7 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
 
   return (
     <section ref={sectionRef} className="relative h-[280vh] md:h-[340vh]">
-      <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
+      <div className="sticky top-0 h-lvh w-full overflow-hidden">
         <div
           ref={layerRef}
           className="absolute inset-0 overflow-hidden bg-[#01020c] will-change-[clip-path]"
@@ -252,7 +259,7 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
             {WORDS.map((w) => (
               <span
                 key={w}
-                className="absolute left-1/2 top-1/2 whitespace-nowrap text-5xl md:text-7xl font-semibold tracking-tight text-white/90 opacity-0 will-change-transform [text-shadow:0_2px_30px_rgba(1,2,12,0.6)]"
+                className="absolute left-1/2 top-1/2 whitespace-nowrap text-3xl md:text-7xl font-semibold tracking-tight text-white/90 opacity-0 will-change-transform [text-shadow:0_2px_30px_rgba(1,2,12,0.6)]"
               >
                 {w}
               </span>

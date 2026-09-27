@@ -4,7 +4,7 @@ import { onIntroReveal, setupGsap } from "@/lib/motion";
 import { useLayoutEffect, useRef } from "react";
 
 import Image from "next/image";
-import { SignatureIcon } from "../AboutMe/SkillsIcons";
+import { SignatureIcon } from "../SignatureIcon";
 
 const AMPLITUDE = 140;
 export default function GalleryProjects() {
@@ -121,7 +121,7 @@ export default function GalleryProjects() {
   return (
     <div
       ref={rootRef}
-      className="overflow-hidden h-[70vh] -mt-[18vh] flex flex-col justify-center items-center"
+      className="overflow-hidden pt-6 pb-10 md:py-0 md:h-[70vh] md:-mt-[18vh] flex flex-col justify-center items-center"
     >
       <div className="flex flex-row gap-1 md:gap-4">
         {gallery.map((item) => (
@@ -131,7 +131,7 @@ export default function GalleryProjects() {
           >
             <Image
               src={item.urlImage}
-              alt={`Gallery image ${item.id}`}
+              alt=""
               fill
               sizes="(min-width: 768px) max(15vw, 260px), max(15vw, 110px)"
               className="object-top object-cover"

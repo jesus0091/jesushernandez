@@ -53,7 +53,7 @@ export default function HomePage() {
 
   const sectionRef = useRef<HTMLElement | null>(null);
   const greetRef = useRef<HTMLParagraphElement | null>(null);
-  const titleRef = useRef<HTMLHeadingElement | null>(null);
+  const titleRef = useRef<HTMLParagraphElement | null>(null);
   const frontendRowRef = useRef<HTMLSpanElement | null>(null);
   const designerRowRef = useRef<HTMLSpanElement | null>(null);
   const subtitleRef = useRef<HTMLDivElement | null>(null);
@@ -280,7 +280,7 @@ export default function HomePage() {
       <section
         ref={sectionRef}
         id="hero"
-        className="relative px-4 h-[85dvh] md:h-[100dvh] w-full
+        className="relative px-4 h-[68svh] min-h-[480px] md:min-h-0 md:h-svh w-full
           flex flex-col justify-center items-center
           pt-16 md:pt-0
           touch-pan-y select-none
@@ -300,8 +300,11 @@ export default function HomePage() {
             👋, My name is Jesús Hernández
           </p>
 
+          {/* The one real heading; the visual titles below are decorative. */}
+          <h1 className="sr-only">Jesús Hernández, AI-Driven Engineer &amp; Product Designer</h1>
+
           {/* Mobile marquee */}
-          <div className="md:hidden w-screen overflow-hidden -mx-4 flex flex-col gap-2">
+          <div aria-hidden="true" className="md:hidden w-screen overflow-hidden -mx-4 flex flex-col gap-2">
             <div className="hero-marquee-left flex whitespace-nowrap">
               {Array.from({ length: 6 }).map((_, i) => (
                 <span
@@ -312,7 +315,6 @@ export default function HomePage() {
                     lineHeight: 1.1,
                     letterSpacing: "-0.03em",
                   }}
-                  aria-hidden={i > 0}
                 >
                   <span className="font-black hero-gradient-text">AI-Driven</span>
                   <span className="font-light text-(--color-ink-1)">Engineer</span>
@@ -330,7 +332,6 @@ export default function HomePage() {
                     lineHeight: 1.1,
                     letterSpacing: "-0.03em",
                   }}
-                  aria-hidden={i > 0}
                 >
                   <span className="font-light text-(--color-ink-1)">Product</span>
                   <span className="font-black hero-gradient-text">Designer</span>
@@ -362,8 +363,8 @@ export default function HomePage() {
           </div>
 
           {/* Desktop interactive title */}
-          <div className="hidden md:block">
-            <h1
+          <div aria-hidden="true" className="hidden md:block">
+            <p
               ref={titleRef}
               onMouseLeave={() => setHovered("frontend")}
               className="flex flex-col items-center gap-0 leading-none whitespace-nowrap select-none"
@@ -409,7 +410,7 @@ export default function HomePage() {
                   </span>
                 </span>
               </span>
-            </h1>
+            </p>
           </div>
 
           <div

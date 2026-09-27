@@ -167,9 +167,8 @@ function MaskedWords({ text }: { text: string }) {
   ));
 }
 
-// Desktop: the carousel pins and scrolls sideways with the page (Embla off).
-// Mobile / reduced motion: regular swipeable Embla carousel.
-const SCROLL_DRIVEN_QUERY = "(min-width: 769px)";
+// The carousel pins and scrolls sideways with the page (Embla off).
+// Reduced motion: regular swipeable Embla carousel.
 
 export default function LatestProjects() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -182,7 +181,7 @@ export default function LatestProjects() {
   const [trackOffset, setTrackOffset] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
   const isMobile = useIsMobile(768);
-  const scrollDriven = !isMobile && !reducedMotion;
+  const scrollDriven = !reducedMotion;
 
   useEffect(() => setReducedMotion(prefersReducedMotion()), []);
 
@@ -192,7 +191,7 @@ export default function LatestProjects() {
     dragFree: false,
     loop: false,
     slidesToScroll: 1,
-    breakpoints: reducedMotion ? {} : { [SCROLL_DRIVEN_QUERY]: { active: false } },
+    active: reducedMotion,
   });
 
   // Progress bar, written straight to the DOM (runs every scroll frame).
@@ -204,7 +203,7 @@ export default function LatestProjects() {
       progressRef.current.style.transform = `scaleX(${min + p * (1 - min)})`;
   };
 
-  // Mobile / reduced motion: follow the Embla swipe.
+  // Reduced motion: follow the Embla swipe.
   useEffect(() => {
     if (!emblaApi || scrollDriven) return;
     const update = () => setProgress(emblaApi.scrollProgress());
@@ -323,7 +322,7 @@ export default function LatestProjects() {
       ref={sectionRef}
       id="projects"
       // Opaque, above the section before it: it slides over "What sets me apart".
-      className="grain-surface z-10 w-full py-24 md:py-32"
+      className="grain-surface z-10 w-full pt-20 pb-12 md:py-32"
     >
       {/* Header inside container */}
       <div className="mx-auto max-w-[1280px] w-full px-6 md:px-8">
@@ -361,12 +360,12 @@ export default function LatestProjects() {
           viewportRef.current = el;
           emblaRef(el);
         }}
-        className="overflow-hidden px-6 md:px-0"
+        className={scrollDriven ? "overflow-hidden" : "overflow-hidden px-6 md:px-0"}
       >
         <div
           ref={trackRef}
           className="flex gap-5 will-change-transform"
-          style={{ paddingLeft: isMobile ? undefined : trackOffset }}
+          style={{ paddingLeft: scrollDriven || !isMobile ? trackOffset : undefined }}
         >
           {PROJECTS.map((p, i) => (
             // Desktop: the banner's height follows the screen height (36svh,
@@ -374,7 +373,7 @@ export default function LatestProjects() {
             <div
               key={p.id}
               className="shrink-0 w-[calc(100vw-64px)] md:w-[calc(clamp(240px,36svh,380px)*1600/707)]"
-              style={!isMobile && i === PROJECTS.length - 1 ? { marginRight: trackOffset } : undefined}
+              style={(scrollDriven || !isMobile) && i === PROJECTS.length - 1 ? { marginRight: trackOffset } : undefined}
             >
               <ProjectCard project={p} />
             </div>
@@ -382,7 +381,7 @@ export default function LatestProjects() {
         </div>
 
         {/* Progress — inside the pinned viewport so it stays with the cards */}
-        <div className="mx-auto max-w-[1280px] w-full md:px-8 mt-8 flex items-center">
+        <div className={`mx-auto max-w-[1280px] w-full md:px-8 mt-8 flex items-center ${scrollDriven ? "px-6" : ""}`}>
           <div className="relative h-px flex-1 overflow-hidden bg-[var(--color-line-2)]">
             <div
               ref={progressRef}
@@ -396,7 +395,7 @@ export default function LatestProjects() {
         {scrollDriven && (
           <div
             ref={phrasesRef}
-            className="mx-auto max-w-[1280px] w-full px-8 mt-10 grid text-lg font-medium text-[var(--muted)]"
+            className="mx-auto max-w-[1280px] w-full px-6 md:px-8 mt-8 md:mt-10 grid text-sm md:text-lg font-medium text-[var(--muted)]"
           >
             {PHRASES.map(({ text, Icon }, i) => (
               <p

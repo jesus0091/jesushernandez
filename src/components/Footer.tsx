@@ -19,7 +19,6 @@ import { SplitText } from "gsap/SplitText";
 import { getLenis, setupGsap } from "@/lib/motion";
 import SectionLabel from "./SectionLabel";
 import gsap from "gsap";
-import { useIsMobile } from "@/app/utils/useIsMobile";
 
 type FooterLink = { label: string; href: string };
 type SocialLink = { label: string; href: string; icon: React.ReactNode };
@@ -260,11 +259,14 @@ export default function Footer({
         ease: "none",
         stagger: 0.06,
         // The body wrapper isn't transformed by the curtain, so its
-        // positions are stable; letters land exactly at the page end.
+        // positions are stable. Letters land a little before the page end,
+        // clamped to the max scroll: ending exactly on the last pixel left
+        // the last letters short whenever the page height was off by a few
+        // pixels (rounding, late fonts, subpixel layout).
         scrollTrigger: {
           trigger: box.closest("[data-footer-body]"),
           start: "center bottom",
-          end: "bottom bottom",
+          end: "clamp(bottom bottom+=48)",
           scrub: true,
         },
       });
@@ -317,8 +319,6 @@ export default function Footer({
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
-
-  const isMobile = useIsMobile(768);
 
   return (
     <footer
