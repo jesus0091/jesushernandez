@@ -6,6 +6,9 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const RINGS = 10;
+// Rings are soft gradients, so they're rasterized at a quarter of their
+// on-screen size and scaled up: 10 full-size layers were ~200MB of textures.
+const RING_UPSCALE = 4;
 // Card size before it grows to fill the viewport.
 const CARD_MAX_W = 1216;
 const CARD_GUTTER = 24;
@@ -97,19 +100,33 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
       const vh = layer.clientHeight;
       const x = Math.max(CARD_GUTTER, (vw - CARD_MAX_W) / 2) * (1 - e);
       const y = Math.max(0, (vh - CARD_H(vw, vh)) / 2) * (1 - e);
-      layer.style.clipPath = `inset(${y}px ${x}px round ${CARD_RADIUS * (1 - e)}px)`;
+      // A clip-path animated every frame makes Firefox repaint everything
+      // inside it, so drop it as soon as the card fills the screen.
+      layer.style.clipPath = e >= 1 ? "none" : `inset(${y}px ${x}px round ${CARD_RADIUS * (1 - e)}px)`;
       // The navbar goes dark once the card has grown under it.
       layer.dataset.navDark = y < 36 ? "true" : "false";
 
       // Tunnel: each ring travels from the vanishing point past the viewer,
       // wrapping so there's always another one coming.
       const travel = progress * 2.2;
+      const ringBase = Math.max(vw, vh) * 0.4; // w-[40vmax]
+      const halfDiagonal = Math.hypot(vw, vh) / 2;
       rings.forEach((ring, i) => {
         const z = (i / RINGS + travel) % 1;
-        const scale = 0.04 * Math.pow(60, z);
+        const scale = 0.04 * Math.pow(60, z) * RING_UPSCALE;
         const fade = Math.min(z / 0.25, 1) * Math.min((1 - z) / 0.2, 1);
+        const opacity = fade * (0.2 + 0.5 * e);
+        // Skip rings nobody can see: faded out, or grown so big that their
+        // band (from 54% of the radius) is past the screen corners. Each one
+        // still costs a full-screen blend otherwise.
+        const offscreen = ringBase * scale * 0.27 > halfDiagonal;
+        if (opacity < 0.01 || offscreen) {
+          ring.style.visibility = "hidden";
+          return;
+        }
+        ring.style.visibility = "visible";
         ring.style.transform = `translate(-50%, -50%) scale(${scale})`;
-        ring.style.opacity = String(fade * (0.2 + 0.5 * e));
+        ring.style.opacity = String(opacity);
       });
 
       // Cylinder: lines draw out from the vanishing point, the tube turns a
@@ -156,7 +173,7 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
         const fade = gsap.utils.clamp(0, 1, (z - 0.45) / 0.15) * gsap.utils.clamp(0, 1, (1 - z) / 0.15);
         word.style.transform = `translate(-50%, -50%) translate(${dx}px, ${dy}px) scale(${scale})`;
         word.style.opacity = String(fade);
-        word.style.filter = `blur(${Math.max(0, z - 0.8) * 20}px)`;
+        word.style.filter = z > 0.8 ? `blur(${(z - 0.8) * 20}px)` : "none";
       });
 
       // The light at the end of the tunnel opens up as we go in.
@@ -197,7 +214,7 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
       <div className="sticky top-0 h-lvh w-full overflow-hidden">
         <div
           ref={layerRef}
-          className="absolute inset-0 overflow-hidden bg-[#01020c] will-change-[clip-path]"
+          className="absolute inset-0 overflow-hidden bg-[#01020c]"
         >
           <div
             ref={glowRef}
@@ -208,77 +225,77 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
             {Array.from({ length: RINGS }).map((_, i) => (
               <div
                 key={i}
-                className="absolute left-1/2 top-1/2 aspect-square w-[160vmax] rounded-full will-change-transform"
+                className="absolute left-1/2 top-1/2 aspect-square w-[40vmax] rounded-full will-change-transform"
                 style={{ background: RING }}
               />
             ))}
           </div>
-          <svg
-            ref={cylRef}
+          {/* Noise: the site's cached grain tile, not a live SVG filter. */}
+          <div
             aria-hidden
-            className="absolute inset-0 w-full h-full pointer-events-none opacity-0"
-            viewBox="-50 -50 100 100"
-            preserveAspectRatio="xMidYMid slice"
-          >
-            <defs>
-              {/* Lines fade out toward the vanishing point instead of bunching up. */}
-              <radialGradient id="cyl-fade" gradientUnits="userSpaceOnUse" cx={0} cy={0} r={CYL_REACH}>
-                <stop offset="0.02" stopColor="rgb(165,180,252)" stopOpacity={0} />
-                <stop offset="0.14" stopColor="rgb(165,180,252)" stopOpacity={0.3} />
-                <stop offset="1" stopColor="rgb(165,180,252)" stopOpacity={0.3} />
-              </radialGradient>
-            </defs>
-            <g fill="none">
-              {Array.from({ length: CYL_LINES }).map((_, i) => {
-                const start = cylPoint(i, CYL_R0);
-                return (
-                  <line
-                    key={i}
-                    x1={start.x}
-                    y1={start.y}
-                    x2={start.x}
-                    y2={start.y}
-                    stroke="url(#cyl-fade)"
-                    vectorEffect="non-scaling-stroke"
-                  />
-                );
-              })}
-              {Array.from({ length: CYL_CIRCLES }).map((_, i) => (
-                <circle
+            className="absolute inset-0 pointer-events-none opacity-[0.12]"
+            style={{ backgroundImage: "var(--grain-image)", backgroundSize: "var(--grain-size) var(--grain-size)" }}
+          />
+        </div>
+        {/* Outside the clipped layer: only visible once the card is (almost)
+            full screen, so they don't need the clip and don't repaint with it. */}
+        <svg
+          ref={cylRef}
+          aria-hidden
+          className="absolute inset-0 w-full h-full pointer-events-none opacity-0"
+          viewBox="-50 -50 100 100"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <defs>
+            {/* Lines fade out toward the vanishing point instead of bunching up. */}
+            <radialGradient id="cyl-fade" gradientUnits="userSpaceOnUse" cx={0} cy={0} r={CYL_REACH}>
+              <stop offset="0.02" stopColor="rgb(165,180,252)" stopOpacity={0} />
+              <stop offset="0.14" stopColor="rgb(165,180,252)" stopOpacity={0.3} />
+              <stop offset="1" stopColor="rgb(165,180,252)" stopOpacity={0.3} />
+            </radialGradient>
+          </defs>
+          <g fill="none">
+            {Array.from({ length: CYL_LINES }).map((_, i) => {
+              const start = cylPoint(i, CYL_R0);
+              return (
+                <line
                   key={i}
-                  r={0}
-                  stroke="rgb(165,180,252)"
-                  strokeOpacity={0.22}
+                  x1={start.x}
+                  y1={start.y}
+                  x2={start.x}
+                  y2={start.y}
+                  stroke="url(#cyl-fade)"
                   vectorEffect="non-scaling-stroke"
                 />
-              ))}
-            </g>
-          </svg>
-          <p className="sr-only">Things we can build together: {WORDS.join(", ")}.</p>
-          <div ref={wordsRef} aria-hidden className="absolute inset-0 pointer-events-none">
-            {WORDS.map((w) => (
-              <span
-                key={w}
-                className="absolute left-1/2 top-1/2 whitespace-nowrap text-3xl md:text-7xl font-semibold tracking-tight text-white/90 opacity-0 will-change-transform [text-shadow:0_2px_30px_rgba(1,2,12,0.6)]"
-              >
-                {w}
-              </span>
+              );
+            })}
+            {Array.from({ length: CYL_CIRCLES }).map((_, i) => (
+              <circle
+                key={i}
+                r={0}
+                stroke="rgb(165,180,252)"
+                strokeOpacity={0.22}
+                vectorEffect="non-scaling-stroke"
+              />
             ))}
-          </div>
-          {/* Noise overlay */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.12]" aria-hidden="true">
-            <filter id="cta-noise">
-              <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-              <feColorMatrix type="saturate" values="0" />
-            </filter>
-            <rect width="100%" height="100%" filter="url(#cta-noise)" />
-          </svg>
-          <div
-            ref={contentRef}
-            className="relative z-10 h-full flex items-center justify-center will-change-transform"
-          >
-            {children}
-          </div>
+          </g>
+        </svg>
+        <p className="sr-only">Things we can build together: {WORDS.join(", ")}.</p>
+        <div ref={wordsRef} aria-hidden className="absolute inset-0 pointer-events-none">
+          {WORDS.map((w) => (
+            <span
+              key={w}
+              className="absolute left-1/2 top-1/2 whitespace-nowrap text-3xl md:text-7xl font-semibold tracking-tight text-white/90 opacity-0 will-change-transform [text-shadow:0_2px_30px_rgba(1,2,12,0.6)]"
+            >
+              {w}
+            </span>
+          ))}
+        </div>
+        <div
+          ref={contentRef}
+          className="relative z-10 h-full flex items-center justify-center will-change-transform"
+        >
+          {children}
         </div>
       </div>
     </section>

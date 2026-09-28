@@ -343,7 +343,7 @@ export default function Footer({
               href={`mailto:${contactEmail}`}
               data-cta
               data-sfx="cta"
-              className="relative inline-flex items-center rounded-full gap-2 border border-white/20 bg-[#050b3a]/40 backdrop-blur-sm px-6 py-3 text-base cursor-pointer font-medium text-white hover:bg-white/10 transition active:scale-[0.96]"
+              className="relative inline-flex items-center rounded-full gap-2 border border-white/20 bg-[#050b3a]/60 px-6 py-3 text-base cursor-pointer font-medium text-white hover:bg-white/10 transition active:scale-[0.96]"
               aria-label="Send me an email"
             >
               <Envelope size={18} />
