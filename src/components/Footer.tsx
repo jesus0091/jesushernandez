@@ -17,7 +17,7 @@ import Link from "next/link";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { getLenis, setupGsap } from "@/lib/motion";
-import SectionLabel from "./SectionLabel";
+import SectionLabel, { LABEL_FROM, LABEL_TO } from "./SectionLabel";
 import gsap from "gsap";
 
 type FooterLink = { label: string; href: string };
@@ -25,19 +25,20 @@ type SocialLink = { label: string; href: string; icon: React.ReactNode };
 
 type FooterProps = {
   className?: string;
+  /** "card" drops the tunnel ride and adds the logo and social links to the card. */
+  cta?: "tunnel" | "card";
   quickLinks?: FooterLink[];
   social?: SocialLink[];
-  email?: string;
   contactEmail?: string;
 };
 
 export default function Footer({
   className = "",
-  email = "hello @jesus",
+  cta = "tunnel",
   contactEmail = "jesushernandez120491@gmail.com",
   quickLinks = [
     { label: "Home", href: "/" },
-    { label: "Projects", href: "/works" },
+    { label: "Works", href: "/works" },
   ],
   social = [
     {
@@ -57,6 +58,7 @@ export default function Footer({
     },
   ],
 }: FooterProps) {
+  const isCard = cta === "card";
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const footerRef = useRef<HTMLElement | null>(null);
   const ctaBtnRef = useRef<HTMLAnchorElement | null>(null);
@@ -101,6 +103,7 @@ export default function Footer({
       const label = footer.querySelector<HTMLElement>("[data-cta-label]");
       const title = footer.querySelector<HTMLElement>("[data-cta-title]");
       const ctas = footer.querySelectorAll<HTMLElement>("[data-cta]");
+      const extras = footer.querySelectorAll<HTMLElement>("[data-cta-extra]");
       const cols = footer.querySelectorAll<HTMLElement>("[data-footer-col]");
       const glow = footer.querySelector<HTMLElement>("[data-aurora]");
       const inner = footer.querySelector<HTMLElement>("[data-footer-inner]");
@@ -121,11 +124,15 @@ export default function Footer({
       });
 
       // Estado inicial
-      gsap.set([label, title, ...ctas, ...cols], {
+      gsap.set([title, ...ctas, ...extras, ...cols], {
         opacity: 0,
         y: 18,
         willChange: "opacity, transform",
       });
+      // No own layer for the title: Firefox painted it as a lighter box.
+      gsap.set(title, { willChange: "auto" });
+      const labelText = label?.querySelectorAll("[data-label-text]") ?? [];
+      gsap.set(labelText, LABEL_FROM.text);
       if (glow)
         gsap.set(glow, {
           opacity: 0.0,
@@ -150,16 +157,14 @@ export default function Footer({
           { opacity: 1, duration: 0.8, scale: 1, ease: "power2.out" },
           0
         );
-      if (label) tl.to(label, { opacity: 1, y: 0, duration: 0.5 }, 0.05);
+      tl.to(labelText, { ...LABEL_TO.text, duration: 0.8, ease: "power4.out" }, 0.17);
 
       if (title) {
         tl.to(title, { opacity: 1, y: 0, duration: 0.7 }, 0.2);
-        tl.fromTo(
-          title,
-          { filter: "brightness(1.05)" },
-          { filter: "brightness(1)", duration: 0.6, ease: "power1.out" },
-          "-=0.4"
-        );
+      }
+
+      if (extras.length) {
+        tl.to(extras, { opacity: 1, y: 0, duration: 0.6, stagger: 0.25 }, 0.1);
       }
 
       if (ctas.length) {
@@ -326,14 +331,24 @@ export default function Footer({
       id="contact"
       className={`relative flex flex-col ${className}`}
     >
-      <CtaTunnel>
+      <CtaTunnel still={isCard}>
         <div className="flex flex-col items-center gap-4 text-center px-6">
+          {isCard && (
+            <Image
+              data-cta-extra
+              src="/images/facebrand.png"
+              className="mb-2 rounded-2xl border border-white/20 bg-white/10 object-contain"
+              width={64}
+              height={64}
+              alt="Jesús Hernández"
+            />
+          )}
           <div data-cta-label className="[&_span]:text-white/80 [&_span[aria-hidden]]:bg-white/50">
-            <SectionLabel align="center">From Concept to Code</SectionLabel>
+            <SectionLabel align="center" animate="none">From Concept to Code</SectionLabel>
           </div>
           <h3
             data-cta-title
-            className="text-3xl sm:text-4xl md:text-7xl font-semibold tracking-tight text-white [text-shadow:0_2px_24px_rgba(15,23,42,0.45)]"
+            className="text-3xl sm:text-4xl md:text-7xl font-semibold tracking-title text-white"
           >
             Let&apos;s build something <br /> great together
           </h3>
@@ -347,9 +362,26 @@ export default function Footer({
               aria-label="Send me an email"
             >
               <Envelope size={18} />
-              {email}
+              Let&apos;s talk
             </Link>
           </div>
+          {isCard && (
+            <ul data-cta-extra className="mt-4 flex items-center gap-3">
+              {social.map((s) => (
+                <li key={s.label}>
+                  <Link
+                    href={s.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={s.label}
+                    className="grid h-11 w-11 place-items-center rounded-full border border-white/20 bg-white/5 text-white transition hover:bg-white/15 active:scale-[0.96] [&_svg]:size-5"
+                  >
+                    {s.icon}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </CtaTunnel>
 

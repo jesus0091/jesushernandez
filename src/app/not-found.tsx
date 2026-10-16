@@ -40,7 +40,7 @@ export default function NotFound() {
             mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--black)]">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-title text-[var(--black)]">
             Page Not Found
           </h2>
           <p className="text-lg md:text-xl text-[var(--muted)] max-w-md mx-auto">

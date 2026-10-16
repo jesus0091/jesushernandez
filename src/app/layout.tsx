@@ -11,6 +11,8 @@ import UiSounds from "@/components/UiSounds";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  // Optical sizing: large titles get the display cut, the closest to SF Pro Display.
+  axes: ["opsz"],
   display: "swap",
   preload: true,
 });

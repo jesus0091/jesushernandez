@@ -24,7 +24,7 @@ export default function GlobalError({
             </div>
 
             <div className="space-y-4">
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-900">
+              <h2 className="text-3xl md:text-5xl font-bold tracking-title text-gray-900">
                 Critical Error
               </h2>
               <p className="text-lg md:text-xl text-gray-600 max-w-md mx-auto">

@@ -6,9 +6,6 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const RINGS = 10;
-// Rings are soft gradients, so they're rasterized at a quarter of their
-// on-screen size and scaled up: 10 full-size layers were ~200MB of textures.
-const RING_UPSCALE = 4;
 // Card size before it grows to fill the viewport.
 const CARD_MAX_W = 1216;
 const CARD_GUTTER = 24;
@@ -20,8 +17,28 @@ const CARD_RADIUS = 24;
 const EXPAND_END = 0.4;
 
 // Soft band of light rather than a hard line, so rings read as depth, not stripes.
-const RING =
-  "radial-gradient(circle, transparent 54%, rgba(129,140,248,0.05) 62%, rgba(165,180,252,0.08) 66%, rgba(129,140,248,0.05) 70%, transparent 78%)";
+// Offsets are relative to the ring's gradient radius (half its box diagonal).
+const RING_STOPS: [number, string][] = [
+  [0.54, "rgba(129,140,248,0)"],
+  [0.62, "rgba(129,140,248,0.05)"],
+  [0.66, "rgba(165,180,252,0.08)"],
+  [0.7, "rgba(129,140,248,0.05)"],
+  [0.78, "rgba(129,140,248,0)"],
+];
+// Glow and rings are drawn into one canvas at this share of CSS pixels and
+// stretched by the browser: they're soft gradients, so it's invisible, and it
+// replaces a dozen full-screen layers the GPU had to blend every frame (which
+// froze whole machines on 4K/retina screens).
+const CANVAS_RES = 0.5;
+// The tunnel's light, simplified from BACKGROUND (fewer stops, same look).
+const GLOW_STOPS: [number, string][] = [
+  [0, "#ff7a1a"],
+  [0.12, "#d24e22"],
+  [0.27, "#5e2b4f"],
+  [0.46, "#161a5c"],
+  [0.72, "#070b33"],
+  [1, "#01020c"],
+];
 
 // Things we can build together — they fly out of the tunnel one after another.
 const WORDS = [
@@ -65,30 +82,39 @@ const BACKGROUND =
  * CTA card that, once centered, grows to fill the screen and then flies the
  * viewer through a tunnel of rings and the things we can build together.
  */
-export default function CtaTunnel({ children }: { children: React.ReactNode }) {
+export default function CtaTunnel({
+  children,
+  still = false,
+}: {
+  children: React.ReactNode;
+  /** Just the card, with no scroll ride: for pages that already end on a strong note. */
+  still?: boolean;
+}) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const layerRef = useRef<HTMLDivElement | null>(null);
-  const glowRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const ringsRef = useRef<HTMLDivElement | null>(null);
   const wordsRef = useRef<HTMLDivElement | null>(null);
   const cylRef = useRef<SVGSVGElement | null>(null);
-  const [animated, setAnimated] = useState(true);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const cardGlowRef = useRef<HTMLDivElement | null>(null);
+  const [animated, setAnimated] = useState(!still);
 
   useLayoutEffect(() => {
-    if (prefersReducedMotion()) {
+    if (still || prefersReducedMotion()) {
       setAnimated(false);
       return;
     }
     const section = sectionRef.current;
     const layer = layerRef.current;
-    const rings = Array.from(ringsRef.current?.children ?? []) as HTMLElement[];
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d", { alpha: false }) ?? null;
     const words = Array.from(wordsRef.current?.children ?? []) as HTMLElement[];
     const cyl = cylRef.current;
     const cylLines = Array.from(cyl?.querySelectorAll("line") ?? []);
     const cylCircles = Array.from(cyl?.querySelectorAll("circle") ?? []);
     const cylGroup = cyl?.querySelector("g") ?? null;
-    if (!section || !layer) return;
+    if (!section || !layer || !canvas || !ctx) return;
     const gsap = setupGsap();
 
     const render = (progress: number) => {
@@ -109,25 +135,45 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
       // Tunnel: each ring travels from the vanishing point past the viewer,
       // wrapping so there's always another one coming.
       const travel = progress * 2.2;
-      const ringBase = Math.max(vw, vh) * 0.4; // w-[40vmax]
-      const halfDiagonal = Math.hypot(vw, vh) / 2;
-      rings.forEach((ring, i) => {
+      const cw = Math.max(1, Math.round(vw * CANVAS_RES));
+      const ch = Math.max(1, Math.round(vh * CANVAS_RES));
+      if (canvas.width !== cw || canvas.height !== ch) {
+        canvas.width = cw;
+        canvas.height = ch;
+      }
+      const cx = cw / 2;
+      const cy = ch / 2;
+      const halfDiagonal = Math.hypot(cw, ch) / 2;
+
+      // The light at the end of the tunnel opens up as we go in.
+      ctx.globalAlpha = 1;
+      const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, halfDiagonal * (1 + progress * 0.3));
+      GLOW_STOPS.forEach(([o, c]) => glow.addColorStop(o, c));
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, cw, ch);
+
+      const ringBase = Math.max(cw, ch) * 0.4; // 40vmax
+      for (let i = 0; i < RINGS; i++) {
         const z = (i / RINGS + travel) % 1;
-        const scale = 0.04 * Math.pow(60, z) * RING_UPSCALE;
         const fade = Math.min(z / 0.25, 1) * Math.min((1 - z) / 0.2, 1);
         const opacity = fade * (0.2 + 0.5 * e);
-        // Skip rings nobody can see: faded out, or grown so big that their
-        // band (from 54% of the radius) is past the screen corners. Each one
-        // still costs a full-screen blend otherwise.
-        const offscreen = ringBase * scale * 0.27 > halfDiagonal;
-        if (opacity < 0.01 || offscreen) {
-          ring.style.visibility = "hidden";
-          return;
-        }
-        ring.style.visibility = "visible";
-        ring.style.transform = `translate(-50%, -50%) scale(${scale})`;
-        ring.style.opacity = String(opacity);
-      });
+        // Disc of 40vmax; its gradient reaches the box corner (√2 × half).
+        const disc = (ringBase * 0.16 * Math.pow(60, z)) / 2;
+        const radius = disc * Math.SQRT2;
+        const inner = radius * RING_STOPS[0][0];
+        // Skip rings nobody can see: faded out or band past the corners.
+        if (opacity < 0.01 || inner > halfDiagonal) continue;
+        const band = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+        RING_STOPS.forEach(([o, c]) => band.addColorStop(o, c));
+        ctx.globalAlpha = opacity;
+        ctx.fillStyle = band;
+        // Fill only the band (an annulus), not the transparent middle.
+        ctx.beginPath();
+        ctx.arc(cx, cy, Math.min(disc, radius * 0.78), 0, Math.PI * 2);
+        ctx.arc(cx, cy, inner, 0, Math.PI * 2, true);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
 
       // Cylinder: lines draw out from the vanishing point, the tube turns a
       // little, then everything fades before the tunnel ends.
@@ -135,6 +181,8 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
         const w = gsap.utils.clamp(0, 1, (progress - CYL_START) / (CYL_END - CYL_START));
         const alpha = w <= 0 || w >= 1 ? 0 : Math.min(w / 0.2, 1) * Math.min((1 - w) / 0.3, 1);
         cyl.style.opacity = String(alpha);
+        // Hidden, not just transparent, so it isn't repainted while unused.
+        cyl.style.display = alpha > 0 ? "block" : "none";
         if (alpha > 0) {
           const draw = gsap.parseEase("brand")(Math.min(w / 0.45, 1));
           const reach = CYL_R0 + (CYL_REACH - CYL_R0) * draw;
@@ -163,9 +211,10 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
       words.forEach((word, i) => {
         const z = t * (1 + (WORDS.length - 1) * WORD_GAP) - i * WORD_GAP;
         if (z <= 0 || z >= 1) {
-          word.style.opacity = "0";
+          word.style.visibility = "hidden";
           return;
         }
+        word.style.visibility = "visible";
         const scale = 0.04 * Math.pow(60, z);
         const a = (WORD_ANGLES[i % WORD_ANGLES.length] * Math.PI) / 180;
         const dx = Math.cos(a) * spreadX * scale;
@@ -173,11 +222,8 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
         const fade = gsap.utils.clamp(0, 1, (z - 0.45) / 0.15) * gsap.utils.clamp(0, 1, (1 - z) / 0.15);
         word.style.transform = `translate(-50%, -50%) translate(${dx}px, ${dy}px) scale(${scale})`;
         word.style.opacity = String(fade);
-        word.style.filter = z > 0.8 ? `blur(${(z - 0.8) * 20}px)` : "none";
       });
 
-      // The light at the end of the tunnel opens up as we go in.
-      if (glowRef.current) glowRef.current.style.transform = `scale(${1 + progress * 0.3})`;
       if (contentRef.current) {
         contentRef.current.style.transform = `scale(${1 + t * 0.08})`;
       }
@@ -194,15 +240,62 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
     });
 
     return () => st.kill();
-  }, []);
+  }, [still]);
+
+  // Still card: the orange glow trails the pointer and drifts back on leave.
+  useLayoutEffect(() => {
+    const card = cardRef.current;
+    const glow = cardGlowRef.current;
+    if (animated || !card || !glow) return;
+    if (prefersReducedMotion() || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    const gsap = setupGsap();
+    const xTo = gsap.quickTo(glow, "x", { duration: 0.9, ease: "power3.out" });
+    const yTo = gsap.quickTo(glow, "y", { duration: 0.9, ease: "power3.out" });
+
+    const onMove = (e: PointerEvent) => {
+      const rect = card.getBoundingClientRect();
+      xTo(e.clientX - rect.left - rect.width / 2);
+      yTo(e.clientY - rect.top - rect.height / 2);
+    };
+    const onLeave = () => {
+      xTo(0);
+      yTo(0);
+    };
+    card.addEventListener("pointermove", onMove);
+    card.addEventListener("pointerleave", onLeave);
+    return () => {
+      card.removeEventListener("pointermove", onMove);
+      card.removeEventListener("pointerleave", onLeave);
+      gsap.killTweensOf(glow);
+      gsap.set(glow, { clearProps: "transform" });
+    };
+  }, [animated]);
 
   if (!animated) {
     return (
-      <section className="max-w-[1280px] mx-auto w-full px-6 md:px-8 pt-16 pb-8">
+      <section className={`max-w-[1280px] mx-auto w-full px-6 md:px-8 pb-8 ${still ? "" : "pt-16"}`}>
         <div
-          className="relative overflow-hidden rounded-3xl py-20"
-          style={{ background: BACKGROUND }}
+          ref={cardRef}
+          className="relative overflow-hidden rounded-3xl bg-[#01020c] py-8 md:py-10"
         >
+          {/* A square bigger than the card that fades to the card color at
+              its edge, so moving it never shows a seam. */}
+          <div
+            aria-hidden
+            className="absolute left-1/2 top-1/2 aspect-square w-[max(116%,640px)] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+          >
+            {/* Own element for the pointer offset: GSAP would overwrite the centering. */}
+            <div
+              ref={cardGlowRef}
+              className="h-full w-full will-change-transform"
+              style={{ background: BACKGROUND.replace("circle at", "circle closest-side at") }}
+            />
+          </div>
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none mix-blend-overlay opacity-70"
+            style={{ backgroundImage: "var(--grain-image)", backgroundSize: "var(--grain-size) var(--grain-size)" }}
+          />
           <div className="relative z-10">{children}</div>
         </div>
       </section>
@@ -216,20 +309,7 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
           ref={layerRef}
           className="absolute inset-0 overflow-hidden bg-[#01020c]"
         >
-          <div
-            ref={glowRef}
-            className="absolute inset-0 will-change-transform"
-            style={{ background: BACKGROUND }}
-          />
-          <div ref={ringsRef} aria-hidden className="absolute inset-0 pointer-events-none">
-            {Array.from({ length: RINGS }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute left-1/2 top-1/2 aspect-square w-[40vmax] rounded-full will-change-transform"
-                style={{ background: RING }}
-              />
-            ))}
-          </div>
+          <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
           {/* Noise: the site's cached grain tile, not a live SVG filter. */}
           <div
             aria-hidden
@@ -242,7 +322,7 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
         <svg
           ref={cylRef}
           aria-hidden
-          className="absolute inset-0 w-full h-full pointer-events-none opacity-0"
+          className="absolute inset-0 w-full h-full pointer-events-none opacity-0 hidden"
           viewBox="-50 -50 100 100"
           preserveAspectRatio="xMidYMid slice"
         >
@@ -285,7 +365,7 @@ export default function CtaTunnel({ children }: { children: React.ReactNode }) {
           {WORDS.map((w) => (
             <span
               key={w}
-              className="absolute left-1/2 top-1/2 whitespace-nowrap text-3xl md:text-7xl font-semibold tracking-tight text-white/90 opacity-0 will-change-transform [text-shadow:0_2px_30px_rgba(1,2,12,0.6)]"
+              className="absolute left-1/2 top-1/2 whitespace-nowrap text-3xl md:text-7xl font-semibold tracking-title text-white/90 invisible will-change-transform [text-shadow:0_2px_12px_rgba(1,2,12,0.5)]"
             >
               {w}
             </span>

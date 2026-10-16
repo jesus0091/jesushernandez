@@ -1,3 +1,5 @@
+import { FUNDACION_PATARO, type CaseStudy } from "./case-studies";
+
 export type LinkOut = {
   type: "behance" | "github" | "website";
   href: string;
@@ -9,15 +11,21 @@ export type Work = {
   index: string;
   category: string;
   title: string;
+  /** The title as set on the project's own page, one entry per line. */
+  titleLines?: string[];
   productName: string;
   role: string;
   description: string;
+  /** Who the client is and what was done for them; opens the project's page in place of the description. */
+  overview?: { client: string; sector: string; about: string; work: string };
   cover: string;
+  /** Screens of the project (800×354). When set, a mosaic of them replaces the cover. */
+  mosaic?: string[];
+  caseStudy?: CaseStudy;
   technologies: string[];
   integrations?: string[];
   tools: string[];
   links?: LinkOut[];
-  year: string;
 };
 
 export const WORKS: Work[] = [
@@ -28,7 +36,6 @@ export const WORKS: Work[] = [
     title: "Website Design & Development",
     productName: "Ristario",
     role: "UX/UI Designer & FullStack Developer",
-    year: "2024",
     description:
       "Full ownership of Ristario's digital presence from concept to production. Designed the brand identity, UI system, and all visual assets, then implemented the full website in Next.js. Shipped as a single handoff-free project.",
     cover: "/images/linkedin.webp",
@@ -46,8 +53,7 @@ export const WORKS: Work[] = [
     category: "UX/UI Design & Frontend Dev",
     title: "SaaS Platform",
     productName: "Move The Chain",
-    role: "UX/UI Designer & FrontEnd Developer",
-    year: "2023",
+    role: "UX/UI Designer & Developer",
     description:
       "End-to-end design and development of a SaaS platform focused on employee engagement. Led design for onboarding flows, the dashboard redesign and the full component design system, delivering wireframes, interactive prototypes and production-ready specs. Then built and maintained complex feature workflows and a reusable component library, bringing the design system into code in a collaborative Agile team shipping production features weekly.",
     cover: "/images/mtc-design.webp",
@@ -62,18 +68,32 @@ export const WORKS: Work[] = [
   {
     id: "fundacion-pataro",
     index: "03",
-    category: "UX/UI Design",
-    title: "Foundation Website",
+    category: "Design & Development",
+    title: "Six health programs, one site built to be found",
+    titleLines: ["Six health programs,", "one site built to be found"],
     productName: "Fundación Pataro",
-    role: "UX/UI Designer & FrontEnd Developer",
-    year: "2023",
+    role: "UX/UI Designer & Developer",
     description:
-      "Complete UX/UI design for Fundación Pataro's website. Conducted user research, accessibility audits, and built a visual identity that balances emotion with trustworthiness.",
+      "End-to-end website for Fundación Patricio Pataro, a foundation that works on medical training, research and healthcare management. An end-to-end project: I designed it, developed it, tested it and launched it to production.",
+    overview: {
+      client: "Fundación Patricio Pataro",
+      sector: "Healthcare · Foundation",
+      about:
+        "Fundación Patricio Pataro is a foundation that works on medical training, research and healthcare management. It runs six programs, for the doctors, institutions and families they reach.",
+      work: "An end-to-end project, by one person: I designed the website, developed it, tested it and launched it to production.",
+    },
     cover: "/images/Banner-10.webp",
-    technologies: ["Figma", "UI Design", "Accessibility", "Branding"],
-    integrations: [],
-    tools: ["Figma", "FigJam", "Notion"],
-    links: [{ type: "behance", href: "https://www.behance.net/devjesushernandez", label: "Behance" }],
+    // Order matters: the mosaic deals even and odd entries to alternating rows.
+    mosaic: ["hero", "purpose", "training", "impact", "audience", "research", "mission"].map(
+      (name) => `/images/pataro/${name}.webp`,
+    ),
+    technologies: ["NextJS", "ReactJS", "TailwindCSS", "Figma", "Design System", "Accessibility"],
+    integrations: ["Vercel", "Tabler Icons"],
+    tools: ["Figma", "FigJam", "Notion", "Git"],
+    links: [
+      { type: "website", href: "https://www.fundacionpatriciopataro.com/", label: "Visit website" },
+    ],
+    caseStudy: FUNDACION_PATARO,
   },
   {
     id: "iacon",
@@ -82,7 +102,6 @@ export const WORKS: Work[] = [
     title: "Landing Page Redesign",
     productName: "IACON",
     role: "UX/UI Designer",
-    year: "2022",
     description:
       "Redesign of IACON's corporate landing page with modern aesthetics and stronger brand positioning. Created new visual assets, a refreshed type system, and a component-based layout system in Figma.",
     cover: "/images/iacon.webp",
@@ -98,7 +117,6 @@ export const WORKS: Work[] = [
     title: "Industrial Dashboard",
     productName: "Smart Factory",
     role: "UX/UI Designer",
-    year: "2022",
     description:
       "Data-first dashboard design for factory floor operators to monitor production machinery in real time. Designed for high-density information display with a focus on clarity under stress conditions.",
     cover: "/images/smart-f.webp",
@@ -114,7 +132,6 @@ export const WORKS: Work[] = [
     title: "Web Application",
     productName: "Omnipad",
     role: "UX/UI Designer",
-    year: "2022",
     description:
       "Task management web app for call center teams. Designed end-to-end flows for scheduling, tracking, and managing client calls, validated with real call center agents before handoff.",
     cover: "/images/omnipad.webp",
@@ -130,7 +147,6 @@ export const WORKS: Work[] = [
     title: "Mobile App — iOS",
     productName: "Academic Project",
     role: "UX/UI Designer",
-    year: "2022",
     description:
       "Full Design Thinking process applied to an iOS application for psychologists. From discovery interviews and empathy maps to wireframes, high-fidelity prototypes, and usability testing.",
     cover: "/images/therapia.webp",

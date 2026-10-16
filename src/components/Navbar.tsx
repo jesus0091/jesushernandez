@@ -9,7 +9,7 @@ import Link from "next/link";
 import gsap from "gsap";
 
 const links = [
-  { href: "/works", label: "Projects", sectionId: undefined },
+  { href: "/works", label: "Works", sectionId: undefined },
 ];
 
 // Vertical center of the navbar; a dark section counts once it covers it.
@@ -167,6 +167,17 @@ export default function Navbar() {
               </span>
             </Link>
 
+            <span
+              aria-hidden
+              className={[
+                // -mr: the link's own padding already spaces the first link from it.
+                "-mr-4 text-lg font-light transition-colors duration-300",
+                dark ? "text-white/40" : "text-[var(--color-ink-4)]",
+              ].join(" ")}
+            >
+              /
+            </span>
+
             <ul className="flex items-center gap-1">
               {links.map((link) => {
                 const selected = activeSection === link.sectionId;
@@ -177,7 +188,8 @@ export default function Navbar() {
                       data-sfx="nav"
                       aria-current={selected ? "page" : undefined}
                       className={[
-                        "px-4 py-2 rounded-full text-[15px] font-medium transition-all duration-200",
+                        // Set like the section eyebrows (SectionLabel): caps, wide tracking.
+                        "px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-[0.2em] transition-all duration-200",
                         dark
                           ? selected
                             ? "text-white bg-white/15"

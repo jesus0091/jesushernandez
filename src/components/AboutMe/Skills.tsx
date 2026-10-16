@@ -129,20 +129,20 @@ export default function Skills() {
       <div className="mx-auto w-full max-w-[1280px] px-6 md:px-8">
         <div className="mb-10 md:mb-14 flex flex-col gap-3">
           <SectionLabel>Skills</SectionLabel>
-          <SectionHeading className="text-3xl md:text-6xl leading-tighter font-semibold tracking-tight text-[var(--black)]">
+          <SectionHeading className="text-3xl md:text-6xl leading-tighter font-semibold tracking-title text-[var(--black)]">
             What I bring to the table.
           </SectionHeading>
         </div>
 
         {CATEGORIES.map((c) => (
-          <div key={c.key} data-row className="relative grid grid-cols-1 gap-4 py-8 md:grid-cols-12 md:gap-8 md:py-10">
+          <div key={c.key} data-row className="relative grid grid-cols-1 gap-3 py-6 md:grid-cols-12 md:gap-8 md:py-7">
             <span data-line aria-hidden className="absolute inset-x-0 top-0 h-px origin-left bg-black/15" />
-            <h3 data-title className="text-2xl font-semibold tracking-tight text-[var(--black)] md:col-span-5">
+            <h3 data-title className="text-2xl font-semibold tracking-title text-[var(--black)] md:col-span-5">
               {c.label}
             </h3>
             {/* Square-ish tags, not pills: the site's buttons are pills, so the
                 shape keeps skills from reading as clickable. */}
-            <ul className="flex flex-wrap content-start gap-2 md:col-span-7">
+            <ul className="flex flex-wrap content-start gap-x-2 gap-y-1.5 md:col-span-7">
               {c.skills.map((s) => (
                 <li key={s} data-tag className="rounded-md bg-black/[0.05] px-2.5 py-1 font-mono text-sm text-[var(--color-ink-2)]">
                   <span data-tag-text data-text={s}>

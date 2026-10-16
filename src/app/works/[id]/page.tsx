@@ -54,7 +54,7 @@ export default async function WorkDetailPage({ params }: Props) {
       <main>
         <WorkDetail work={work} />
       </main>
-      <Footer />
+      <Footer cta="card" />
     </>
   );
 }

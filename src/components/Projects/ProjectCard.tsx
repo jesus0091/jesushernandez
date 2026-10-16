@@ -5,6 +5,7 @@ import { ArrowUpRight, User, Users } from "@/components/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { LinkOut } from "./LatestsProjects";
+import CoverMosaic from "../Works/CoverMosaic";
 
 export type Mode = "solo" | "collab";
 export type Category = "frontend" | "design";
@@ -17,6 +18,7 @@ export type Project = {
   summary: string;
   stack: string[];
   cover: string;
+  mosaic?: string[];
   category: Category;
   mode: Mode;
   links?: LinkOut[];
@@ -34,14 +36,20 @@ export default function ProjectCard({ project }: { project: Project }) {
       <article>
         {/* Covers are exported at 1600×707. */}
         <div className="relative aspect-[1600/707] w-full overflow-hidden bg-zinc-100">
-          <Image
-            src={p.cover}
-            alt={`${p.title} cover`}
-            fill
-            sizes="(max-width: 768px) 100vw, 860px"
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-            priority={p.id === "ristario"}
-          />
+          {p.mosaic ? (
+            <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.04]">
+              <CoverMosaic tiles={p.mosaic} />
+            </div>
+          ) : (
+            <Image
+              src={p.cover}
+              alt={`${p.title} cover`}
+              fill
+              sizes="(max-width: 768px) 100vw, 860px"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+              priority={p.id === "ristario"}
+            />
+          )}
 
           <span
             className={`absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium backdrop-blur-md ${
@@ -61,7 +69,7 @@ export default function ProjectCard({ project }: { project: Project }) {
 
         <div className="flex items-center justify-between gap-4 px-5 md:px-6 pt-4 md:pt-5 pb-5 md:pb-6">
           <div>
-            <h3 className="text-lg md:text-xl font-semibold leading-tight text-[var(--black)]">
+            <h3 className="text-lg md:text-xl font-semibold leading-tight tracking-title text-[var(--black)]">
               {p.productName}
             </h3>
 

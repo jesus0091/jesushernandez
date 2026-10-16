@@ -14,6 +14,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SectionHeading from "../motion/SectionHeading";
 import SectionLabel from "../SectionLabel";
 import gsap from "gsap";
+import { useRecede } from "../motion/useRecede";
 
 type AboutTextProps = {
   pinDistance?: number;
@@ -33,6 +34,8 @@ const AboutText: React.FC<AboutTextProps> = ({
   const boxRef = useRef<HTMLDivElement | null>(null);
   const rightColRef = useRef<HTMLDivElement | null>(null);
   const gridRef = useRef<HTMLDivElement | null>(null);
+
+  useRecede(sectionRef, gridRef);
   const segments: { text: string; bold?: boolean }[] = [
     { text: "I'm a " },
     { text: "AI-Driven Engineer", bold: true },
@@ -157,7 +160,7 @@ const AboutText: React.FC<AboutTextProps> = ({
 
           <div className="flex flex-col gap-3">
             <SectionLabel>About Me</SectionLabel>
-            <SectionHeading className="select-none text-3xl md:text-6xl leading-tighter font-semibold text-[var(--black)]">
+            <SectionHeading className="select-none text-3xl md:text-6xl leading-tighter font-semibold tracking-title text-[var(--black)]">
               The Creative Mind Behind the Code
             </SectionHeading>
           </div>
@@ -244,9 +247,9 @@ const AboutText: React.FC<AboutTextProps> = ({
             }
           `}</style>
           <div className="btn-border-wrap w-fit">
-            <Link href="#projects" data-sfx="cta" className="group flex flex-row items-center gap-2 px-5 py-3 rounded-full font-semibold text-base transition-colors hover:bg-black hover:text-white">
+            <Link href="/works" data-sfx="cta" className="group flex flex-row items-center gap-2 px-5 py-3 rounded-full font-semibold text-base transition-colors hover:bg-black hover:text-white">
               <span className="btn-text-shine">Look at My Work</span>
-              <ArrowRight className="transition-transform duration-200 group-hover:rotate-90" />
+              <ArrowRight className="transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
           </div>
         </div>

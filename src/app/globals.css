@@ -18,6 +18,8 @@
 
   /* Section surface (brush transition), not a second accent */
   --color-blue: #1f3bd6;
+  /* Quiet text accent (hero greeting) */
+  --color-navy: #083a8f;
 
   --color-line-1: #e5e1d8;
   --color-line-2: #d4cfc4;
@@ -41,6 +43,10 @@
   --dur-base: 240ms;
   --dur-slow: 420ms;
 
+  /* ---------------- Tracking ---------------- */
+  /* Every title, at any size. */
+  --tracking-title: -0.0125em;
+
   /* ---------------- Fluid type scale ---------------- */
   --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8125rem);
   --text-sm: clamp(0.875rem, 0.82rem + 0.25vw, 0.9375rem);
@@ -54,7 +60,9 @@
   --text-display: clamp(5rem, 4rem + 6vw, 9rem);
 
   /* ---------------- Font families ---------------- */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* SF Pro where the system has it (Apple devices; it cannot be served as a
+     web font), Inter with its display optical size everywhere else. */
+  --font-sans: -apple-system, BlinkMacSystemFont, var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
 }
 
@@ -85,8 +93,6 @@ html {
 }
 
 body {
-  /* No background here: the page color lives on <html> so the grain
-     (body::after, z-index -1) sits between it and all content. */
   color: var(--color-ink-2);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -207,10 +213,29 @@ html.lenis body {
   }
 }
 
-/* ---------------- Film grain (page background only) ---------------- */
+/* ---------------- Works hero wall ---------------- */
+/* Rows slide by exactly one of their three identical sets, so the loop has no
+   seam. Transform-only keyframes: the compositor runs them, no JS per frame. */
+@keyframes works-wall-slide {
+  to {
+    transform: translate3d(calc(-100% / 3), 0, 0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .works-wall-row {
+    animation: works-wall-slide 88s linear infinite;
+  }
+  .works-wall-row[data-reverse] {
+    animation-direction: reverse;
+    /* Shorter rows (fewer covers per set): scaled to keep the same speed. */
+    animation-duration: 66s;
+  }
+}
+
+/* ---------------- Film grain (over the whole page) ---------------- */
 :root {
-  /* Shared by body::after and .grain-surface so they always match. */
-  --grain-opacity: 0.18;
+  /* Shared by body::after and the local overlay-blend grain layers. */
+  --grain-opacity: 0.3;
   /* Tile size: bigger tiles scale up the (vector) noise, so bigger grains. */
   --grain-size: 220px;
   --grain-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -219,7 +244,10 @@ body::after {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: -1; /* above the <html> background, below all content */
+  /* Behind the content: the page background carries the grain, while cards,
+     images and mockups stay clean. Paints over html's background because
+     body has none of its own. */
+  z-index: -1;
   pointer-events: none;
   opacity: var(--grain-opacity);
   mix-blend-mode: multiply;
@@ -227,11 +255,10 @@ body::after {
   background-size: var(--grain-size) var(--grain-size);
 }
 
-/* An opaque page-colored surface (for sections that slide over others) that
-   keeps the grain. Fixed attachment lines its noise up with body::after, so
-   there is no seam where it meets the regular page background. Lives in the
-   components layer so utilities (e.g. `fixed` on the navbar) win over its
-   `position: relative`. */
+/* An opaque page-colored surface for sections that slide over others. It
+   covers the body::after grain, so it carries its own copy of it. Lives in
+   the components layer so utilities (e.g. `fixed` on the navbar) win over
+   its `position: relative`. */
 @layer components {
   .grain-surface {
     position: relative;
@@ -248,6 +275,5 @@ body::after {
     mix-blend-mode: multiply;
     background-image: var(--grain-image);
     background-size: var(--grain-size) var(--grain-size);
-    background-attachment: fixed;
   }
 }

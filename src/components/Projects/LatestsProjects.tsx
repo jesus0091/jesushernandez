@@ -11,6 +11,7 @@ import ScrubWords from "../motion/ScrubWords";
 import SectionHeading from "../motion/SectionHeading";
 import SectionLabel from "../SectionLabel";
 import gsap from "gsap";
+import { getWorkById } from "@/data/works";
 import { prefersReducedMotion } from "@/lib/motion";
 import { useIsMobile } from "@/app/utils/useIsMobile";
 
@@ -31,6 +32,7 @@ export type Project = {
   summary: string;
   stack: string[];
   cover: string;
+  mosaic?: string[];
   category: Category;
   mode: Mode;
   links?: LinkOut[];
@@ -57,7 +59,7 @@ const PROJECTS: Project[] = [
     id: "move-the-chain",
     title: "SaaS Platform",
     productName: "Move The Chain",
-    role: "UX/UI Designer & FrontEnd Developer",
+    role: "UX/UI Designer & Developer",
     summary:
       "Design and development of a SaaS platform focused on employee engagement: workflows, wireframes, prototypes and the design system, then built into features, integrations and reusable components.",
     stack: ["ReactJS", "NextJS", "TypeScript", "TailwindCSS", "Figma", "Design System", "UX Research"],
@@ -73,11 +75,12 @@ const PROJECTS: Project[] = [
     id: "fundacion-pataro",
     title: "Foundation Website Design",
     productName: "Fundación Pataro",
-    role: "UX/UI Designer & FrontEnd Developer",
+    role: "UX/UI Designer & Developer",
     summary:
       "Complete UX/UI design for Fundación Pataro website. Focused on accessibility, user experience and visual identity to communicate the foundation's mission effectively.",
     stack: ["Figma", "Figma Design", "UX Research", "Accessibility", "Prototyping", "Branding"],
     cover: "/images/Banner-10.webp",
+    mosaic: getWorkById("fundacion-pataro")?.mosaic,
     category: "design",
     mode: "solo",
     links: [{ type: "behance", href: "https://www.behance.net/devjesushernandez", icon: <BehanceLogo /> }],
@@ -299,10 +302,8 @@ export default function LatestProjects() {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      const label = headerRef.current?.querySelector<HTMLElement>("[data-section-label]");
       const subtitle = headerRef.current?.querySelector<HTMLElement>("p:last-child");
 
-      if (label) gsap.set(label, { autoAlpha: 0, x: -20, skewX: -3 });
       if (subtitle) gsap.set(subtitle, { autoAlpha: 0, y: 16 });
 
       const tl = gsap.timeline({
@@ -310,7 +311,6 @@ export default function LatestProjects() {
         scrollTrigger: { trigger: sectionRef.current, start: "top 80%", once: true },
       });
 
-      if (label) tl.to(label, { autoAlpha: 1, x: 0, skewX: 0, duration: 0.5 }, 0);
       if (subtitle) tl.to(subtitle, { autoAlpha: 1, y: 0, duration: 0.5 }, 0.25);
     }, sectionRef);
 
@@ -332,7 +332,7 @@ export default function LatestProjects() {
             <div ref={anchorRef} className="absolute" aria-hidden />
             <SectionLabel className="mb-1">Latest Projects</SectionLabel>
             <Link href="/works" className="block max-w-3xl">
-              <SectionHeading className="text-3xl md:text-6xl text-[var(--black)] font-semibold tracking-tight">
+              <SectionHeading className="text-3xl md:text-6xl text-[var(--black)] font-semibold tracking-title">
                 Building Digital
                 <br />
                 Products & Experience

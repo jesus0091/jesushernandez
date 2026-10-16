@@ -1,28 +1,44 @@
+import { ArrowDown } from "@/components/icons";
+import SectionHeading from "../motion/SectionHeading";
+import SectionLabel from "../SectionLabel";
+import WorksWall from "./WorksWall";
+import { WORKS } from "@/data/works";
+
+const COVERS = WORKS.map((w) => w.cover);
+
 export default function WorksHero() {
   return (
-    <section className="w-full pt-32 pb-16 md:pt-40 md:pb-20 bg-[var(--background)]">
-      <div className="mx-auto max-w-[1280px] px-6 md:px-8 flex flex-col gap-6">
+    // svh, not vh: stays put when the mobile address bar collapses.
+    <section
+      data-nav-dark
+      className="relative isolate flex min-h-svh w-full flex-col overflow-hidden bg-[var(--color-ink-1)]"
+    >
+      {/* A slow, tilted wall of the project covers themselves. */}
+      <WorksWall covers={COVERS} />
+      {/* Scrim: keeps the title readable and fades the wall out at the edges. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_55%_at_center,rgb(10_10_10/0.9),rgb(10_10_10/0.45)_60%,rgb(10_10_10/0.75))]"
+      />
 
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-          <div className="flex flex-col gap-3">
-            <p className="text-base md:text-xl font-semibold text-[var(--orange)] tracking-wide">
-              My Works
-            </p>
-            <h1
-              className="font-bold text-[var(--black)] tracking-tight"
-              style={{ fontSize: "clamp(48px, 7vw, 100px)", lineHeight: 1.05 }}
-            >
-              Selected Projects
-            </h1>
-          </div>
+      <div className="mx-auto flex w-full max-w-[1280px] flex-1 flex-col items-center justify-center gap-4 px-6 pt-24 text-center md:px-8">
+        <SectionLabel align="center">Works</SectionLabel>
+        <SectionHeading
+          as="h1"
+          className="font-semibold tracking-title text-[var(--color-bg)] text-[clamp(44px,8vw,128px)] leading-[1.02]"
+        >
+          Selected Projects
+        </SectionHeading>
+        <p className="max-w-md text-sm md:text-lg font-medium text-[var(--color-bg)]/60">
+          Real projects where design meets code, craft meets delivery.
+        </p>
+      </div>
 
-          <p className="text-base md:text-xl font-medium text-[var(--muted)] max-w-xs md:text-right pb-2 leading-relaxed">
-            Real projects where design meets code, craft meets delivery.
-          </p>
-        </div>
-
-        <div className="w-full h-px bg-black/10 mt-2" />
-
+      <div className="flex justify-center pb-8 font-semibold text-xs uppercase tracking-[0.2em] text-[var(--color-bg)]/60">
+        <span className="inline-flex items-center gap-2">
+          Scroll
+          <ArrowDown size={14} />
+        </span>
       </div>
     </section>
   );

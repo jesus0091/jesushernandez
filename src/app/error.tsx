@@ -34,7 +34,7 @@ export default function Error({
 
         {/* Message */}
         <div className="space-y-4">
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--black)]">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-title text-[var(--black)]">
             Something Went Wrong
           </h2>
           <p className="text-lg md:text-xl text-[var(--muted)] max-w-md mx-auto">

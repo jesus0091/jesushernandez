@@ -7,7 +7,7 @@ import { HANDOFF, HANDOFF_COVERED } from "./motion/skillsHandoff";
 import ScatterText from "./motion/ScatterText";
 import type gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SectionLabel from "./SectionLabel";
+import SectionLabel, { LABEL_FROM, LABEL_TO } from "./SectionLabel";
 
 // Zigzag sweep across a 100×100 box; once thick enough it covers the viewport.
 const BRUSH_PATH =
@@ -114,10 +114,16 @@ export default function WSMAQuote() {
           HANDOFF_COVERED
         )
         .fromTo(
+          extras.querySelectorAll("[data-label-text]"),
+          LABEL_FROM.text,
+          { ...LABEL_TO.text, duration: 0.3, ease: "power2.out" },
+          HANDOFF_COVERED + HANDOFF.scatter * 0.6
+        )
+        .fromTo(
           extras.querySelectorAll("[data-wsma-fade]"),
           { autoAlpha: 0, y: 16 },
-          { autoAlpha: 1, y: 0, stagger: 0.15, duration: 0.3 },
-          HANDOFF_COVERED + HANDOFF.scatter * 0.6
+          { autoAlpha: 1, y: 0, duration: 0.3 },
+          "<0.15"
         )
         .to({}, { duration: 0.01 }, total - 0.01);
 
@@ -230,11 +236,14 @@ export default function WSMAQuote() {
           preserveAspectRatio="none"
         >
           <defs>
-            {/* Rails fade out toward the vanishing point instead of bunching up. */}
+            {/* Shared by rails and frames, centered on the vanishing point: clear
+                at the very center (so lines don't bunch up), accent glow in the
+                depth, cooling to the page color toward the screen edges. */}
             <radialGradient id="wsma-tunnel-fade" gradientUnits="userSpaceOnUse" cx={VP.x} cy={VP.y} r={100}>
-              <stop offset="0.03" stopColor="var(--color-bg)" stopOpacity={0} />
-              <stop offset="0.3" stopColor="var(--color-bg)" stopOpacity={0.3} />
-              <stop offset="1" stopColor="var(--color-bg)" stopOpacity={0.3} />
+              <stop offset="0.03" stopColor="var(--color-accent)" stopOpacity={0} />
+              <stop offset="0.16" stopColor="var(--color-accent)" stopOpacity={0.75} />
+              <stop offset="0.5" stopColor="var(--color-bg)" stopOpacity={0.3} />
+              <stop offset="1" stopColor="var(--color-bg)" stopOpacity={0.22} />
             </radialGradient>
           </defs>
           <g fill="none">
@@ -254,8 +263,7 @@ export default function WSMAQuote() {
               <rect
                 key={i}
                 data-frame
-                stroke="var(--color-bg)"
-                strokeOpacity={0.22}
+                stroke="url(#wsma-tunnel-fade)"
                 vectorEffect="non-scaling-stroke"
               />
             ))}
@@ -266,14 +274,12 @@ export default function WSMAQuote() {
           ref={extrasRef}
           className="relative z-[41] mx-auto max-w-[1280px] px-6 md:px-8 flex flex-col items-center text-center gap-4"
         >
-          <div data-wsma-fade>
-            <SectionLabel align="center">What sets me apart</SectionLabel>
-          </div>
+          <SectionLabel align="center" animate="none">What sets me apart</SectionLabel>
 
           <div className="flex flex-col pb-2">
             <ScatterText
               className="text-[var(--color-bg)]"
-              style={{ fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.03em" }}
+              style={{ fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.0125em" }}
               tweenRef={scatterRef}
             >
               I code. I design. <span className="text-[var(--color-accent)]">I do both.</span>
