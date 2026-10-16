@@ -1,4 +1,4 @@
-import { FUNDACION_PATARO, type CaseStudy } from "./case-studies";
+import { FUNDACION_PATARO, RISTARIO, type CaseStudy } from "./case-studies";
 
 export type LinkOut = {
   type: "behance" | "github" | "website";
@@ -33,19 +33,32 @@ export const WORKS: Work[] = [
     id: "ristario",
     index: "01",
     category: "Design & Development",
-    title: "Website Design & Development",
+    title: "A free QR menu, priced in two currencies",
+    titleLines: ["A free QR menu,", "priced in two currencies"],
     productName: "Ristario",
     role: "UX/UI Designer & FullStack Developer",
     description:
       "Full ownership of Ristario's digital presence from concept to production. Designed the brand identity, UI system, and all visual assets, then implemented the full website in Next.js. Shipped as a single handoff-free project.",
+    overview: {
+      client: "Ristario",
+      sector: "Restaurants · SaaS",
+      about:
+        "Ristario is a free QR menu for restaurants in Venezuela: prices in bolívares and dollars at the BCV rate, orders through WhatsApp, and everything edited from a phone.",
+      work: "Full ownership, by one person: the brand identity, UI system and visual assets, then the website built in Next.js and launched to production.",
+    },
     cover: "/images/linkedin.webp",
+    // Order matters: the mosaic deals even and odd entries to alternating rows.
+    mosaic: ["hero", "features", "how", "problems", "impact", "testimonials", "venezuela"].map(
+      (name) => `/images/ristario/${name}.webp`,
+    ),
     technologies: ["NextJS", "TypeScript", "TailwindCSS", "ReactJS"],
     integrations: ["Vercel", "Google Analytics"],
     tools: ["Figma", "Git", "Vercel", "Photoshop"],
     links: [
+      { type: "website", href: "https://www.ristario.com/", label: "Visit website" },
       { type: "behance", href: "https://www.behance.net/devjesushernandez", label: "Behance" },
-      { type: "github", href: "#", label: "GitHub" },
     ],
+    caseStudy: RISTARIO,
   },
   {
     id: "move-the-chain",

@@ -40,7 +40,7 @@ const BODY = "text-pretty text-sm md:text-base leading-relaxed text-[var(--muted
 const KICKER = "font-semibold text-xs uppercase tracking-[0.2em]";
 const RULE = "border-[var(--color-line-2)]";
 const CARD = "rounded-3xl border border-black/[0.06] bg-white";
-// Tinted stage the screenshots sit on, in the project's own blues.
+// Tinted stage the screenshots sit on, in the project's own colors (see CaseTheme).
 // A full-screen panel's content: as wide as the page's column.
 const PANEL = "w-[min(1216px,calc(100vw-4rem))]";
 // Panels hang from the same height, so every node sits on one line.
@@ -52,10 +52,10 @@ const PANEL_LEAD = "text-pretty text-[clamp(15px,min(1.25vw,2.2svh),18px)] leadi
 const PANEL_VISUAL = "max-h-[min(19rem,34svh)] min-h-0 w-full max-w-3xl flex-[1_1_0px]";
 // The dark sheet: night blue with the project's blue and teal glowing in from the corners.
 const NIGHT =
-  "bg-[#0a0d14] bg-[image:radial-gradient(70%_60%_at_100%_0%,#0B5ED766_0%,transparent_70%),radial-gradient(60%_60%_at_0%_100%,#0D948855_0%,transparent_70%)]";
+  "bg-[#0a0d14] bg-[image:radial-gradient(70%_60%_at_100%_0%,color-mix(in_srgb,var(--cs-glow-a)_40%,transparent)_0%,transparent_70%),radial-gradient(60%_60%_at_0%_100%,color-mix(in_srgb,var(--cs-glow-b)_33%,transparent)_0%,transparent_70%)]";
 // Segments in a score gauge; each is 100 / GAUGE_SEGMENTS points.
 const GAUGE_SEGMENTS = 50;
-const STAGE = "rounded-3xl bg-[linear-gradient(135deg,#EAF2FF,#BAE6FD)]";
+const STAGE = "rounded-3xl bg-[linear-gradient(135deg,var(--cs-stage-from),var(--cs-stage-to))]";
 
 const two = (n: number) => String(n).padStart(2, "0");
 const slug = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -775,7 +775,7 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
             <div className="flex flex-1 flex-col">
               {identity.type.fonts.map((font) => (
                 <div
-                  key={font.family}
+                  key={`${font.family}-${font.role}`}
                   className={`grid flex-1 grid-cols-[auto_1fr] content-center items-center gap-x-5 gap-y-1.5 border-t py-3.5 text-[#1E293B] ${RULE}`}
                   style={{ fontFamily: FAMILIES[font.family], fontWeight: font.weight }}
                 >
@@ -845,9 +845,9 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
           href={study.closing.href}
           target="_blank"
           rel="noreferrer"
-          className="group relative isolate flex flex-col gap-4 overflow-hidden rounded-3xl bg-[#0B5ED7] p-6 text-white transition-colors duration-300 hover:bg-[#083A8F] md:flex-row md:items-center md:justify-between md:px-10 md:py-7"
+          className="group relative isolate flex flex-col gap-4 overflow-hidden rounded-3xl bg-[var(--cs-brand)] p-6 text-white transition-colors duration-300 hover:bg-[var(--cs-brand-hover)] md:flex-row md:items-center md:justify-between md:px-10 md:py-7"
         >
-          {/* The site's grain tile; overlay so it reads on the saturated blue. */}
+          {/* The site's grain tile; overlay so it reads on the saturated brand color. */}
           <span
             aria-hidden
             className="pointer-events-none absolute inset-0 -z-10 opacity-80 mix-blend-overlay"
@@ -858,7 +858,7 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70 md:text-sm">{study.closing.heading}</span>
             <span className="text-base sm:text-2xl md:text-3xl font-semibold tracking-title break-all">{study.closing.label}</span>
           </span>
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white text-[#0B5ED7] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white text-[var(--cs-brand)] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
             <ArrowUpRight size={24} />
           </span>
         </Link>

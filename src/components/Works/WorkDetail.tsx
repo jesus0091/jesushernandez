@@ -19,6 +19,18 @@ const LINK_ICONS = {
 export default function WorkDetail({ work }: { work: Work }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const website = work.links?.find((l) => l.type === "website");
+  // The project's own colors, for the parts of the page that wear them (see CaseTheme).
+  const theme = work.caseStudy?.theme;
+  const themeVars = theme
+    ? ({
+        "--cs-brand": theme.brand,
+        "--cs-brand-hover": theme.brandHover,
+        "--cs-glow-a": theme.glow[0],
+        "--cs-glow-b": theme.glow[1],
+        "--cs-stage-from": theme.stage[0],
+        "--cs-stage-to": theme.stage[1],
+      } as React.CSSProperties)
+    : undefined;
   const links = work.links?.filter((l) => l !== website) ?? [];
   const { overview } = work;
 
@@ -39,7 +51,7 @@ export default function WorkDetail({ work }: { work: Work }) {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full overflow-x-clip pb-6 md:pb-8">
+    <div ref={containerRef} style={themeVars} className="w-full overflow-x-clip pb-6 md:pb-8">
       <div className="mx-auto max-w-[1280px] px-6 md:px-8">
         {/* The opening screen: the breadcrumb on top, the title and the banner sitting at the bottom. */}
         <div className="flex min-h-[100svh] flex-col pt-24 pb-6 md:pt-28 md:pb-8">
@@ -80,9 +92,9 @@ export default function WorkDetail({ work }: { work: Work }) {
                   href={website.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="group relative isolate flex h-12 w-max shrink-0 items-center gap-2.5 overflow-hidden rounded-xl bg-[#0B5ED7] px-5 text-sm font-medium text-white transition-colors duration-300 hover:bg-[#083A8F] md:size-[clamp(112px,11.2vw,150px)] md:flex-col-reverse md:items-start md:justify-between md:rounded-2xl md:p-4 md:text-base md:leading-tight"
+                  className="group relative isolate flex h-12 w-max shrink-0 items-center gap-2.5 overflow-hidden rounded-xl bg-[var(--cs-brand,#0B5ED7)] px-5 text-sm font-medium text-white transition-colors duration-300 hover:bg-[var(--cs-brand-hover,#083A8F)] md:size-[clamp(112px,11.2vw,150px)] md:flex-col-reverse md:items-start md:justify-between md:rounded-2xl md:p-4 md:text-base md:leading-tight"
                 >
-                  {/* The site's grain tile; overlay so it reads on the saturated blue. */}
+                  {/* The site's grain tile; overlay so it reads on the saturated brand color. */}
                   <span
                     aria-hidden
                     className="pointer-events-none absolute inset-0 -z-10 opacity-80 mix-blend-overlay"
