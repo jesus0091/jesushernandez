@@ -18,7 +18,8 @@ type ScrambleTitleProps = {
 /** The title's type size, shared so neighbours can be placed on its cap height and baseline in em. */
 export const TITLE_SIZE = "text-[clamp(2.75rem,9.5vw,8.75rem)]";
 
-const GLYPHS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+// Lowercase only: wide capitals (W, M, Z) would push the line past its final width mid-decode.
+const GLYPHS = "abcdefghijklmnopqrstuvwxyz";
 
 /** Decodes el's text from `from` to `to`: each character flickers, then settles, roughly left to right. */
 function scramble(el: HTMLElement, from: string, to: string, duration: number) {

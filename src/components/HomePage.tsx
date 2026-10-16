@@ -7,7 +7,6 @@ import {
   LinkedinLogo,
 } from "@/components/icons";
 
-import AuroraGlow from "./AuroraGlow";
 import Link from "next/link";
 import ScrambleTitle, { TITLE_SIZE } from "./motion/ScrambleTitle";
 import CoverMosaic from "./Works/CoverMosaic";
@@ -89,14 +88,6 @@ export default function HomePage() {
           overflow-x-clip
         "
       >
-        <div className="absolute inset-0 pointer-events-none z-0">
-          <AuroraGlow
-            blobSize={700}
-            speed={1.2}
-            opacity={0.55}
-            colors={["#fb923c", "#ff8a3c", "#fdba74"]}
-          />
-        </div>
         {/* As on a project page: the intro sits low on the first screen, the wall closes it. */}
         <div ref={contentRef} className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-1 flex-col items-start gap-2 px-6 text-left md:px-8">
           <p ref={greetRef} className="mt-auto text-base md:text-lg font-medium text-[var(--color-navy)]">
