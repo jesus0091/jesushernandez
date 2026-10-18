@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Jesus Hernandez | AI-Driven Engineer & Product Designer";
+export const alt = "Jesús Hernández | Product Engineer & Designer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -36,7 +36,6 @@ export default async function OpengraphImage() {
           justifyContent: "space-between",
           padding: "72px 80px",
           backgroundColor: "#f4f1ea",
-          backgroundImage: "radial-gradient(circle at 85% 20%, rgba(251,146,60,0.35), rgba(244,241,234,0) 55%)",
           color: "#111111",
           fontFamily: "Inter",
         }}
@@ -47,14 +46,15 @@ export default async function OpengraphImage() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           <div style={{ fontSize: 96, fontWeight: 700, letterSpacing: -4, lineHeight: 1 }}>Jesús Hernández</div>
+          {/* Set like the home title: the lead word heavy, the rest light. */}
           <div style={{ display: "flex", fontSize: 48, fontWeight: 400, letterSpacing: -1, color: "#3a3a3a" }}>
-            <span style={{ color: "#ff6600", fontWeight: 700, marginRight: 14 }}>AI-Driven</span>
-            Engineer &amp; Product Designer
+            <span style={{ color: "#111111", fontWeight: 700, marginRight: 14 }}>Product</span>
+            Engineer &amp; Designer
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 26, color: "#6b6b6b" }}>
-          <span>I code. I design. I do both.</span>
-          <span>jesushernandez.vercel.app</span>
+          <span>Based in Argentina</span>
+          <span>jesushernandez.site</span>
         </div>
       </div>
     ),

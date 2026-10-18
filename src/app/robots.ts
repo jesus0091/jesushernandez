@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const CANONICAL = "https://jesushernandez.vercel.app";
+const CANONICAL = "https://jesushernandez.site";
 
 export default function robots(): MetadataRoute.Robots {
   return {

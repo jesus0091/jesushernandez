@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { WORKS } from "@/data/works";
 
-const CANONICAL = "https://jesushernandez.vercel.app";
+const CANONICAL = "https://jesushernandez.site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const workPages = WORKS.map((w) => ({

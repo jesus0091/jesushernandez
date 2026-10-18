@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WorkDetail from "@/components/Works/WorkDetail";
 
-const CANONICAL = "https://jesushernandez.vercel.app";
+const CANONICAL = "https://jesushernandez.site";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -19,7 +19,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!work) return {};
 
   const title = `${work.productName} — ${work.title}`;
-  const description = work.description.slice(0, 160);
+  // Search and share previews show about 160 characters: cut at a word, never mid-word.
+  const summary = work.overview?.about ?? work.description;
+  const description = summary.length <= 160 ? summary : `${summary.slice(0, 157).replace(/\s+\S*$/, "")}…`;
 
   return {
     title,

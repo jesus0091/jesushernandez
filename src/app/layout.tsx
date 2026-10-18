@@ -24,18 +24,18 @@ const jetbrainsMono = JetBrains_Mono({
   preload: false,
 });
 
-const CANONICAL = "https://jesushernandez.vercel.app";
+const CANONICAL = "https://jesushernandez.site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(CANONICAL),
   title: {
-    default: "Jesus Hernandez | AI-Driven Engineer & Product Designer",
-    template: "%s | Jesus Hernandez",
+    default: "Jesús Hernández | Product Engineer & Designer",
+    template: "%s | Jesús Hernández",
   },
   description:
-    "Portfolio of Jesus Hernandez, AI-Driven Engineer & Product Designer who designs and ships full-stack products end to end with React, Next.js, and AI agents built into every step of the workflow.",
+    "Product Engineer and Designer based in Argentina. I design and build digital products end to end, from the first sketch to production.",
   keywords: [
-    "AI-Driven Engineer",
+    "Product Engineer",
     "Design Engineer",
     "Product Designer",
     "AI Engineer",
@@ -48,9 +48,9 @@ export const metadata: Metadata = {
     "Web Design",
     "Web Development",
   ],
-  authors: [{ name: "Jesus Hernandez", url: CANONICAL }],
-  creator: "Jesus Hernandez",
-  publisher: "Jesus Hernandez",
+  authors: [{ name: "Jesús Hernández", url: CANONICAL }],
+  creator: "Jesús Hernández",
+  publisher: "Jesús Hernández",
   robots: {
     index: true,
     follow: true,
@@ -64,17 +64,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "Jesus Hernandez Portfolio",
+    siteName: "Jesús Hernández",
     url: CANONICAL,
-    title: "Jesus Hernandez | AI-Driven Engineer & Product Designer",
+    title: "Jesús Hernández | Product Engineer & Designer",
     description:
-      "Explore the portfolio of Jesus Hernandez: AI-driven engineering, product design, and full-stack products shipped end to end.",
+      "Product Engineer and Designer based in Argentina. I design and build digital products end to end, from the first sketch to production.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jesus Hernandez | AI-Driven Engineer & Product Designer",
+    title: "Jesús Hernández | Product Engineer & Designer",
     description:
-      "AI-driven engineering and product design portfolio by Jesus Hernandez.",
+      "Product Engineer and Designer based in Argentina. I design and build digital products end to end, from the first sketch to production.",
   },
   category: "technology",
 };
@@ -93,11 +93,11 @@ export default function RootLayout({
   const personJsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: "Jesus Hernandez",
+    name: "Jesús Hernández",
     url: CANONICAL,
-    jobTitle: "AI-Driven Engineer & Product Designer",
+    jobTitle: "Product Engineer & Designer",
     description:
-      "AI-Driven Engineer & Product Designer who designs and ships full-stack digital products end to end.",
+      "Product Engineer and Designer based in Argentina. I design and build digital products end to end, from the first sketch to production.",
     image: `${CANONICAL}/images/about_me.webp`,
     address: {
       "@type": "PostalAddress",
@@ -124,10 +124,10 @@ export default function RootLayout({
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Jesus Hernandez Portfolio",
+    name: "Jesús Hernández",
     url: CANONICAL,
     inLanguage: "en",
-    author: { "@type": "Person", name: "Jesus Hernandez", url: CANONICAL },
+    author: { "@type": "Person", name: "Jesús Hernández", url: CANONICAL },
   };
 
   return (
