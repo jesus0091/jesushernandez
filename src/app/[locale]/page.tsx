@@ -1,3 +1,5 @@
+import { setRequestLocale } from "next-intl/server";
+import type { Locale } from "@/i18n/routing";
 import AboutText from "@/components/AboutMe/AboutText";
 import Skills from "@/components/AboutMe/Skills";
 import Footer from "@/components/Footer";
@@ -6,7 +8,14 @@ import LatestsProjects from "@/components/Projects/LatestsProjects";
 import Navbar from "@/components/Navbar";
 import WSMAQuote from "@/components/WSMAQuote";
 
-export default function LandingPage() {
+export default async function LandingPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   return (
     <>
       <Navbar />

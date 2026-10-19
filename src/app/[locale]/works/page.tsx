@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
+import type { Locale } from "@/i18n/routing";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WorksHero from "@/components/Works/WorksHero";
@@ -21,7 +23,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function WorksPage() {
+export default async function WorksPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   return (
     <>
       <Navbar />

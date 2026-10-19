@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { setRequestLocale } from "next-intl/server";
+import type { Locale } from "@/i18n/routing";
 import { WORKS, getWorkById } from "@/data/works";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -45,8 +47,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function WorkDetailPage({ params }: Props) {
-  const { id } = await params;
+export default async function WorkDetailPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale; id: string }>;
+}) {
+  const { locale, id } = await params;
+  setRequestLocale(locale);
   const work = getWorkById(id);
   if (!work) notFound();
 

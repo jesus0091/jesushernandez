@@ -10,17 +10,18 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   async redirects() {
-    return [
+    // Every rule exists twice: English at the root, Spanish under /es.
+    return ["", "/es"].flatMap((prefix) => [
       // The two Move The Chain case studies were merged into one.
       ...["mtc-fe", "mtc-ux"].map((id) => ({
-        source: `/works/${id}`,
-        destination: "/works/move-the-chain",
+        source: `${prefix}/works/${id}`,
+        destination: `${prefix}/works/move-the-chain`,
         permanent: true,
       })),
       // Old standalone pages, now sections of the home page.
-      { source: "/about", destination: "/#about", permanent: true },
-      { source: "/projects", destination: "/works", permanent: true },
-    ];
+      { source: `${prefix}/about`, destination: `${prefix}/#about`, permanent: true },
+      { source: `${prefix}/projects`, destination: `${prefix}/works`, permanent: true },
+    ]);
   },
   // Security headers only take effect as real HTTP headers, not <meta> tags.
   async headers() {
