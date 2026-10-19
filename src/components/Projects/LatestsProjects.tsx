@@ -4,7 +4,7 @@ import { BehanceLogo, BookOpenText, FlowArrow, GithubLogo, ArrowRight, PenNib, Q
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import ProjectCard from "./ProjectCard";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ScrubWords from "../motion/ScrubWords";

@@ -20,5 +20,45 @@
     "alt": "Jesús Hernández | Product Engineer & Designer",
     "portfolio": "PORTFOLIO",
     "location": "Based in Argentina"
+  },
+  "nav": {
+    "home": "Home",
+    "works": "Works",
+    "lab": "Lab",
+    "blog": "Blog",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "menuSr": "Menu",
+    "closeSr": "Close",
+    "menuLabel": "Navigation menu",
+    "logoAlt": "Logo",
+    "language": "Language",
+    "switchTo": {
+      "en": "Switch to English",
+      "es": "Cambiar a español"
+    }
+  },
+  "footer": {
+    "ctaLabel": "From Concept to Code",
+    "ctaTitleTop": "Let's build something",
+    "ctaTitleBottom": "great together",
+    "talk": "Let's talk",
+    "emailAria": "Send me an email",
+    "tagline": "Product Engineer. I design and build digital products end to end, from the first sketch to production.",
+    "navigation": "Navigation",
+    "connect": "Connect",
+    "location": "Location",
+    "country": "Argentina",
+    "copyright": "All rights reserved.",
+    "backToTop": "Back to top",
+    "navAria": "Footer"
+  },
+  "transition": {
+    "pages": {
+      "home": "Home",
+      "works": "Works",
+      "lab": "Lab",
+      "blog": "Blog"
+    }
   }
 }

@@ -10,10 +10,11 @@ import {
   Envelope,
 } from "@/components/icons";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import CtaTunnel, { TUNNEL_STOPS } from "./motion/CtaTunnel";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { getLenis, setupGsap } from "@/lib/motion";
@@ -45,12 +46,7 @@ export default function Footer({
   className = "",
   cta = "tunnel",
   contactEmail = "jesushernandez120491@gmail.com",
-  quickLinks = [
-    { label: "Home", href: "/" },
-    { label: "Works", href: "/works" },
-    { label: "Lab", href: "/lab" },
-    { label: "Blog", href: "/blog" },
-  ],
+  quickLinks,
   social = [
     {
       label: "LinkedIn",
@@ -69,6 +65,14 @@ export default function Footer({
     },
   ],
 }: FooterProps) {
+  const t = useTranslations("footer");
+  const tNav = useTranslations("nav");
+  const links = quickLinks ?? [
+    { label: tNav("home"), href: "/" },
+    { label: tNav("works"), href: "/works" },
+    { label: tNav("lab"), href: "/lab" },
+    { label: tNav("blog"), href: "/blog" },
+  ];
   const isCard = cta === "card";
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const footerRef = useRef<HTMLElement | null>(null);
@@ -406,13 +410,13 @@ export default function Footer({
             />
           )}
           <div data-cta-label className="[&_span]:text-white/80 [&_span[aria-hidden]]:bg-white/50">
-            <SectionLabel align="center" animate="none" surface="dark">From Concept to Code</SectionLabel>
+            <SectionLabel align="center" animate="none" surface="dark">{t("ctaLabel")}</SectionLabel>
           </div>
           <h3
             data-cta-title
             className="text-3xl sm:text-4xl md:text-7xl font-semibold tracking-title text-white"
           >
-            Let&apos;s build something <br /> great together
+            {t("ctaTitleTop")} <br /> {t("ctaTitleBottom")}
           </h3>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
             <Link
@@ -421,10 +425,10 @@ export default function Footer({
               data-cta
               data-sfx="cta"
               className="relative inline-flex items-center rounded-full gap-2 border border-white/20 bg-[#050b3a]/60 px-6 py-3 text-base cursor-pointer font-medium text-white hover:bg-white/10 transition active:scale-[0.96]"
-              aria-label="Send me an email"
+              aria-label={t("emailAria")}
             >
               <Envelope size={18} />
-              Let&apos;s talk
+              {t("talk")}
             </Link>
           </div>
           {isCard && (
@@ -455,17 +459,16 @@ export default function Footer({
           <div className="grid grid-cols-2 md:grid-cols-12 gap-x-6 gap-y-10">
             <div data-footer-col className="col-span-2 md:col-span-5">
               <p className="text-base text-[var(--color-ink-3)] leading-relaxed max-w-sm">
-                Product Engineer. I design and build digital products end to
-                end, from the first sketch to production.
+                {t("tagline")}
               </p>
             </div>
 
-            <nav data-footer-col aria-label="Footer" className="md:col-span-2 md:col-start-7 flex flex-col gap-3">
+            <nav data-footer-col aria-label={t("navAria")} className="md:col-span-2 md:col-start-7 flex flex-col gap-3">
               <h4 className="text-xs font-mono font-medium uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">
-                Navigation
+                {t("navigation")}
               </h4>
               <ul className="flex flex-col gap-2">
-                {quickLinks.map((l) => (
+                {links.map((l) => (
                   <li key={l.href}>
                     <Link
                       href={l.href}
@@ -480,7 +483,7 @@ export default function Footer({
 
             <div data-footer-col className="md:col-span-2 flex flex-col gap-3">
               <h4 className="text-xs font-mono font-medium uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">
-                Connect
+                {t("connect")}
               </h4>
               <ul className="flex flex-col gap-2">
                 {social.map((s) => (
@@ -504,9 +507,9 @@ export default function Footer({
 
             <div data-footer-col className="md:col-span-2 flex flex-col gap-3">
               <h4 className="text-xs font-mono font-medium uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">
-                Location
+                {t("location")}
               </h4>
-              <p className="text-base text-[var(--color-ink-3)]">Argentina</p>
+              <p className="text-base text-[var(--color-ink-3)]">{t("country")}</p>
               <p className="text-base tabular-nums text-[var(--color-ink-1)]">
                 {localTime ? `${localTime} ART` : "\u00a0"}
               </p>
@@ -531,14 +534,14 @@ export default function Footer({
           className="w-full flex flex-col-reverse pb-6 md:pb-8 max-w-[1280px] mx-auto px-6 md:px-8 sm:flex-row items-center justify-between gap-3 pt-5 relative before:absolute before:top-0 before:inset-x-6 md:before:inset-x-8 before:h-px before:bg-black/15"
         >
           <p className="text-sm text-center text-[var(--color-ink-3)]">
-            © {year} Jesús Hernández. All rights reserved.
+            © {year} Jesús Hernández. {t("copyright")}
           </p>
           <button
             type="button"
             onClick={scrollToTop}
             className="group inline-flex items-center gap-1.5 text-sm text-[var(--color-ink-3)] hover:text-[var(--color-ink-1)] transition-colors"
           >
-            Back to top
+            {t("backToTop")}
             <ArrowUp
               size={14}
               className="transition-transform duration-200 ease-out group-hover:-translate-y-0.5"

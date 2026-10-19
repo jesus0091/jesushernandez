@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { Warning, ArrowClockwise, House } from "@/components/icons";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 export default function Error({
   error,

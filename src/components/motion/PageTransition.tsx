@@ -6,7 +6,10 @@ import { useEffect, useRef } from "react";
 
 import { BrushSvg, brushIn, brushOut, playEased } from "./Brush";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
-import { getWorkById } from "@/data/works";
+import { destinationName } from "./destination";
+import { stripLocale } from "@/i18n/paths";
+import { transition as en } from "../../../messages/en.json";
+import { transition as es } from "../../../messages/es.json";
 
 // If the new page never arrives (a failed navigation), uncover anyway.
 const FAILSAFE_MS = 5000;
@@ -16,16 +19,11 @@ const MIN_LABEL_MS = 400;
 // Same alphabet as the skills tags' decode.
 const CHARS = "abcdefghijklmnopqrstuvwxyz<>/{}#_";
 
-const PAGE_NAMES: Record<string, string> = { "/": "Home", "/works": "Works", "/lab": "Lab", "/blog": "Blog" };
-
-/** What the black screen says on the way to `path`: the page, or the project's name. */
-function destinationName(path: string) {
-  if (PAGE_NAMES[path]) return PAGE_NAMES[path];
-  const [, section, id] = path.split("/");
-  if (section === "works" && id) return getWorkById(id)?.productName ?? id;
-  const last = path.split("/").filter(Boolean).pop() ?? "";
-  return last.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-}
+// The name is shown in the destination's language, which may not be the
+// current one (the language switch), so it reads the messages directly.
+const PAGES = { en: en.pages, es: es.pages };
+const pageName = (locale: "en" | "es") => (key: string) =>
+  PAGES[locale][key.replace("pages.", "") as keyof typeof en.pages];
 
 /**
  * Page-to-page transition, with the site's brush and no signature: an
@@ -87,7 +85,7 @@ export default function PageTransition() {
       if (label) {
         const gsap = setupGsap();
         gsap.registerPlugin(ScrambleTextPlugin);
-        const name = destinationName(url.pathname);
+        const name = destinationName(url.pathname, pageName(stripLocale(url.pathname).locale));
         labelAt.current = performance.now();
         gsap.set(label, { autoAlpha: 1, y: 0 });
         gsap.fromTo(

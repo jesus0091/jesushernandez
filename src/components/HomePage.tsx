@@ -7,7 +7,7 @@ import {
   LinkedinLogo,
 } from "@/components/icons";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import ScrambleTitle, { TITLE_SIZE } from "./motion/ScrambleTitle";
 import CoverMosaic from "./Works/CoverMosaic";
 import gsap from "gsap";

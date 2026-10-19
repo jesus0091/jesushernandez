@@ -3,7 +3,7 @@
 import { ArrowUpRight, User, Users } from "@/components/icons";
 
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { LinkOut } from "./LatestsProjects";
 import CoverMosaic from "../Works/CoverMosaic";
 

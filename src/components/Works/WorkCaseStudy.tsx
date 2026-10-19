@@ -2,7 +2,7 @@
 
 import { Fragment, useLayoutEffect, useRef } from "react";
 import { Source_Serif_4 } from "next/font/google";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUpRight,

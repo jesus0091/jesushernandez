@@ -9,7 +9,7 @@ import {
 import React, { useLayoutEffect, useRef } from "react";
 
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SectionHeading from "../motion/SectionHeading";
 import SectionLabel from "../SectionLabel";

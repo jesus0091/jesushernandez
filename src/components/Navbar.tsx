@@ -5,15 +5,17 @@ import { getLenis } from "@/lib/motion";
 import { Envelope } from "@/components/icons";
 import SoundToggle from "@/components/SoundToggle";
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link } from "@/i18n/navigation";
+import { usePathname } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import LocaleSwitch from "@/components/LocaleSwitch";
 import gsap from "gsap";
 
 const links = [
-  { href: "/works", label: "Works", sectionId: undefined },
-  { href: "/lab", label: "Lab", sectionId: undefined },
-  { href: "/blog", label: "Blog", sectionId: undefined },
-];
+  { href: "/works", key: "works", sectionId: undefined },
+  { href: "/lab", key: "lab", sectionId: undefined },
+  { href: "/blog", key: "blog", sectionId: undefined },
+] as const;
 
 // Vertical center of the navbar; a dark section counts once it covers it.
 const NAV_PROBE_Y = 36;
@@ -60,7 +62,9 @@ export default function Navbar() {
   const blend = clear === "blend";
   const light = dark || blend;
   const [activeSection, setActiveSection] = useState<string>("hero");
+  // Without the locale prefix, so it compares with the links' hrefs.
   const pathname = usePathname();
+  const t = useTranslations("nav");
 
   // A link to the page you're already on does nothing in Next: take it to
   // the top instead.
@@ -232,7 +236,7 @@ export default function Navbar() {
                             : "text-[var(--muted)] hover:text-[var(--black)] hover:bg-black/[0.05]",
                       ].join(" ")}
                     >
-                      {link.label}
+                      {t(link.key)}
                     </Link>
                   </li>
                 );
@@ -241,6 +245,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-2">
+            <LocaleSwitch light={light} />
             <SoundToggle dark={light} />
             <Link
               href="mailto:jesushernandez120491@gmail.com"
@@ -285,7 +290,7 @@ export default function Navbar() {
         >
           <Image
             src="/images/facebrand.png"
-            alt="Logo"
+            alt={t("logoAlt")}
             className="border border-black/10 rounded-control bg-black/5 object-contain w-9 h-9"
             width={36}
             height={36}
@@ -300,7 +305,7 @@ export default function Navbar() {
       {/* ── Mobile hamburger button (fixed, always visible) ── */}
       <button
         type="button"
-        aria-label={open ? "Cerrar menú" : "Abrir menú"}
+        aria-label={open ? t("closeMenu") : t("openMenu")}
         aria-expanded={open}
         aria-controls="mobile-fullscreen-menu"
         onClick={() => setOpen((v) => !v)}
@@ -312,7 +317,7 @@ export default function Navbar() {
           color: open || !dark ? "white" : "var(--black)",
         }}
       >
-        <span className="sr-only">{open ? "Cerrar" : "Menú"}</span>
+        <span className="sr-only">{open ? t("closeSr") : t("menuSr")}</span>
         <div className="relative w-5 h-4 flex items-center justify-center">
           <span
             className="absolute block h-[2px] w-5 bg-current rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
@@ -338,7 +343,7 @@ export default function Navbar() {
         ref={overlayRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Menú de navegación"
+        aria-label={t("menuLabel")}
         className="md:hidden fixed inset-0 z-[60] bg-[var(--black)] flex flex-col justify-center px-8 pb-16"
         style={{
           clipPath: open
@@ -364,14 +369,15 @@ export default function Navbar() {
                     0{i + 1}
                   </span>
                   <span className="text-white text-[clamp(2.5rem,10vw,3.5rem)] font-bold tracking-tight leading-none transition-opacity duration-200 group-hover:opacity-60">
-                    {link.label}
+                    {t(link.key)}
                   </span>
                 </Link>
               </li>
             ))}
           </ul>
 
-          <div className="menu-item border-t border-white/10 pt-8">
+          <div className="menu-item border-t border-white/10 pt-8 flex flex-col gap-6">
+            <LocaleSwitch light className="-ml-2" />
             <Link
               href="mailto:jesushernandez120491@gmail.com"
               onClick={() => setOpen(false)}
