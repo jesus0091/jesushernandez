@@ -3,6 +3,7 @@
 import { ArrowUpRight, User, Users } from "@/components/icons";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { LinkOut } from "./LatestsProjects";
 import CoverMosaic from "../Works/CoverMosaic";
@@ -12,10 +13,7 @@ export type Category = "frontend" | "design";
 
 export type Project = {
   id: string;
-  title: string;
   productName: string;
-  role: string;
-  summary: string;
   stack: string[];
   cover: string;
   mosaic?: string[];
@@ -26,11 +24,13 @@ export type Project = {
 
 export default function ProjectCard({ project }: { project: Project }) {
   const p = project;
+  const t = useTranslations("projects");
+  const role = t(`items.${p.id}.role`);
 
   return (
     <Link
       href={`/works/${p.id}`}
-      aria-label={`Open ${p.productName} — ${p.role}`}
+      aria-label={t("openAria", { name: p.productName, role })}
       className="group relative block overflow-hidden rounded-card border border-black/[0.06] bg-white/70 backdrop-blur-sm transition-colors duration-300 ease-out hover:border-black/[0.12] hover:bg-white"
     >
       <article>
@@ -43,7 +43,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           ) : (
             <Image
               src={p.cover}
-              alt={`${p.title} cover`}
+              alt={t("coverAlt", { title: t(`items.${p.id}.title`) })}
               fill
               sizes="(max-width: 768px) 100vw, 860px"
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
@@ -63,7 +63,7 @@ export default function ProjectCard({ project }: { project: Project }) {
             ) : (
               <Users className="h-3.5 w-3.5" />
             )}
-            {p.mode === "solo" ? "Solo" : "Collaborative"}
+            {p.mode === "solo" ? t("solo") : t("collab")}
           </span>
         </div>
 
@@ -73,7 +73,7 @@ export default function ProjectCard({ project }: { project: Project }) {
               {p.productName}
             </h3>
 
-            <p className="mt-1 text-sm text-[var(--muted)]">{p.role}</p>
+            <p className="mt-1 text-sm text-[var(--muted)]">{role}</p>
           </div>
 
           <span

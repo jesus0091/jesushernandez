@@ -60,5 +60,135 @@
       "lab": "Lab",
       "blog": "Blog"
     }
+  },
+  "home": {
+    "greeting": "My name is Jesús Hernández 👋",
+    "srTitle": "Jesús Hernández, Product Engineer & Product Designer",
+    "location": "Based in Argentina",
+    "linkedin": "LinkedIn profile",
+    "github": "GitHub profile",
+    "behance": "Behance profile"
+  },
+  "about": {
+    "label": "About Me",
+    "heading": "The Creative Mind Behind the Code",
+    "cta": "Look at My Work",
+    "body": "I'm a <b>AI-Driven Engineer</b> and <b>Product Designer</b> based in <b>Buenos Aires, Argentina.</b> I combine <b>design and development</b> in a single profile, which means I can take a product from <b>concept to polished interface</b> without losing coherence along the way. I care deeply about the <b>details:</b> the right <b>spacing,</b> the right <b>interaction,</b> the right words. That's how I build <b>digital products</b> that feel as good as they work."
+  },
+  "skills": {
+    "label": "Skills",
+    "heading": "What I bring to the table.",
+    "dev": "Development",
+    "design": "Design",
+    "soft": "Soft Skills",
+    "softItems": {
+      "communication": "Communication",
+      "teamwork": "Teamwork",
+      "problemSolving": "Problem Solving",
+      "empathy": "Empathy",
+      "ownership": "Ownership",
+      "mentoring": "Mentoring",
+      "adaptability": "Adaptability",
+      "criticalThinking": "Critical Thinking",
+      "selfManagement": "Self-management"
+    }
+  },
+  "wsma": {
+    "label": "What sets me apart",
+    "line": "I code. I design. ",
+    "accent": "I do both.",
+    "subTop": "Great products happen when",
+    "subBottom": "design meets code."
+  },
+  "projects": {
+    "label": "Latest Projects",
+    "headingTop": "Building Digital",
+    "headingBottom": "Products & Experience",
+    "subtitle": "Highlights of collaborative and solo projects that shaped my expertise.",
+    "viewAll": "View all works",
+    "caption": "The {count} most recent",
+    "solo": "Solo",
+    "collab": "Collaborative",
+    "openAria": "Open {name} — {role}",
+    "coverAlt": "{title} cover",
+    "phrases": [
+      "Every project starts with a question, not a screen.",
+      "Research shapes the flows, the flows shape the system.",
+      "Design and code stay in the same hands, so nothing gets lost in handoff.",
+      "Each project is a story, from brief to launch, design to code."
+    ],
+    "phraseLink": "See the full picture.",
+    "items": {
+      "ristario": {
+        "title": "Website Design & Development",
+        "role": "UX/UI Designer & FullStack Developer",
+        "summary": "Complete design and development of Ristario website. From concept to production, including UX/UI design, branding, and full-stack implementation."
+      },
+      "move-the-chain": {
+        "title": "SaaS Platform",
+        "role": "UX/UI Designer & Developer",
+        "summary": "Design and development of a SaaS platform focused on employee engagement: workflows, wireframes, prototypes and the design system, then built into features, integrations and reusable components."
+      },
+      "fundacion-pataro": {
+        "title": "Foundation Website Design",
+        "role": "UX/UI Designer & Developer",
+        "summary": "Complete UX/UI design for Fundación Pataro website. Focused on accessibility, user experience and visual identity to communicate the foundation's mission effectively."
+      },
+      "iacon": {
+        "title": "Landing Page Redesigning",
+        "role": "UX/UI Designer",
+        "summary": "Redesign of IACON's corporate landing page in Figma, along with new visual assets and branding elements to strengthen the company's digital identity."
+      },
+      "smart-factory": {
+        "title": "Web Dashboard",
+        "role": "UX/UI Designer",
+        "summary": "Design of an industrial dashboard used by factory operators to monitor and control production machinery. Project created from scratch with data-first UI."
+      },
+      "cc-webapp": {
+        "title": "Web Application",
+        "role": "UX/UI Designer",
+        "summary": "Task management web application for call centers. Users can schedule, manage and track client calls. Flows, wireframes and visual prototype."
+      },
+      "psy-app": {
+        "title": "Mobile App",
+        "role": "UX/UI Designer",
+        "summary": "Integrative UX/UI project for an iOS app designed for psychologists. Developed from scratch with the full Design Thinking process, research and testing."
+      }
+    }
+  },
+  "tunnel": {
+    "srIntro": "Things we can build together:",
+    "words": [
+      "Web Apps",
+      "Mobile Apps",
+      "SaaS Platforms",
+      "Design Systems",
+      "Dashboards",
+      "Automations",
+      "MVPs",
+      "E-commerce",
+      "Internal Tools",
+      "Landing Pages",
+      "Brand Identity"
+    ]
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "message": "Oops! The page you're looking for seems to have wandered off into the digital void.",
+    "home": "Go Home",
+    "back": "Go Back",
+    "lostBefore": "Lost? Try checking the URL or head back to the",
+    "lostLink": "homepage",
+    "lostAfter": "."
+  },
+  "error": {
+    "title": "Something Went Wrong",
+    "message": "We encountered an unexpected error. Don't worry, it's not your fault!",
+    "details": "View error details",
+    "tryAgain": "Try Again",
+    "home": "Go Home",
+    "persistsBefore": "If this problem persists, please",
+    "contact": "contact support",
+    "persistsAfter": "."
   }
 }

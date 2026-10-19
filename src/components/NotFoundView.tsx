@@ -4,7 +4,23 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { House, ArrowLeft } from "@/components/icons";
 
-export default function NotFound() {
+type NotFoundViewProps = {
+  /** Where "home" points: "/" or "/es". This page renders outside the locale layout. */
+  homeHref: string;
+  labels: {
+    title: string;
+    message: string;
+    home: string;
+    back: string;
+    lostBefore: string;
+    lostLink: string;
+    lostAfter: string;
+  };
+};
+
+// The 404 page (app/global-not-found.tsx). It gets its copy as props because
+// the server component that renders it knows the locale.
+export default function NotFoundView({ homeHref, labels }: NotFoundViewProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -41,11 +57,10 @@ export default function NotFound() {
           }`}
         >
           <h2 className="text-3xl md:text-5xl font-bold tracking-title text-[var(--black)]">
-            Page Not Found
+            {labels.title}
           </h2>
           <p className="text-lg md:text-xl text-[var(--muted)] max-w-md mx-auto">
-            Oops! The page you&apos;re looking for seems to have wandered off
-            into the digital void.
+            {labels.message}
           </p>
         </div>
 
@@ -56,18 +71,18 @@ export default function NotFound() {
           }`}
         >
           <Link
-            href="/"
+            href={homeHref}
             className="group flex items-center gap-2 px-6 py-3 bg-[var(--black)] text-[var(--white)] rounded-full font-semibold transition-all hover:scale-105 hover:shadow-lg active:scale-95"
           >
             <House size={20} />
-            Go Home
+            {labels.home}
           </Link>
           <button
             onClick={() => window.history.back()}
             className="group flex items-center gap-2 px-6 py-3 border-2 border-[var(--black)] text-[var(--black)] rounded-full font-semibold transition-all hover:scale-105 hover:shadow-lg active:scale-95"
           >
             <ArrowLeft size={20} />
-            Go Back
+            {labels.back}
           </button>
         </div>
 
@@ -78,14 +93,14 @@ export default function NotFound() {
           }`}
         >
           <p className="text-sm text-[var(--muted)]">
-            Lost? Try checking the URL or head back to the{" "}
+            {labels.lostBefore}{" "}
             <Link
-              href="/"
+              href={homeHref}
               className="text-[var(--color-accent-ink)] hover:underline font-medium"
             >
-              homepage
+              {labels.lostLink}
             </Link>
-            .
+            {labels.lostAfter}
           </p>
         </div>
       </div>

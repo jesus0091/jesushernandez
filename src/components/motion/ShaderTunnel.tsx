@@ -2,6 +2,7 @@
 
 import { prefersReducedMotion, setupGsap } from "@/lib/motion";
 import { useLayoutEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -13,19 +14,6 @@ const CARD_H = (vw: number, vh: number) =>
 const CARD_RADIUS = 24;
 const EXPAND_END = 0.4;
 
-const WORDS = [
-  "Web Apps",
-  "Mobile Apps",
-  "SaaS Platforms",
-  "Design Systems",
-  "Dashboards",
-  "Automations",
-  "MVPs",
-  "E-commerce",
-  "Internal Tools",
-  "Landing Pages",
-  "Brand Identity",
-];
 const WORD_GAP = 0.12;
 const WORD_ANGLES = [-35, 145, 35, -145, -75, 105, 75, -105, -55, 125, 55, -125];
 
@@ -193,6 +181,10 @@ export default function ShaderTunnel({ variant, children }: { variant: TunnelVar
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const wordsRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
+  const tr = useTranslations("tunnel");
+  const words = tr.raw("words") as string[];
+  // The ride only needs how many words there are, the same in every language.
+  const wordCount = words.length;
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
@@ -206,7 +198,7 @@ export default function ShaderTunnel({ variant, children }: { variant: TunnelVar
     }
     const gsap = setupGsap();
     const reduced = prefersReducedMotion();
-    const words = Array.from(wordsRef.current?.children ?? []) as HTMLElement[];
+    const wordEls = Array.from(wordsRef.current?.children ?? []) as HTMLElement[];
 
     const prog = compile(gl);
     gl.useProgram(prog);
@@ -271,8 +263,8 @@ export default function ShaderTunnel({ variant, children }: { variant: TunnelVar
       const portrait = vh > vw;
       const spreadX = portrait ? vw * 0.5 : Math.max(vw, vh) * 0.55;
       const spreadY = portrait ? vh * 0.6 : Math.max(vw, vh) * 0.55 * 0.7;
-      words.forEach((word, i) => {
-        const z = t * (1 + (WORDS.length - 1) * WORD_GAP) - i * WORD_GAP;
+      wordEls.forEach((word, i) => {
+        const z = t * (1 + (wordCount - 1) * WORD_GAP) - i * WORD_GAP;
         if (z <= 0 || z >= 1) {
           word.style.visibility = "hidden";
           return;
@@ -368,7 +360,7 @@ export default function ShaderTunnel({ variant, children }: { variant: TunnelVar
       gl.deleteBuffer(buf);
       gl.deleteProgram(prog);
     };
-  }, [variant]);
+  }, [variant, wordCount]);
 
   return (
     <section ref={sectionRef} className="relative h-[280vh] md:h-[340vh]">
@@ -379,9 +371,9 @@ export default function ShaderTunnel({ variant, children }: { variant: TunnelVar
         className="sticky top-0 h-lvh w-full overflow-hidden data-[fallback=true]:bg-[#01020c]"
       >
         <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
-        <p className="sr-only">Things we can build together: {WORDS.join(", ")}.</p>
+        <p className="sr-only">{tr("srIntro")} {words.join(", ")}.</p>
         <div ref={wordsRef} aria-hidden className="absolute inset-0 pointer-events-none">
-          {WORDS.map((w) => (
+          {words.map((w) => (
             <span
               key={w}
               className="absolute left-1/2 top-1/2 whitespace-nowrap text-3xl md:text-7xl font-semibold tracking-title text-white/90 invisible will-change-transform"

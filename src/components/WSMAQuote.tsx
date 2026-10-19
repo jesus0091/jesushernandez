@@ -2,6 +2,7 @@
 
 import { prefersReducedMotion, setupGsap } from "@/lib/motion";
 import { useLayoutEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 
 import { HANDOFF, HANDOFF_COVERED } from "./motion/skillsHandoff";
 import ScatterText from "./motion/ScatterText";
@@ -29,6 +30,7 @@ const RAILS = (() => {
 const depthScale = (z: number) => 0.04 * Math.pow(60, z);
 
 export default function WSMAQuote() {
+  const t = useTranslations("wsma");
   // The pin owns the wrapper; the exit tween owns the section's transform. If
   // both lived on one element, a ScrollTrigger refresh while scrolled past the
   // pin would record the exit's translateY as the pin's own style and restore
@@ -269,7 +271,7 @@ export default function WSMAQuote() {
           ref={extrasRef}
           className="relative z-[41] mx-auto max-w-[1280px] px-6 md:px-8 flex flex-col items-center text-center gap-4"
         >
-          <SectionLabel align="center" animate="none" surface="dark">What sets me apart</SectionLabel>
+          <SectionLabel align="center" animate="none" surface="dark">{t("label")}</SectionLabel>
 
           <div className="flex flex-col pb-2">
             <ScatterText
@@ -277,14 +279,14 @@ export default function WSMAQuote() {
               style={{ fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.0125em" }}
               tweenRef={scatterRef}
             >
-              I code. I design. <span className="text-[var(--color-accent)]">I do both.</span>
+              {t("line")}<span className="text-[var(--color-accent)]">{t("accent")}</span>
             </ScatterText>
           </div>
 
           <p data-wsma-fade className="text-sm md:text-lg font-medium text-[var(--color-bg)]/60 max-w-md mt-1">
-            Great products happen when
+            {t("subTop")}
             <br />
-            <span className="text-[var(--color-bg)] font-semibold">design meets code.</span>
+            <span className="text-[var(--color-bg)] font-semibold">{t("subBottom")}</span>
           </p>
         </div>
       </section>

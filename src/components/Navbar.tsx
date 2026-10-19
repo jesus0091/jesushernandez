@@ -187,8 +187,8 @@ export default function Navbar() {
               : "grain-surface border-b border-black/[0.08]",
         ].filter(Boolean).join(" ")}
       >
-        <nav className="max-w-[1280px] mx-auto px-8 flex items-center justify-between h-[72px]">
-          <div className="flex items-center gap-4">
+        <nav className="max-w-[1280px] mx-auto px-6 lg:px-8 flex items-center justify-between h-[72px]">
+          <div className="flex items-center gap-3 lg:gap-4">
             <Link
               href="/"
               className={[
@@ -207,7 +207,7 @@ export default function Navbar() {
               aria-hidden
               className={[
                 // -mr: the link's own padding already spaces the first link from it.
-                "-mr-4 text-lg font-light transition-colors duration-300",
+                "-mr-3 lg:-mr-4 text-lg font-light transition-colors duration-300",
                 light ? "text-white/50" : "text-[var(--color-ink-4)]",
               ].join(" ")}
             >
@@ -226,7 +226,7 @@ export default function Navbar() {
                       aria-current={selected ? "page" : undefined}
                       className={[
                         // Set like the section eyebrows (SectionLabel): caps, wide tracking.
-                        "px-4 py-2 rounded-full text-xs font-mono font-medium uppercase tracking-[0.08em] transition-all duration-200",
+                        "px-2.5 lg:px-4 py-2 rounded-full text-xs font-mono font-medium uppercase tracking-[0.08em] transition-all duration-200",
                         light
                           ? selected
                             ? "text-white bg-white/15"
@@ -251,7 +251,7 @@ export default function Navbar() {
               href="mailto:jesushernandez120491@gmail.com"
               data-sfx="cta"
               className={[
-                "flex items-center gap-2 rounded-full font-medium transition-all duration-300 px-5 py-2 text-[15px]",
+                "flex items-center gap-2 whitespace-nowrap rounded-full font-medium transition-all duration-300 px-4 lg:px-5 py-2 text-[15px]",
                 light
                   ? "bg-white text-[var(--black)] hover:bg-white/85"
                   : "bg-[var(--black)] text-white hover:bg-zinc-800",
@@ -267,7 +267,7 @@ export default function Navbar() {
       {/* Logo layer: same grid as the header's nav, but outside its blend, so
           the face and its square never invert while the brush passes. */}
       <div aria-hidden className="hidden md:block fixed top-0 left-0 right-0 z-50 pointer-events-none">
-        <div className="max-w-[1280px] mx-auto px-8 flex items-center h-[72px]">
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-8 flex items-center h-[72px]">
           <Image
             src="/images/facebrand.png"
             alt=""

@@ -2,19 +2,20 @@
 
 import { prefersReducedMotion, setupGsap } from "@/lib/motion";
 import { useLayoutEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 
 import { HANDOFF } from "../motion/skillsHandoff";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import SectionHeading from "../motion/SectionHeading";
 import SectionLabel from "../SectionLabel";
 
-type Category = { key: string; label: string; skills: string[] };
+// Technical skill names stay as they are; only the category titles and the soft skills are translated.
+type Category = { key: "dev" | "design" | "soft"; skills: string[] };
 
 // Kept current with what shows up in recent projects.
 const CATEGORIES: Category[] = [
   {
     key: "dev",
-    label: "Development",
     skills: [
       "React", "Next.js", "TypeScript", "JavaScript", "Vite", "TailwindCSS",
       "GSAP", "Framer Motion", "Zustand", "TanStack Query", "React Hook Form",
@@ -27,15 +28,14 @@ const CATEGORIES: Category[] = [
   },
   {
     key: "design",
-    label: "Design",
     skills: ["Figma", "Design System", "Prototyping", "UX Research", "Accessibility", "AI Design", "Midjourney"],
   },
   {
     key: "soft",
-    label: "Soft Skills",
+    // Keys into skills.softItems.
     skills: [
-      "Communication", "Teamwork", "Problem Solving", "Empathy",
-      "Ownership", "Mentoring", "Adaptability", "Critical Thinking", "Self-management",
+      "communication", "teamwork", "problemSolving", "empathy",
+      "ownership", "mentoring", "adaptability", "criticalThinking", "selfManagement",
     ],
   },
 ];
@@ -50,6 +50,7 @@ const CHARS = "abcdefghijklmnopqrstuvwxyz<>/{}#_";
  * it. Hovering a tag decodes it again.
  */
 export default function Skills() {
+  const t = useTranslations("skills");
   const rootRef = useRef<HTMLElement | null>(null);
 
   useLayoutEffect(() => {
@@ -129,9 +130,9 @@ export default function Skills() {
     <section id="skills" ref={rootRef} className="relative pt-12 pb-20 md:py-28">
       <div className="mx-auto w-full max-w-[1280px] px-6 md:px-8">
         <div className="mb-10 md:mb-14 flex flex-col gap-3">
-          <SectionLabel>Skills</SectionLabel>
+          <SectionLabel>{t("label")}</SectionLabel>
           <SectionHeading className="text-3xl md:text-6xl leading-tighter font-semibold tracking-title text-[var(--black)]">
-            What I bring to the table.
+            {t("heading")}
           </SectionHeading>
         </div>
 
@@ -139,18 +140,21 @@ export default function Skills() {
           <div key={c.key} data-row className="relative grid grid-cols-1 gap-3 py-6 md:grid-cols-12 md:gap-8 md:py-7">
             <span data-line aria-hidden className="absolute inset-x-0 top-0 h-px origin-left bg-black/15" />
             <h3 data-title className="text-2xl font-semibold tracking-title text-[var(--black)] md:col-span-3">
-              {c.label}
+              {t(c.key)}
             </h3>
             {/* Square-ish tags, not pills: the site's buttons are pills, so the
                 shape keeps skills from reading as clickable. */}
             <ul className="flex flex-wrap content-start gap-x-2 gap-y-1.5 md:col-span-9">
-              {c.skills.map((s) => (
-                <li key={s} data-tag className="rounded-chip bg-black/[0.05] px-2.5 py-1 font-mono text-sm text-[var(--color-ink-2)]">
-                  <span data-tag-text data-text={s}>
-                    {s}
-                  </span>
-                </li>
-              ))}
+              {c.skills.map((s) => {
+                const label = c.key === "soft" ? t(`softItems.${s}`) : s;
+                return (
+                  <li key={s} data-tag className="rounded-chip bg-black/[0.05] px-2.5 py-1 font-mono text-sm text-[var(--color-ink-2)]">
+                    <span data-tag-text data-text={label}>
+                      {label}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}

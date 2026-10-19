@@ -3,6 +3,7 @@
 import { BehanceLogo, BookOpenText, FlowArrow, GithubLogo, ArrowRight, PenNib, Question } from "@/components/icons";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import { useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
 import ProjectCard from "./ProjectCard";
@@ -26,10 +27,7 @@ export type LinkOut = {
 
 export type Project = {
   id: string;
-  title: string;
   productName: string;
-  role: string;
-  summary: string;
   stack: string[];
   cover: string;
   mosaic?: string[];
@@ -41,11 +39,7 @@ export type Project = {
 const PROJECTS: Project[] = [
   {
     id: "ristario",
-    title: "Website Design & Development",
     productName: "Ristario",
-    role: "UX/UI Designer & FullStack Developer",
-    summary:
-      "Complete design and development of Ristario website. From concept to production, including UX/UI design, branding, and full-stack implementation.",
     stack: ["Figma", "ReactJS", "NextJS", "TypeScript", "TailwindCSS", "Design System", "Branding"],
     cover: "/images/linkedin.webp",
     category: "frontend",
@@ -57,11 +51,7 @@ const PROJECTS: Project[] = [
   },
   {
     id: "move-the-chain",
-    title: "SaaS Platform",
     productName: "Move The Chain",
-    role: "UX/UI Designer & Developer",
-    summary:
-      "Design and development of a SaaS platform focused on employee engagement: workflows, wireframes, prototypes and the design system, then built into features, integrations and reusable components.",
     stack: ["ReactJS", "NextJS", "TypeScript", "TailwindCSS", "Figma", "Design System", "UX Research"],
     cover: "/images/mtc-design.webp",
     category: "design",
@@ -73,11 +63,7 @@ const PROJECTS: Project[] = [
   },
   {
     id: "fundacion-pataro",
-    title: "Foundation Website Design",
     productName: "Fundación Pataro",
-    role: "UX/UI Designer & Developer",
-    summary:
-      "Complete UX/UI design for Fundación Pataro website. Focused on accessibility, user experience and visual identity to communicate the foundation's mission effectively.",
     stack: ["Figma", "Figma Design", "UX Research", "Accessibility", "Prototyping", "Branding"],
     cover: "/images/Banner-10.webp",
     mosaic: getWorkById("fundacion-pataro")?.mosaic,
@@ -87,11 +73,7 @@ const PROJECTS: Project[] = [
   },
   {
     id: "iacon",
-    title: "Landing Page Redesigning",
     productName: "IACON",
-    role: "UX/UI Designer",
-    summary:
-      "Redesign of IACON's corporate landing page in Figma, along with new visual assets and branding elements to strengthen the company's digital identity.",
     stack: ["Figma", "Figma Design", "FigJam", "Design System", "Branding"],
     cover: "/images/iacon.webp",
     category: "design",
@@ -100,11 +82,7 @@ const PROJECTS: Project[] = [
   },
   {
     id: "smart-factory",
-    title: "Web Dashboard",
     productName: "Smart Factory",
-    role: "UX/UI Designer",
-    summary:
-      "Design of an industrial dashboard used by factory operators to monitor and control production machinery. Project created from scratch with data-first UI.",
     stack: ["Figma", "UX Design", "Prototyping", "Design System", "Branding"],
     cover: "/images/smart-f.webp",
     category: "design",
@@ -113,11 +91,7 @@ const PROJECTS: Project[] = [
   },
   {
     id: "cc-webapp",
-    title: "Web Application",
     productName: "Omnipad",
-    role: "UX/UI Designer",
-    summary:
-      "Task management web application for call centers. Users can schedule, manage and track client calls. Flows, wireframes and visual prototype.",
     stack: ["Figma", "Figma Design", "Design System", "Prototyping", "UX Research", "UI Design"],
     cover: "/images/omnipad.webp",
     category: "design",
@@ -126,11 +100,7 @@ const PROJECTS: Project[] = [
   },
   {
     id: "psy-app",
-    title: "Mobile App",
     productName: "Academic Project",
-    role: "UX/UI Designer",
-    summary:
-      "Integrative UX/UI project for an iOS app designed for psychologists. Developed from scratch with the full Design Thinking process, research and testing.",
     stack: ["Figma", "Figma Design", "Design System", "iOS", "Prototyping", "UX Research", "Design Thinking"],
     cover: "/images/therapia.webp",
     category: "design",
@@ -146,13 +116,8 @@ const LATEST = PROJECTS.slice(0, 5);
 // each phrase rises in, reads itself word by word, then rises out.
 // The last one carries the link and stays.
 // Each phrase is a step of the process; its icon marks the step.
-const PHRASES = [
-  { text: "Every project starts with a question, not a screen.", Icon: Question },
-  { text: "Research shapes the flows, the flows shape the system.", Icon: FlowArrow },
-  { text: "Design and code stay in the same hands, so nothing gets lost in handoff.", Icon: PenNib },
-  { text: "Each project is a story, from brief to launch, design to code.", Icon: BookOpenText },
-];
-const PHRASE_LINK = "See the full picture.";
+// Texts live in messages (projects.phrases), in this order.
+const PHRASE_ICONS = [Question, FlowArrow, PenNib, BookOpenText];
 
 const linkClass =
   "bg-[linear-gradient(var(--orange),var(--orange))] bg-[length:100%_1.5px] bg-bottom-left bg-no-repeat pb-0.5 text-[var(--color-accent-ink)]";
@@ -177,6 +142,9 @@ function MaskedWords({ text }: { text: string }) {
 // Reduced motion: regular swipeable Embla carousel.
 
 export default function LatestProjects() {
+  const t = useTranslations("projects");
+  const phraseTexts = t.raw("phrases") as string[];
+  const phraseLink = t("phraseLink");
   const sectionRef = useRef<HTMLElement | null>(null);
   const headerRef = useRef<HTMLDivElement | null>(null);
   const anchorRef = useRef<HTMLDivElement | null>(null);
@@ -251,7 +219,7 @@ export default function LatestProjects() {
     };
 
     const ctx = gsap.context(() => {
-      const n = PHRASES.length;
+      const n = PHRASE_ICONS.length;
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: viewport,
@@ -353,16 +321,16 @@ export default function LatestProjects() {
           <div className="flex flex-col gap-2">
             {/* Anchor to measure left offset for full-bleed carousel */}
             <div ref={anchorRef} className="absolute" aria-hidden />
-            <SectionLabel className="mb-1">Latest Projects</SectionLabel>
+            <SectionLabel className="mb-1">{t("label")}</SectionLabel>
             <Link href="/works" className="block max-w-3xl">
               <SectionHeading className="text-3xl md:text-6xl text-[var(--black)] font-semibold tracking-title">
-                Building Digital
+                {t("headingTop")}
                 <br />
-                Products & Experience
+                {t("headingBottom")}
               </SectionHeading>
             </Link>
             <p className="text-sm md:text-lg font-medium text-[var(--muted)] max-w-lg mt-1">
-              Highlights of collaborative and solo projects that shaped my expertise.
+              {t("subtitle")}
             </p>
           </div>
 
@@ -371,7 +339,7 @@ export default function LatestProjects() {
             data-sfx="cta"
             className="hidden md:inline-flex items-center gap-2 shrink-0 rounded-full px-6 py-3 bg-[var(--black)] text-white font-medium text-base transition hover:bg-zinc-800"
           >
-            View all works
+            {t("viewAll")}
             <ArrowRight size={16} />
           </Link>
         </div>
@@ -392,7 +360,7 @@ export default function LatestProjects() {
           className={`mx-auto max-w-[1280px] w-full md:px-8 mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.08em] text-[var(--color-ink-4)] ${scrollDriven ? "px-6" : ""}`}
         >
           <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" aria-hidden />
-          The {LATEST.length} most recent
+          {t("caption", { count: LATEST.length })}
         </p>
 
         <div
@@ -432,31 +400,34 @@ export default function LatestProjects() {
             className="mx-auto max-w-[1280px] w-full px-6 md:px-8 mt-8 md:mt-10 flex items-end justify-between gap-6"
           >
             <div className="grid text-sm md:text-lg font-medium text-[var(--muted)]">
-              {PHRASES.map(({ text, Icon }, i) => (
+              {phraseTexts.map((text, i) => {
+                const Icon = PHRASE_ICONS[i];
+                return (
                 <p
-                  key={text}
+                  key={i}
                   data-phrase
                   className="[grid-area:1/1] max-w-md text-balance"
                   style={i > 0 ? { visibility: "hidden", opacity: 0 } : undefined}
-                  aria-hidden={i < PHRASES.length - 1 || undefined}
+                  aria-hidden={i < phraseTexts.length - 1 || undefined}
                 >
                   <Icon
                     data-phrase-icon
                     aria-hidden
                     size={20}
-                    className={`${phraseIconClass} ${i === PHRASES.length - 1 ? "text-[var(--orange)]" : ""}`}
+                    className={`${phraseIconClass} ${i === phraseTexts.length - 1 ? "text-[var(--orange)]" : ""}`}
                   />
                   <MaskedWords text={text} />
-                  {i === PHRASES.length - 1 && (
+                  {i === phraseTexts.length - 1 && (
                     <>
                       {" "}
                       <Link href="/works" data-scrub-underline className={linkClass}>
-                        <MaskedWords text={PHRASE_LINK} />
+                        <MaskedWords text={phraseLink} />
                       </Link>
                     </>
                   )}
                 </p>
-              ))}
+                );
+              })}
             </div>
             {/* Same CTA as the header's, back at the end of the ride. */}
             <Link
@@ -466,7 +437,7 @@ export default function LatestProjects() {
               style={{ visibility: "hidden", opacity: 0 }}
               className="inline-flex items-center gap-2 shrink-0 rounded-full px-6 py-3 bg-[var(--black)] text-white font-medium text-base transition hover:bg-zinc-800"
             >
-              View all works
+              {t("viewAll")}
               <ArrowRight size={16} />
             </Link>
           </div>
@@ -478,9 +449,9 @@ export default function LatestProjects() {
         {!scrollDriven && (
           <ScrubWords className="text-sm md:text-lg font-medium text-[var(--muted)] max-w-md">
             <BookOpenText aria-hidden size={20} className={`${phraseIconClass} text-[var(--orange)]`} />
-            {PHRASES[PHRASES.length - 1].text}{" "}
+            {phraseTexts[phraseTexts.length - 1]}{" "}
             <Link href="/works" data-scrub-underline className={linkClass}>
-              {PHRASE_LINK}
+              {phraseLink}
             </Link>
           </ScrubWords>
         )}
@@ -489,7 +460,7 @@ export default function LatestProjects() {
             href="/works"
             className="md:hidden inline-flex items-center gap-2 rounded-full px-5 py-2.5 bg-[var(--black)] text-white font-medium text-sm transition hover:bg-zinc-800"
           >
-            View all works
+            {t("viewAll")}
             <ArrowRight size={16} />
           </Link>
         </div>

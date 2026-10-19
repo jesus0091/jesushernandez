@@ -2,7 +2,7 @@
   "meta": {
     "siteTitle": "Jesús Hernández | Product Engineer & Designer",
     "titleTemplate": "%s | Jesús Hernández",
-    "description": "Product Engineer y Designer radicado en Argentina. Diseño y construyo productos digitales de punta a punta, desde el primer boceto hasta producción.",
+    "description": "Product Engineer y Designer con base en Argentina. Diseño y construyo productos digitales de punta a punta, desde el primer boceto hasta producción.",
     "works": {
       "title": "Proyectos",
       "description": "Trabajos seleccionados de Jesús Hernández: sitios y productos diseñados y construidos de punta a punta, desde la investigación hasta el lanzamiento."
@@ -19,7 +19,7 @@
   "og": {
     "alt": "Jesús Hernández | Product Engineer & Designer",
     "portfolio": "PORTFOLIO",
-    "location": "Radicado en Argentina"
+    "location": "Con base en Argentina"
   },
   "nav": {
     "home": "Inicio",
@@ -60,5 +60,135 @@
       "lab": "Lab",
       "blog": "Blog"
     }
+  },
+  "home": {
+    "greeting": "Me llamo Jesús Hernández 👋",
+    "srTitle": "Jesús Hernández, Product Engineer & Product Designer",
+    "location": "Con base en Argentina",
+    "linkedin": "Perfil de LinkedIn",
+    "github": "Perfil de GitHub",
+    "behance": "Perfil de Behance"
+  },
+  "about": {
+    "label": "Sobre mí",
+    "heading": "La mente creativa detrás del código",
+    "cta": "Mira mi trabajo",
+    "body": "Soy <b>AI-Driven Engineer</b> y <b>Product Designer</b> con base en <b>Buenos Aires, Argentina.</b> Combino <b>diseño y desarrollo</b> en un solo perfil, lo que significa que puedo llevar un producto del <b>concepto a una interfaz pulida</b> sin perder coherencia en el camino. Me importan mucho los <b>detalles:</b> el <b>espaciado</b> correcto, la <b>interacción</b> correcta, las palabras correctas. Así construyo <b>productos digitales</b> que se sienten tan bien como funcionan."
+  },
+  "skills": {
+    "label": "Habilidades",
+    "heading": "Lo que aporto.",
+    "dev": "Desarrollo",
+    "design": "Diseño",
+    "soft": "Habilidades blandas",
+    "softItems": {
+      "communication": "Comunicación",
+      "teamwork": "Trabajo en equipo",
+      "problemSolving": "Resolución de problemas",
+      "empathy": "Empatía",
+      "ownership": "Responsabilidad",
+      "mentoring": "Mentoría",
+      "adaptability": "Adaptabilidad",
+      "criticalThinking": "Pensamiento crítico",
+      "selfManagement": "Autogestión"
+    }
+  },
+  "wsma": {
+    "label": "Lo que me distingue",
+    "line": "Programo. Diseño. ",
+    "accent": "Hago ambas.",
+    "subTop": "Los grandes productos nacen cuando",
+    "subBottom": "el diseño se une al código."
+  },
+  "projects": {
+    "label": "Últimos proyectos",
+    "headingTop": "Construyendo productos",
+    "headingBottom": "y experiencias digitales",
+    "subtitle": "Lo más destacado de proyectos colaborativos e individuales que moldearon mi experiencia.",
+    "viewAll": "Ver proyectos",
+    "caption": "Los {count} más recientes",
+    "solo": "Individual",
+    "collab": "Colaborativo",
+    "openAria": "Abrir {name} — {role}",
+    "coverAlt": "Portada de {title}",
+    "phrases": [
+      "Cada proyecto empieza con una pregunta, no con una pantalla.",
+      "La investigación da forma a los flujos, y los flujos dan forma al sistema.",
+      "Diseño y código están en las mismas manos, así que nada se pierde en el traspaso.",
+      "Cada proyecto es una historia, del brief al lanzamiento, del diseño al código."
+    ],
+    "phraseLink": "Mira el panorama completo.",
+    "items": {
+      "ristario": {
+        "title": "Diseño y desarrollo de sitio web",
+        "role": "UX/UI Designer & FullStack Developer",
+        "summary": "Diseño y desarrollo completos del sitio web de Ristario. Del concepto a producción, incluyendo diseño UX/UI, branding e implementación full-stack."
+      },
+      "move-the-chain": {
+        "title": "Plataforma SaaS",
+        "role": "UX/UI Designer & Developer",
+        "summary": "Diseño y desarrollo de una plataforma SaaS enfocada en el compromiso de los empleados: flujos, wireframes, prototipos y el sistema de diseño, construidos luego como funcionalidades, integraciones y componentes reutilizables."
+      },
+      "fundacion-pataro": {
+        "title": "Diseño del sitio web de una fundación",
+        "role": "UX/UI Designer & Developer",
+        "summary": "Diseño UX/UI completo del sitio web de Fundación Pataro. Centrado en la accesibilidad, la experiencia de usuario y la identidad visual para comunicar con eficacia la misión de la fundación."
+      },
+      "iacon": {
+        "title": "Rediseño de landing page",
+        "role": "UX/UI Designer",
+        "summary": "Rediseño de la landing page corporativa de IACON en Figma, junto con nuevos recursos visuales y elementos de marca para fortalecer la identidad digital de la empresa."
+      },
+      "smart-factory": {
+        "title": "Dashboard web",
+        "role": "UX/UI Designer",
+        "summary": "Diseño de un dashboard industrial que usan los operarios de una fábrica para monitorear y controlar la maquinaria de producción. Proyecto creado desde cero con una interfaz centrada en los datos."
+      },
+      "cc-webapp": {
+        "title": "Aplicación web",
+        "role": "UX/UI Designer",
+        "summary": "Aplicación web de gestión de tareas para call centers. Los usuarios pueden programar, gestionar y hacer seguimiento de las llamadas con clientes. Flujos, wireframes y prototipo visual."
+      },
+      "psy-app": {
+        "title": "App móvil",
+        "role": "UX/UI Designer",
+        "summary": "Proyecto integral de UX/UI para una app de iOS pensada para psicólogos. Desarrollado desde cero con todo el proceso de Design Thinking, investigación y pruebas."
+      }
+    }
+  },
+  "tunnel": {
+    "srIntro": "Cosas que podemos construir juntos:",
+    "words": [
+      "Web Apps",
+      "Apps móviles",
+      "Plataformas SaaS",
+      "Sistemas de diseño",
+      "Dashboards",
+      "Automatizaciones",
+      "MVPs",
+      "E-commerce",
+      "Herramientas internas",
+      "Landing Pages",
+      "Identidad de marca"
+    ]
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "message": "¡Vaya! La página que buscas parece haberse perdido en el vacío digital.",
+    "home": "Ir al inicio",
+    "back": "Volver",
+    "lostBefore": "¿Perdido? Revisa la URL o vuelve a la",
+    "lostLink": "página de inicio",
+    "lostAfter": "."
+  },
+  "error": {
+    "title": "Algo salió mal",
+    "message": "Encontramos un error inesperado. No te preocupes, ¡no es tu culpa!",
+    "details": "Ver detalles del error",
+    "tryAgain": "Intentar de nuevo",
+    "home": "Ir al inicio",
+    "persistsBefore": "Si el problema continúa,",
+    "contact": "contacta con soporte",
+    "persistsAfter": "."
   }
 }

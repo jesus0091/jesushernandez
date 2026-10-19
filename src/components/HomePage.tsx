@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useLayoutEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import {
   BehanceLogo,
   GithubLogo,
@@ -25,6 +26,7 @@ const HERO_MOSAIC = WALL.flatMap((name, i) => [
 ]);
 
 export default function HomePage() {
+  const t = useTranslations("home");
   const sectionRef = useRef<HTMLElement | null>(null);
   const greetRef = useRef<HTMLParagraphElement | null>(null);
   const titleRef = useRef<HTMLDivElement | null>(null);
@@ -91,10 +93,10 @@ export default function HomePage() {
         {/* As on a project page: the intro sits low on the first screen, the wall closes it. */}
         <div ref={contentRef} className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-1 flex-col items-start gap-2 px-6 text-left md:px-8">
           <p ref={greetRef} className="mt-auto font-mono text-sm uppercase md:text-base text-[var(--color-accent-ink)]">
-            My name is Jesús Hernández 👋
+            {t("greeting")}
           </p>
 
-          <h1 className="sr-only">Jesús Hernández, Product Engineer &amp; Product Designer</h1>
+          <h1 className="sr-only">{t("srTitle")}</h1>
 
           {/* Title with the location beside it; on phones the location drops below. */}
           <div className={`relative flex w-full flex-col gap-3 ${TITLE_SIZE}`}>
@@ -110,7 +112,7 @@ export default function HomePage() {
                 ref={subtitleRef}
                 className="text-base flex md:text-lg font-medium text-[var(--muted)]"
               >
-                <p className="md:-mt-[0.16em] md:leading-none">Based in Argentina</p>
+                <p className="md:-mt-[0.16em] md:leading-none">{t("location")}</p>
               </div>
               <div ref={footerSocialRef} className="flex flex-row gap-1 mt-1 -ml-2.5 md:mt-0 md:ml-0 md:-mr-2.5 md:-mb-2.5">
                 <Link
@@ -118,7 +120,7 @@ export default function HomePage() {
                   data-sfx="social"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="LinkedIn profile"
+                  aria-label={t("linkedin")}
                   className="flex w-10 h-10 items-center justify-center rounded-full hover:bg-black/5 transition text-(--color-ink-3) hover:text-(--color-ink-1)"
                 >
                   <LinkedinLogo size={20} />
@@ -128,7 +130,7 @@ export default function HomePage() {
                   data-sfx="social"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="GitHub profile"
+                  aria-label={t("github")}
                   className="flex w-10 h-10 items-center justify-center rounded-full hover:bg-black/5 transition text-(--color-ink-3) hover:text-(--color-ink-1)"
                 >
                   <GithubLogo size={20} />
@@ -138,7 +140,7 @@ export default function HomePage() {
                   data-sfx="social"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Behance profile"
+                  aria-label={t("behance")}
                   className="flex w-10 h-10 items-center justify-center rounded-full hover:bg-black/5 transition text-(--color-ink-3) hover:text-(--color-ink-1)"
                 >
                   <BehanceLogo size={20} />

@@ -9,6 +9,7 @@ import {
 import React, { useLayoutEffect, useRef } from "react";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SectionHeading from "../motion/SectionHeading";
@@ -36,27 +37,16 @@ const AboutText: React.FC<AboutTextProps> = ({
   const gridRef = useRef<HTMLDivElement | null>(null);
 
   useRecede(sectionRef, gridRef);
-  const segments: { text: string; bold?: boolean }[] = [
-    { text: "I'm a " },
-    { text: "AI-Driven Engineer", bold: true },
-    { text: " and " },
-    { text: "Product Designer", bold: true },
-    { text: " based in " },
-    { text: "Buenos Aires, Argentina.", bold: true },
-    { text: " I combine " },
-    { text: "design and development", bold: true },
-    { text: " in a single profile, which means I can take a product from " },
-    { text: "concept to polished interface", bold: true },
-    { text: " without losing coherence along the way. I care deeply about the " },
-    { text: "details:", bold: true },
-    { text: " the right " },
-    { text: "spacing,", bold: true },
-    { text: " the right " },
-    { text: "interaction,", bold: true },
-    { text: " the right words. That's how I build " },
-    { text: "digital products", bold: true },
-    { text: " that feel as good as they work." },
-  ];
+  const t = useTranslations("about");
+  // The paragraph marks its bold phrases with <b>…</b>.
+  const segments = (t.raw("body") as string)
+    .split(/(<b>.*?<\/b>)/)
+    .filter(Boolean)
+    .map((part) =>
+      part.startsWith("<b>")
+        ? { text: part.slice(3, -4), bold: true }
+        : { text: part, bold: false }
+    );
 
   useLayoutEffect(() => {
     if (typeof window === "undefined") return;
@@ -159,9 +149,9 @@ const AboutText: React.FC<AboutTextProps> = ({
         <div ref={rightColRef} className="relative flex-1 flex flex-col gap-6 py-4">
 
           <div className="flex flex-col gap-3">
-            <SectionLabel>About Me</SectionLabel>
+            <SectionLabel>{t("label")}</SectionLabel>
             <SectionHeading className="select-none text-3xl md:text-6xl leading-tighter font-semibold tracking-title text-[var(--black)]">
-              The Creative Mind Behind the Code
+              {t("heading")}
             </SectionHeading>
           </div>
           <p
@@ -248,7 +238,7 @@ const AboutText: React.FC<AboutTextProps> = ({
           `}</style>
           <div className="btn-border-wrap w-fit">
             <Link href="/works" data-sfx="cta" className="group flex flex-row items-center gap-2 px-5 py-3 rounded-full font-semibold text-base transition-colors hover:bg-black hover:text-white">
-              <span className="btn-text-shine">Look at My Work</span>
+              <span className="btn-text-shine">{t("cta")}</span>
               <ArrowRight className="transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
           </div>
