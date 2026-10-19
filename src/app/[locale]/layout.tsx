@@ -25,7 +25,9 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
   display: "swap",
-  preload: true,
+  // Only small labels use it, none visible before the intro ends: not worth
+  // competing with the first screen for bandwidth.
+  preload: false,
 });
 
 export async function generateMetadata({

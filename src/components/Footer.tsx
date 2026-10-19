@@ -300,6 +300,7 @@ export default function Footer({
 
     // Fit the wordmark exactly to the container width.
     let lastWidth = 0;
+    let lastSize = "";
     const fit = () => {
       if (box.clientWidth === lastWidth) return;
       lastWidth = box.clientWidth;
@@ -307,7 +308,15 @@ export default function Footer({
       const w = text.offsetWidth;
       if (w) text.style.fontSize = `${(100 * box.clientWidth) / w}px`;
       paint();
-      ScrollTrigger.refresh();
+      // Refreshing every trigger is the costliest step of loading the page,
+      // so only do it when the size changed. The first fit only moves the
+      // name's own trigger (made just below, before the name had its size);
+      // later ones change the page's height, which every trigger depends on.
+      const size = text.style.fontSize;
+      if (size === lastSize) return;
+      if (lastSize) ScrollTrigger.refresh();
+      else tween?.scrollTrigger?.refresh();
+      lastSize = size;
     };
 
     let tween: gsap.core.Tween | null = null;
@@ -320,7 +329,7 @@ export default function Footer({
       drift = gsap.to(glow, { drift: 1, duration: 14, ease: "sine.inOut", repeat: -1, yoyo: true, paused: true, onUpdate: place });
       io = new IntersectionObserver(([entry]) => void (entry.isIntersecting ? drift?.play() : drift?.pause()));
       io.observe(box);
-      split = SplitText.create(text, { type: "chars" });
+      split = SplitText.create(text, { type: "chars", aria: "none" });
       // Char boxes are only 0.8em tall (leading-[0.8]) but glyphs + accents
       // reach ~1em above the baseline, so push well past the box to hide them.
       tween = gsap.from(split.chars, {
@@ -520,8 +529,10 @@ export default function Footer({
         {/* Wordmark: sized to fill the container, letters rise in with scroll */}
         <div className="mt-16 md:mt-24 w-full max-w-[1280px] mx-auto px-6 md:px-8">
           <div ref={wordmarkBoxRef} className="overflow-hidden pt-[0.1em]">
+            {/* Decorative: the name is read in the copyright line below. */}
             <p
               ref={wordmarkRef}
+              aria-hidden
               className="relative inline-block whitespace-nowrap font-semibold tracking-[-0.05em] leading-[0.8] text-[var(--black)] text-[12vw] md:text-[10vw] pb-[0.12em]"
             >
               Jesús Hernández

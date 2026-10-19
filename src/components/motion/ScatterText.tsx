@@ -37,6 +37,9 @@ export default function ScatterText({ children, className = "", style, scrollTri
 
     const split = SplitText.create(root, {
       type: "chars",
+      // The root is hidden from assistive tech; the sr-only copy below reads instead
+      // (an aria-label on a plain span is ignored, and letters would be spelled out).
+      aria: "none",
       autoSplit: true,
       onSplit: (self) => {
         // Spread scales with the type, capped so letters stay near the viewport.
@@ -87,8 +90,11 @@ export default function ScatterText({ children, className = "", style, scrollTri
   }, []);
 
   return (
-    <span ref={rootRef} className={className} style={style}>
-      {children}
-    </span>
+    <>
+      <span className="sr-only">{children}</span>
+      <span ref={rootRef} aria-hidden className={className} style={style}>
+        {children}
+      </span>
+    </>
   );
 }

@@ -4,10 +4,10 @@ import { prefersReducedMotion, setupGsap } from "@/lib/motion";
 import { useLayoutEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 
-import { HANDOFF } from "../motion/skillsHandoff";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import SectionHeading from "../motion/SectionHeading";
 import SectionLabel from "../SectionLabel";
+import SkillLogos from "./SkillLogos";
 
 // Technical skill names stay as they are; only the category titles and the soft skills are translated.
 type Category = { key: "dev" | "design" | "soft"; skills: string[] };
@@ -63,25 +63,13 @@ export default function Skills() {
 
     const ctx = gsap.context(() => {
       // Dividers fill across with scroll.
-      q<HTMLElement>("[data-line]:not([data-line-last])").forEach((line) => {
+      q<HTMLElement>("[data-line]").forEach((line) => {
         gsap.fromTo(
           line,
           { scaleX: 0 },
           { scaleX: 1, ease: "none", scrollTrigger: { trigger: line, start: "top bottom", end: "top 50%", scrub: 0.6 } }
         );
       });
-
-      // The closing divider fills while the section holds at the bottom of the
-      // screen (the hold itself is pinned by WSMAQuote, which paints over it).
-      gsap.fromTo(
-        q("[data-line-last]"),
-        { scaleX: 0 },
-        {
-          scaleX: 1,
-          ease: "none",
-          scrollTrigger: { trigger: root, start: "bottom bottom", end: `+=${HANDOFF.lineFill * 100}%`, scrub: 0.6 },
-        }
-      );
 
       q<HTMLElement>("[data-row]").forEach((row) => {
         const texts = row.querySelectorAll<HTMLElement>("[data-tag-text]");
@@ -127,7 +115,7 @@ export default function Skills() {
   }, []);
 
   return (
-    <section id="skills" ref={rootRef} className="relative pt-12 pb-20 md:py-28">
+    <section id="skills" ref={rootRef} className="relative pt-12 md:pt-28">
       <div className="mx-auto w-full max-w-[1280px] px-6 md:px-8">
         <div className="mb-10 md:mb-14 flex flex-col gap-3">
           <SectionLabel>{t("label")}</SectionLabel>
@@ -158,11 +146,10 @@ export default function Skills() {
             </ul>
           </div>
         ))}
-
-        <div aria-hidden className="relative mt-4 md:mt-6">
-          <span data-line data-line-last className="absolute inset-x-0 top-0 h-px origin-left bg-black/15" />
-        </div>
       </div>
+
+      {/* Outside the container so the logos run the full width of the page. */}
+      <SkillLogos />
     </section>
   );
 }

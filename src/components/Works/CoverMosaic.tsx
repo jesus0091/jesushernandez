@@ -1,15 +1,33 @@
 const ROWS = 6;
+// A tile's width with its gap, in cqh (h-[30cqh] at 1600/707, plus mr-[2cqh]).
+const TILE_W = (30 * 1600) / 707 + 2;
+// A row is 400cqh wide and starts up to 68cqh further left (its margin), so the
+// sets left after the loop's shift must still cover that span.
+const ROW_SPAN = 400 + 68;
+
+// The same few screens repeat across the wall hundreds of times, so each tile
+// lists just two optimized widths (next/image would list every configured one
+// per tile, a few hundred KB of markup).
+const optimized = (src: string, w: number) => `/_next/image?url=${encodeURIComponent(src)}&w=${w}&q=75`;
+const srcSetFor = (src: string) => `${optimized(src, 384)} 384w, ${optimized(src, 640)} 640w`;
 
 /**
  * The /works wall at card size: a tilted mosaic of a project's own screens, in
  * color. Fills its (positioned) parent and is sized from it, in container
  * units, so the same composition holds in any card.
  */
-export default function CoverMosaic({ tiles, animated = false }: { tiles: string[]; animated?: boolean }) {
+export default function CoverMosaic({
+  tiles,
+  animated = false,
+  sizes = "280px",
+}: {
+  tiles: string[];
+  animated?: boolean;
+  /** Rendered tile width, for the image srcset (tiles are far smaller than their files). */
+  sizes?: string;
+}) {
   // Neighbouring rows never share an image (see WorksWall).
   const pools = [tiles.filter((_, i) => i % 2 === 0), tiles.filter((_, i) => i % 2 === 1)];
-  // The loop shifts by one of three identical sets; a still wall needs one.
-  const sets = animated ? 3 : 1;
 
   return (
     <div aria-hidden className="absolute inset-0 overflow-hidden bg-[var(--color-ink-1)] [container-type:size]">
@@ -17,24 +35,36 @@ export default function CoverMosaic({ tiles, animated = false }: { tiles: string
         {Array.from({ length: ROWS }, (_, r) => {
           const pool = pools[r % 2];
           const start = Math.floor(r / 2) * (r % 2 ? 1 : 2);
+          // Each set is the pool twice. The loop shifts by one set, so it needs
+          // only as many identical sets as keep the row covered (a still wall: one).
+          const perSet = pool.length * 2;
+          const sets = animated ? 1 + Math.ceil(ROW_SPAN / (perSet * TILE_W)) : 1;
           return (
             // Each row starts a little further in, so the tiles don't stack in columns.
             <div key={r} className="mb-[2cqh]" style={{ marginLeft: `-${(r * 23) % 68}cqh` }}>
               <div
                 className={`flex w-max ${animated ? "works-wall-row" : ""}`}
                 data-reverse={animated && r % 2 ? "" : undefined}
+                style={animated ? ({ "--wall-sets": sets } as React.CSSProperties) : undefined}
               >
-                {Array.from({ length: sets * pool.length * 2 }, (_, i) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    key={i}
-                    src={pool[(i + start) % pool.length]}
-                    alt=""
-                    decoding="async"
-                    draggable={false}
-                    className="mr-[2cqh] aspect-[1600/707] h-[30cqh] flex-none rounded-[2cqh] object-cover select-none"
-                  />
-                ))}
+                {Array.from({ length: sets * perSet }, (_, i) => {
+                  const src = pool[(i + start) % pool.length];
+                  return (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      key={i}
+                      src={optimized(src, 640)}
+                      srcSet={srcSetFor(src)}
+                      sizes={sizes}
+                      alt=""
+                      // The moving wall is on screen as it loads; still covers sit lower.
+                      loading={animated ? "eager" : "lazy"}
+                      decoding="async"
+                      draggable={false}
+                      className="mr-[2cqh] aspect-[1600/707] h-[30cqh] flex-none rounded-[2cqh] object-cover select-none"
+                    />
+                  );
+                })}
               </div>
             </div>
           );

@@ -38,6 +38,7 @@ const AboutText: React.FC<AboutTextProps> = ({
 
   useRecede(sectionRef, gridRef);
   const t = useTranslations("about");
+  const tSocial = useTranslations("home");
   // The paragraph marks its bold phrases with <b>…</b>.
   const segments = (t.raw("body") as string)
     .split(/(<b>.*?<\/b>)/)
@@ -80,16 +81,28 @@ const AboutText: React.FC<AboutTextProps> = ({
         .to(box,   { clipPath: "inset(0% 0 0 0)", duration: 0.9, ease: "power4.out" }, 0);
 
       // Text "writes itself": words go from faint to full ink, scrubbed with scroll.
-      gsap.fromTo(
+      const writeIn = gsap.fromTo(
         words,
         { opacity: 0.15 },
         {
           opacity: 1,
           stagger: 0.1,
           ease: "none",
+          immediateRender: false,
           scrollTrigger: { trigger: para, start: "top 95%", end: "center center", scrub: true },
         }
       );
+      // The faint start is the effect's first frame, not the text's resting
+      // state: apply it only as the paragraph reaches the screen, so the page
+      // loads with full-contrast text.
+      ScrollTrigger.create({
+        trigger: para,
+        start: "top bottom",
+        once: true,
+        onEnter: () => {
+          if (!writeIn.scrollTrigger?.progress) gsap.set(words, { opacity: 0.15 });
+        },
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -120,6 +133,7 @@ const AboutText: React.FC<AboutTextProps> = ({
                 data-sfx="social"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={tSocial("linkedin")}
                 className="flex w-12 h-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
               >
                 <LinkedinLogo />
@@ -129,6 +143,7 @@ const AboutText: React.FC<AboutTextProps> = ({
                 data-sfx="social"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={tSocial("github")}
                 className="flex w-12 h-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
               >
                 <GithubLogo />
@@ -138,6 +153,7 @@ const AboutText: React.FC<AboutTextProps> = ({
                 data-sfx="social"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={tSocial("behance")}
                 className="flex w-12 h-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
               >
                 <BehanceLogo />

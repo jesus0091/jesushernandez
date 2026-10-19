@@ -26,6 +26,8 @@ export default function ScrubWords({ children, className = "" }: ScrubWordsProps
 
     const split = SplitText.create(root, {
       type: "words",
+      // Words read fine as they are; an aria-label on a <p> is ignored anyway.
+      aria: "none",
       autoSplit: true,
       onSplit: (self) =>
         gsap

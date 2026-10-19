@@ -33,6 +33,7 @@ export default function HomePage() {
   const subtitleRef = useRef<HTMLDivElement | null>(null);
   const footerSocialRef = useRef<HTMLDivElement | null>(null);
   const mosaicRef = useRef<HTMLDivElement | null>(null);
+  const mosaicVeilRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
 
   useRecede(sectionRef, contentRef);
@@ -57,7 +58,11 @@ export default function HomePage() {
       gsap.set(greetRef.current, { autoAlpha: 0, y: 16 });
       gsap.set(subtitleRef.current, { autoAlpha: 0, y: 16 });
       gsap.set(socialLinks, { autoAlpha: 0, y: 10, scale: 0.96 });
-      gsap.set(mosaicRef.current, { autoAlpha: 0, y: 40 });
+      // The wall fades in through a veil of the page color rather than its own
+      // opacity: it looks the same, but the wall is painted (under the intro)
+      // as soon as its images load instead of only once it's revealed.
+      gsap.set(mosaicRef.current, { y: 40 });
+      gsap.set(mosaicVeilRef.current, { autoAlpha: 1 });
 
       const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
       stopWaiting = onIntroReveal(() => tl.play());
@@ -69,7 +74,8 @@ export default function HomePage() {
           { autoAlpha: 1, y: 0, scale: 1, duration: 0.4, stagger: 0.06 },
           ">0.05"
         )
-        .to(mosaicRef.current, { autoAlpha: 1, y: 0, duration: 1 }, "<0.1");
+        .to(mosaicRef.current, { y: 0, duration: 1 }, "<0.1")
+        .to(mosaicVeilRef.current, { autoAlpha: 0, duration: 1 }, "<");
     }, section);
 
     return () => {
@@ -152,9 +158,10 @@ export default function HomePage() {
           {/* The same moving wall as a project page, dealt from every project. */}
           <div
             ref={mosaicRef}
-            className="relative mt-10 h-[38svh] min-h-60 w-full overflow-hidden rounded-card bg-zinc-200 md:mt-12"
+            className="relative mt-6 h-[38svh] min-h-60 w-full overflow-hidden rounded-card bg-zinc-200"
           >
-            <CoverMosaic tiles={HERO_MOSAIC} animated />
+            <CoverMosaic tiles={HERO_MOSAIC} animated sizes="(min-width: 768px) 280px, 210px" />
+            <div ref={mosaicVeilRef} aria-hidden className="invisible absolute -inset-px bg-[var(--color-bg)]" />
           </div>
         </div>
       </section>

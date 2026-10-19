@@ -75,14 +75,13 @@ export default function ScrambleTitle({ lead, words, hold = 2.8, className = "" 
       });
     };
 
-    const ctx = gsap.context(() => {
-      // Hidden until the intro reveals the page, so the decode isn't spent behind it.
-      gsap.set(root, { autoAlpha: 0 });
-    }, root);
+    const ctx = gsap.context(() => {}, root);
 
+    // The decode waits for the intro to reveal the page, so it isn't spent
+    // behind it. Until then the title sits there whole, under the intro: the
+    // page's main text is painted (and counted) as soon as it loads.
     const stopWaiting = onIntroReveal(() =>
       ctx.add(() => {
-        gsap.set(root, { autoAlpha: 1 });
         leadEl.textContent = "";
         wordEl.textContent = "";
         scramble(leadEl, "", lead, 0.9).delay(0.1);

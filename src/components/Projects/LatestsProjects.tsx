@@ -119,9 +119,6 @@ const LATEST = PROJECTS.slice(0, 5);
 // Texts live in messages (projects.phrases), in this order.
 const PHRASE_ICONS = [Question, FlowArrow, PenNib, BookOpenText];
 
-const linkClass =
-  "bg-[linear-gradient(var(--orange),var(--orange))] bg-[length:100%_1.5px] bg-bottom-left bg-no-repeat pb-0.5 text-[var(--color-accent-ink)]";
-
 /** Word wrapped in its own mask so it can rise in/out; padded so descenders aren't clipped. */
 const phraseIconClass = "mr-2 inline-block align-[-0.15em]";
 
@@ -144,7 +141,6 @@ function MaskedWords({ text }: { text: string }) {
 export default function LatestProjects() {
   const t = useTranslations("projects");
   const phraseTexts = t.raw("phrases") as string[];
-  const phraseLink = t("phraseLink");
   const sectionRef = useRef<HTMLElement | null>(null);
   const headerRef = useRef<HTMLDivElement | null>(null);
   const anchorRef = useRef<HTMLDivElement | null>(null);
@@ -264,11 +260,7 @@ export default function LatestProjects() {
             tl.fromTo(icon, { autoAlpha: 0, scale: 0.6, rotation: -12 }, { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.15, ease: "back.out(2)" }, i);
         }
         tl.fromTo(words, { opacity: 0.15 }, { opacity: 1, duration: 0.1, ease: "none", stagger: { amount: last ? 0.45 : 0.55 } }, i + 0.15);
-        if (last) {
-          const underline = phrase.querySelector<HTMLElement>("[data-scrub-underline]");
-          if (underline)
-            tl.fromTo(underline, { backgroundSize: "0% 1.5px" }, { backgroundSize: "100% 1.5px", duration: 0.25, ease: "none" }, i + 0.7);
-        } else {
+        if (!last) {
           tl.to(words, { yPercent: -110, duration: 0.12, ease: "power2.in", stagger: { amount: 0.06 } }, i + 0.85);
           if (icon) tl.to(icon, { autoAlpha: 0, scale: 0.6, duration: 0.1, ease: "power2.in" }, i + 0.87);
           tl.set(phrase, { autoAlpha: 0 }, i + 1);
@@ -417,14 +409,6 @@ export default function LatestProjects() {
                     className={`${phraseIconClass} ${i === phraseTexts.length - 1 ? "text-[var(--orange)]" : ""}`}
                   />
                   <MaskedWords text={text} />
-                  {i === phraseTexts.length - 1 && (
-                    <>
-                      {" "}
-                      <Link href="/works" data-scrub-underline className={linkClass}>
-                        <MaskedWords text={phraseLink} />
-                      </Link>
-                    </>
-                  )}
                 </p>
                 );
               })}
@@ -449,10 +433,7 @@ export default function LatestProjects() {
         {!scrollDriven && (
           <ScrubWords className="text-sm md:text-lg font-medium text-[var(--muted)] max-w-md">
             <BookOpenText aria-hidden size={20} className={`${phraseIconClass} text-[var(--orange)]`} />
-            {phraseTexts[phraseTexts.length - 1]}{" "}
-            <Link href="/works" data-scrub-underline className={linkClass}>
-              {phraseLink}
-            </Link>
+            {phraseTexts[phraseTexts.length - 1]}
           </ScrubWords>
         )}
         <div className="flex items-center gap-3 shrink-0">

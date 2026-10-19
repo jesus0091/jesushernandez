@@ -213,11 +213,12 @@ html.lenis body {
 }
 
 /* ---------------- Works hero wall ---------------- */
-/* Rows slide by exactly one of their three identical sets, so the loop has no
-   seam. Transform-only keyframes: the compositor runs them, no JS per frame. */
+/* Rows slide by exactly one of their identical sets (three, or as many as a
+   row sets in --wall-sets), so the loop has no seam. Transform-only keyframes:
+   the compositor runs them, no JS per frame. */
 @keyframes works-wall-slide {
   to {
-    transform: translate3d(calc(-100% / 3), 0, 0);
+    transform: translate3d(calc(-100% / var(--wall-sets, 3)), 0, 0);
   }
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -228,6 +229,25 @@ html.lenis body {
     animation-direction: reverse;
     /* Shorter rows (fewer covers per set): scaled to keep the same speed. */
     animation-duration: 66s;
+  }
+}
+
+/* ---------------- Skills logo strip ---------------- */
+/* Two identical sets: sliding by half the track loops without a seam. */
+.skill-logos {
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+@keyframes skill-logos-slide {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .skill-logos-track {
+    animation: skill-logos-slide 60s linear infinite;
+  }
+  .skill-logos:hover .skill-logos-track {
+    animation-play-state: paused;
   }
 }
 
