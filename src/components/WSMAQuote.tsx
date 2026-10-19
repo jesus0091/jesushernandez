@@ -279,7 +279,7 @@ export default function WSMAQuote() {
               style={{ fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.0125em" }}
               tweenRef={scatterRef}
             >
-              {t("line")}<span className="text-[var(--color-accent)]">{t("accent")}</span>
+              {t("line")}<span className={t("accentOnNewLine") === "true" ? "block text-[var(--color-accent)]" : "text-[var(--color-accent)]"}>{t("accent")}</span>
             </ScatterText>
           </div>
 

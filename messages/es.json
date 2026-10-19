@@ -2,7 +2,7 @@
   "meta": {
     "siteTitle": "Jesús Hernández | Product Engineer & Designer",
     "titleTemplate": "%s | Jesús Hernández",
-    "description": "Product Engineer y Designer con base en Argentina. Diseño y construyo productos digitales de punta a punta, desde el primer boceto hasta producción.",
+    "description": "Product Engineer y Designer en Argentina. Diseño y construyo productos digitales de punta a punta, desde el primer boceto hasta producción.",
     "works": {
       "title": "Proyectos",
       "description": "Trabajos seleccionados de Jesús Hernández: sitios y productos diseñados y construidos de punta a punta, desde la investigación hasta el lanzamiento."
@@ -19,7 +19,7 @@
   "og": {
     "alt": "Jesús Hernández | Product Engineer & Designer",
     "portfolio": "PORTFOLIO",
-    "location": "Con base en Argentina"
+    "location": "En Argentina"
   },
   "nav": {
     "home": "Inicio",
@@ -64,7 +64,7 @@
   "home": {
     "greeting": "Me llamo Jesús Hernández 👋",
     "srTitle": "Jesús Hernández, Product Engineer & Product Designer",
-    "location": "Con base en Argentina",
+    "location": "En Argentina",
     "linkedin": "Perfil de LinkedIn",
     "github": "Perfil de GitHub",
     "behance": "Perfil de Behance"
@@ -73,7 +73,7 @@
     "label": "Sobre mí",
     "heading": "La mente creativa detrás del código",
     "cta": "Mira mi trabajo",
-    "body": "Soy <b>AI-Driven Engineer</b> y <b>Product Designer</b> con base en <b>Buenos Aires, Argentina.</b> Combino <b>diseño y desarrollo</b> en un solo perfil, lo que significa que puedo llevar un producto del <b>concepto a una interfaz pulida</b> sin perder coherencia en el camino. Me importan mucho los <b>detalles:</b> el <b>espaciado</b> correcto, la <b>interacción</b> correcta, las palabras correctas. Así construyo <b>productos digitales</b> que se sienten tan bien como funcionan."
+    "body": "Soy <b>AI-Driven Engineer</b> y <b>Product Designer</b> en <b>Buenos Aires, Argentina.</b> Combino <b>diseño y desarrollo</b> en un solo perfil, lo que significa que puedo llevar un producto del <b>concepto a una interfaz pulida</b> sin perder coherencia en el camino. Me importan mucho los <b>detalles:</b> el <b>espaciado</b> correcto, la <b>interacción</b> correcta, las palabras correctas. Así construyo <b>productos digitales</b> que se sienten tan bien como funcionan."
   },
   "skills": {
     "label": "Habilidades",
@@ -98,7 +98,8 @@
     "line": "Programo. Diseño. ",
     "accent": "Hago ambas.",
     "subTop": "Los grandes productos nacen cuando",
-    "subBottom": "el diseño se une al código."
+    "subBottom": "el diseño se une al código.",
+    "accentOnNewLine": "true"
   },
   "projects": {
     "label": "Últimos proyectos",
@@ -177,7 +178,7 @@
     "message": "¡Vaya! La página que buscas parece haberse perdido en el vacío digital.",
     "home": "Ir al inicio",
     "back": "Volver",
-    "lostBefore": "¿Perdido? Revisa la URL o vuelve a la",
+    "lostBefore": "¿Te perdiste? Revisa la URL o vuelve a la",
     "lostLink": "página de inicio",
     "lostAfter": "."
   },

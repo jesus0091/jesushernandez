@@ -98,7 +98,8 @@
     "line": "I code. I design. ",
     "accent": "I do both.",
     "subTop": "Great products happen when",
-    "subBottom": "design meets code."
+    "subBottom": "design meets code.",
+    "accentOnNewLine": "false"
   },
   "projects": {
     "label": "Latest Projects",
