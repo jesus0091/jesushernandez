@@ -1,1 +1,24 @@
-{}
+{
+  "meta": {
+    "siteTitle": "Jesús Hernández | Product Engineer & Designer",
+    "titleTemplate": "%s | Jesús Hernández",
+    "description": "Product Engineer and Designer based in Argentina. I design and build digital products end to end, from the first sketch to production.",
+    "works": {
+      "title": "Works",
+      "description": "Selected work by Jesús Hernández: websites and products designed and built end to end, from research to launch."
+    },
+    "lab": {
+      "title": "Lab",
+      "description": "An open workshop: experiments with AI, animation and whatever else I'm trying out."
+    },
+    "blog": {
+      "title": "Blog",
+      "description": "Writing by Jesús Hernández on product, design and engineering."
+    }
+  },
+  "og": {
+    "alt": "Jesús Hernández | Product Engineer & Designer",
+    "portfolio": "PORTFOLIO",
+    "location": "Based in Argentina"
+  }
+}

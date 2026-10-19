@@ -1,1 +1,24 @@
-{}
+{
+  "meta": {
+    "siteTitle": "Jesús Hernández | Product Engineer & Designer",
+    "titleTemplate": "%s | Jesús Hernández",
+    "description": "Product Engineer y Designer radicado en Argentina. Diseño y construyo productos digitales de punta a punta, desde el primer boceto hasta producción.",
+    "works": {
+      "title": "Proyectos",
+      "description": "Trabajos seleccionados de Jesús Hernández: sitios y productos diseñados y construidos de punta a punta, desde la investigación hasta el lanzamiento."
+    },
+    "lab": {
+      "title": "Lab",
+      "description": "Un taller abierto: experimentos con IA, animación y todo lo demás que estoy probando."
+    },
+    "blog": {
+      "title": "Blog",
+      "description": "Textos de Jesús Hernández sobre producto, diseño e ingeniería."
+    }
+  },
+  "og": {
+    "alt": "Jesús Hernández | Product Engineer & Designer",
+    "portfolio": "PORTFOLIO",
+    "location": "Radicado en Argentina"
+  }
+}

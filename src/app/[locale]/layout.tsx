@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Inter, JetBrains_Mono } from "next/font/google";
 
 import IntroOverlay from "@/components/motion/IntroOverlay";
@@ -10,6 +10,7 @@ import PageTransition from "@/components/motion/PageTransition";
 import SmoothScroll from "@/components/motion/SmoothScroll";
 import UiSounds from "@/components/UiSounds";
 import { routing } from "@/i18n/routing";
+import { SITE, absoluteUrl, shareFor } from "@/i18n/seo";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,60 +28,50 @@ const jetbrainsMono = JetBrains_Mono({
   preload: true,
 });
 
-const CANONICAL = "https://jesushernandez.site";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) return {};
+  const t = await getTranslations({ locale, namespace: "meta" });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(CANONICAL),
-  title: {
-    default: "Jesús Hernández | Product Engineer & Designer",
-    template: "%s | Jesús Hernández",
-  },
-  description:
-    "Product Engineer and Designer based in Argentina. I design and build digital products end to end, from the first sketch to production.",
-  keywords: [
-    "Product Engineer",
-    "Design Engineer",
-    "Product Designer",
-    "AI Engineer",
-    "Frontend Engineer",
-    "Full-Stack Developer",
-    "React",
-    "Next.js",
-    "TypeScript",
-    "Portfolio",
-    "Web Design",
-    "Web Development",
-  ],
-  authors: [{ name: "Jesús Hernández", url: CANONICAL }],
-  creator: "Jesús Hernández",
-  publisher: "Jesús Hernández",
-  robots: {
-    index: true,
-    follow: true,
-    "max-image-preview": "large",
-    "max-snippet": -1,
-    "max-video-preview": -1,
-  },
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    siteName: "Jesús Hernández",
-    url: CANONICAL,
-    title: "Jesús Hernández | Product Engineer & Designer",
-    description:
-      "Product Engineer and Designer based in Argentina. I design and build digital products end to end, from the first sketch to production.",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Jesús Hernández | Product Engineer & Designer",
-    description:
-      "Product Engineer and Designer based in Argentina. I design and build digital products end to end, from the first sketch to production.",
-  },
-  category: "technology",
-};
+  return {
+    metadataBase: new URL(SITE),
+    title: {
+      default: t("siteTitle"),
+      template: t("titleTemplate"),
+    },
+    description: t("description"),
+    keywords: [
+      "Product Engineer",
+      "Design Engineer",
+      "Product Designer",
+      "AI Engineer",
+      "Frontend Engineer",
+      "Full-Stack Developer",
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Portfolio",
+      "Web Design",
+      "Web Development",
+    ],
+    authors: [{ name: "Jesús Hernández", url: SITE }],
+    creator: "Jesús Hernández",
+    publisher: "Jesús Hernández",
+    robots: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+    ...shareFor("/", locale, { title: t("siteTitle"), description: t("description") }),
+    category: "technology",
+  };
+}
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -103,16 +94,17 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
   // Opt in to static rendering for this locale.
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "meta" });
 
   const personJsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Jesús Hernández",
-    url: CANONICAL,
+    url: SITE,
     jobTitle: "Product Engineer & Designer",
-    description:
-      "Product Engineer and Designer based in Argentina. I design and build digital products end to end, from the first sketch to production.",
-    image: `${CANONICAL}/images/about_me.webp`,
+    description: t("description"),
+    inLanguage: locale,
+    image: `${SITE}/images/about_me.webp`,
     address: {
       "@type": "PostalAddress",
       addressLocality: "Buenos Aires",
@@ -139,9 +131,9 @@ export default async function LocaleLayout({
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Jesús Hernández",
-    url: CANONICAL,
-    inLanguage: "en",
-    author: { "@type": "Person", name: "Jesús Hernández", url: CANONICAL },
+    url: absoluteUrl("/", locale),
+    inLanguage: locale,
+    author: { "@type": "Person", name: "Jesús Hernández", url: SITE },
   };
 
   return (

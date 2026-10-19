@@ -1,8 +1,14 @@
 import { ImageResponse } from "next/og";
+import { getTranslations } from "next-intl/server";
+import { hasLocale } from "next-intl";
+import { routing } from "@/i18n/routing";
 
-export const alt = "Jesús Hernández | Product Engineer & Designer";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+// A route handler, not the opengraph-image file convention: the convention
+// injects "/en/opengraph-image" into every page's metadata, which the
+// middleware redirects. Pages point at the public URL themselves (see shareFor).
+export const dynamic = "force-static";
+
+const size = { width: 1200, height: 630 };
 
 // Inter, like the site. Built at deploy time; falls back to the default font
 // if Google Fonts can't be reached.
@@ -18,7 +24,18 @@ async function loadInter(weight: number) {
   }
 }
 
-export default async function OpengraphImage() {
+// One image per language, rendered at build time.
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ locale: string }> },
+) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) return new Response(null, { status: 404 });
+  const t = await getTranslations({ locale, namespace: "og" });
   const [regular, bold] = await Promise.all([loadInter(400), loadInter(700)]);
   const fonts = [
     regular && { name: "Inter", data: regular, weight: 400 as const, style: "normal" as const },
@@ -42,7 +59,7 @@ export default async function OpengraphImage() {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 26, letterSpacing: 6, color: "#ff6600" }}>
           <div style={{ width: 48, height: 2, background: "#ff6600" }} />
-          PORTFOLIO
+          {t("portfolio")}
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           <div style={{ fontSize: 96, fontWeight: 700, letterSpacing: -4, lineHeight: 1 }}>Jesús Hernández</div>
@@ -53,7 +70,7 @@ export default async function OpengraphImage() {
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 26, color: "#6b6b6b" }}>
-          <span>Based in Argentina</span>
+          <span>{t("location")}</span>
           <span>jesushernandez.site</span>
         </div>
       </div>

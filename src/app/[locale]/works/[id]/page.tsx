@@ -2,14 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
+import { OG_LOCALE, absoluteUrl, alternatesFor, robotsFor } from "@/i18n/seo";
 import { WORKS, getWorkById } from "@/data/works";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WorkDetail from "@/components/Works/WorkDetail";
 
-const CANONICAL = "https://jesushernandez.site";
-
-type Props = { params: Promise<{ id: string }> };
+type Props = { params: Promise<{ locale: Locale; id: string }> };
 
 // Unknown ids are unmatched URLs, so they get the global 404.
 export const dynamicParams = false;
@@ -19,7 +18,7 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
+  const { locale, id } = await params;
   const work = getWorkById(id);
   if (!work) return {};
 
@@ -34,7 +33,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      url: `${CANONICAL}/works/${work.id}`,
+      url: absoluteUrl(`/works/${work.id}`, locale),
+      locale: OG_LOCALE[locale],
       images: [{ url: work.cover, alt: title }],
       type: "article",
     },
@@ -44,17 +44,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       images: [work.cover],
     },
-    alternates: {
-      canonical: `${CANONICAL}/works/${work.id}`,
-    },
+    alternates: alternatesFor(`/works/${work.id}`, locale),
+    robots: robotsFor(`/works/${work.id}`, locale),
   };
 }
 
-export default async function WorkDetailPage({
-  params,
-}: {
-  params: Promise<{ locale: Locale; id: string }>;
-}) {
+export default async function WorkDetailPage({ params }: Props) {
   const { locale, id } = await params;
   setRequestLocale(locale);
   const work = getWorkById(id);
