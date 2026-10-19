@@ -11,6 +11,9 @@ const CANONICAL = "https://jesushernandez.site";
 
 type Props = { params: Promise<{ id: string }> };
 
+// Unknown ids are unmatched URLs, so they get the global 404.
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return WORKS.map((w) => ({ id: w.id }));
 }
