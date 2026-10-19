@@ -11,7 +11,7 @@ export default function SmoothScroll() {
     if (prefersReducedMotion()) return;
     const gsap = setupGsap();
 
-    const lenis = new Lenis({ lerp: 0.15, wheelMultiplier: 1.1, anchors: true });
+    const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1.1, anchors: true });
     setLenis(lenis);
 
     lenis.on("scroll", ScrollTrigger.update);

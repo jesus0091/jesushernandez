@@ -5,6 +5,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 
 import IntroOverlay from "@/components/motion/IntroOverlay";
+import PageTransition from "@/components/motion/PageTransition";
 import SmoothScroll from "@/components/motion/SmoothScroll";
 import UiSounds from "@/components/UiSounds";
 
@@ -21,7 +22,7 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
   display: "swap",
-  preload: false,
+  preload: true,
 });
 
 const CANONICAL = "https://jesushernandez.site";
@@ -153,6 +154,7 @@ export default function RootLayout({
         <SmoothScroll />
         <UiSounds />
         <IntroOverlay />
+        <PageTransition />
 
         {children}
       </body>

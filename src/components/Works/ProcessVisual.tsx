@@ -4,7 +4,7 @@ import { Fragment, useLayoutEffect, useRef } from "react";
 import { prefersReducedMotion, setupGsap } from "@/lib/motion";
 import type { ProcessVisual as Visual } from "@/data/case-studies";
 
-const LABEL = "font-semibold text-[10px] uppercase tracking-[0.2em] text-[var(--muted)]";
+const LABEL = "font-mono font-medium text-[10px] uppercase tracking-[0.08em] text-[var(--muted)]";
 const BOX = "rounded-lg border border-black/10 bg-white px-3 py-1.5 text-xs font-semibold text-[var(--black)] shadow-sm";
 const LINE = "bg-[var(--color-line-2)]";
 const NOTE_TONES = ["bg-[#FFE9A8]", "bg-[#CFE4FF]", "bg-[#D6F5E3]"];
@@ -280,7 +280,7 @@ export default function ProcessVisual({
       ref={rootRef}
       data-demo
       aria-hidden
-      className={`relative overflow-hidden rounded-2xl border border-black/[0.06] bg-white ${className}`}
+      className={`relative overflow-hidden rounded-card border border-black/[0.06] bg-white ${className}`}
     >
       <Body visual={visual} />
     </div>

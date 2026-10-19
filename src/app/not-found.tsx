@@ -81,7 +81,7 @@ export default function NotFound() {
             Lost? Try checking the URL or head back to the{" "}
             <Link
               href="/"
-              className="text-[var(--orange)] hover:underline font-medium"
+              className="text-[var(--color-accent-ink)] hover:underline font-medium"
             >
               homepage
             </Link>

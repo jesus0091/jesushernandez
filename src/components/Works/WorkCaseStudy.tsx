@@ -37,9 +37,9 @@ const FAMILIES: Record<string, string> = {
 const HEADING = "text-balance font-semibold tracking-title text-3xl md:text-4xl leading-none";
 const LEAD = "text-pretty text-base md:text-lg leading-relaxed";
 const BODY = "text-pretty text-sm md:text-base leading-relaxed text-[var(--muted)]";
-const KICKER = "font-semibold text-xs uppercase tracking-[0.2em]";
+const KICKER = "font-mono font-medium text-xs uppercase tracking-[0.08em]";
 const RULE = "border-[var(--color-line-2)]";
-const CARD = "rounded-3xl border border-black/[0.06] bg-white";
+const CARD = "rounded-card border border-black/[0.06] bg-white";
 // Tinted stage the screenshots sit on, in the project's own colors (see CaseTheme).
 // A full-screen panel's content: as wide as the page's column.
 const PANEL = "w-[min(1216px,calc(100vw-4rem))]";
@@ -55,7 +55,7 @@ const NIGHT =
   "bg-[#0a0d14] bg-[image:radial-gradient(70%_60%_at_100%_0%,color-mix(in_srgb,var(--cs-glow-a)_40%,transparent)_0%,transparent_70%),radial-gradient(60%_60%_at_0%_100%,color-mix(in_srgb,var(--cs-glow-b)_33%,transparent)_0%,transparent_70%)]";
 // Segments in a score gauge; each is 100 / GAUGE_SEGMENTS points.
 const GAUGE_SEGMENTS = 50;
-const STAGE = "rounded-3xl bg-[linear-gradient(135deg,var(--cs-stage-from),var(--cs-stage-to))]";
+const STAGE = "rounded-card bg-[linear-gradient(135deg,var(--cs-stage-from),var(--cs-stage-to))]";
 
 const two = (n: number) => String(n).padStart(2, "0");
 const slug = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -128,7 +128,7 @@ function Chapter({
   return (
     <section
       id={slug(label)}
-      className={`flex scroll-mt-28 flex-col gap-10 md:gap-14 ${dark ? `relative isolate overflow-hidden rounded-3xl p-6 md:p-12 ${NIGHT}` : ""} ${
+      className={`flex scroll-mt-28 flex-col gap-10 md:gap-14 ${dark ? `relative isolate overflow-hidden rounded-card p-6 md:p-12 ${NIGHT}` : ""} ${
         bleed ? "relative isolate py-16 md:py-28" : ""
       } group-data-[h=on]/h:min-h-0 group-data-[h=on]/h:flex-1 group-data-[h=on]/h:gap-0`}
     >
@@ -151,7 +151,7 @@ function Chapter({
         {rule && <span data-rule className={`h-px w-full origin-left ${onDark ? "bg-white/20" : "bg-[var(--color-line-2)]"}`} />}
         <p data-rise className={`${KICKER} flex items-center justify-between`}>
           <span className="flex items-center gap-3">
-            <span className="text-[var(--orange)]">{two(n)}</span>
+            <span className={onDark ? "text-[var(--orange)]" : "text-[var(--color-accent-ink)]"}>{two(n)}</span>
             <span className={strong}>{label}</span>
           </span>
           <span className={soft}>
@@ -271,7 +271,7 @@ function Visual({ visual, dark = false }: { visual: CaseVisual; dark?: boolean }
 function BlockText({ block, dark = false }: { block: CaseBlock; dark?: boolean }) {
   return (
     <div data-rise className="flex flex-col gap-3">
-      <p className={`${KICKER} text-[var(--orange)]`}>{block.kicker}</p>
+      <p className={`${KICKER} ${dark ? "text-[var(--orange)]" : "text-[var(--color-accent-ink)]"}`}>{block.kicker}</p>
       <h3
         className={`text-balance text-xl md:text-2xl leading-[1.1] font-semibold tracking-title ${dark ? "text-[var(--color-bg)]" : "text-[var(--black)]"}`}
       >
@@ -285,10 +285,10 @@ function BlockText({ block, dark = false }: { block: CaseBlock; dark?: boolean }
             <div
               key={point.label}
               data-point
-              className={`group/point flex flex-col gap-0.5 border-b py-3 transition-opacity duration-300 data-[on=false]:opacity-45 ${dark ? "border-white/15" : RULE}`}
+              className={`group/point flex flex-col gap-0.5 border-b py-3 transition-opacity duration-300 data-[on=false]:opacity-[0.85] ${dark ? "border-white/15" : RULE}`}
             >
               <dt
-                className={`font-semibold text-[11px] uppercase tracking-[0.16em] transition-colors duration-300 group-data-[on=true]/point:text-[#0B8CE9] ${dark ? "text-[var(--color-bg)]/60" : "text-[var(--muted)]"}`}
+                className={`font-mono font-medium text-[11px] uppercase tracking-[0.08em] transition-colors duration-300 group-data-[on=true]/point:text-[var(--color-select-ink)] ${dark ? "text-[var(--color-bg)]/60" : "text-[var(--muted)]"}`}
               >
                 {point.label}
               </dt>
@@ -542,7 +542,7 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
       // Full-bleed sheets: a card the width of the column that opens out to the
       // screen's edges on the way in, and closes back on the way out.
       all("[data-bleed]").forEach((el) => {
-        const card = () => `inset(0px ${root.getBoundingClientRect().left}px round 24px)`;
+        const card = () => `inset(0px ${root.getBoundingClientRect().left}px round 20px)`;
         const open = "inset(0px 0px round 0px)";
         gsap.fromTo(
           el,
@@ -652,11 +652,11 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
                     <span data-step-line className="h-px flex-1 origin-left bg-[var(--color-line-2)]" />
                   </span>
                   <span data-step-body className="flex flex-1 flex-col gap-2 pr-8">
-                    <span className={`${KICKER} text-[var(--orange)]`}>{step.phase}</span>
+                    <span className={`${KICKER} text-[var(--color-accent-ink)]`}>{step.phase}</span>
                     <span className="text-xl font-semibold tracking-title text-[var(--black)]">{step.title}</span>
                     <span className={BODY}>{step.text}</span>
                   </span>
-                  <span data-step-body className="mr-8 flex flex-col gap-0.5 rounded-xl bg-white/70 px-4 py-3">
+                  <span data-step-body className="mr-8 flex flex-col gap-0.5 rounded-control bg-white/70 px-4 py-3">
                     <span className="text-xs text-[var(--muted)]">The client gets</span>
                     <span className="text-sm font-semibold text-[var(--black)]">{step.client}</span>
                   </span>
@@ -717,7 +717,7 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
                         >
                           <WorkGlyph name={step.icon} size={24} />
                         </span>
-                        <span className={`${KICKER} text-[var(--orange)]`}>{step.phase}</span>
+                        <span className={`${KICKER} text-[var(--color-accent-ink)]`}>{step.phase}</span>
                         <h3 className="text-balance font-semibold leading-[1.05] tracking-title text-[var(--black)] text-[clamp(28px,min(4.2vw,6.5svh),72px)]">
                           {step.title}
                         </h3>
@@ -725,7 +725,7 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
                         {/* Where a visual has room to show what the client gets, it stands in for naming it. */}
                         {!step.demo && (
                           <p
-                            className={`flex flex-col gap-0.5 rounded-xl bg-white/70 px-5 py-4 ${step.visual ? "[@media(min-height:640px)]:hidden" : ""}`}
+                            className={`flex flex-col gap-0.5 rounded-control bg-white/70 px-5 py-4 ${step.visual ? "[@media(min-height:640px)]:hidden" : ""}`}
                           >
                             <span className="text-xs text-[var(--muted)]">The client gets</span>
                             <span className="text-base font-semibold text-[var(--black)]">{step.client}</span>
@@ -804,8 +804,8 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
             <div className="flex flex-1 flex-col justify-between gap-3">
               {groups.map(([group, colors]) => (
                 <div key={group} className="flex flex-col gap-1.5">
-                  <span className={`${KICKER} text-[10px] text-[var(--muted)]`}>{group}</span>
-                  <div className="flex h-8 overflow-hidden rounded-lg border border-black/[0.06]">
+                  <span className={`${KICKER} text-[10px] text-[var(--color-accent-ink)]`}>{group}</span>
+                  <div className="flex h-8 overflow-hidden rounded-control border border-black/[0.06]">
                     {colors.map((color) => (
                       <span key={color.hex} className={color === primary ? "flex-[2]" : "flex-1"} style={{ backgroundColor: color.hex }} />
                     ))}
@@ -845,7 +845,7 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
           href={study.closing.href}
           target="_blank"
           rel="noreferrer"
-          className="group relative isolate flex flex-col gap-4 overflow-hidden rounded-3xl bg-[var(--cs-brand)] p-6 text-white transition-colors duration-300 hover:bg-[var(--cs-brand-hover)] md:flex-row md:items-center md:justify-between md:px-10 md:py-7"
+          className="group relative isolate flex flex-col gap-4 overflow-hidden rounded-card bg-[var(--cs-brand)] p-6 text-white transition-colors duration-300 hover:bg-[var(--cs-brand-hover)] md:flex-row md:items-center md:justify-between md:px-10 md:py-7"
         >
           {/* The site's grain tile; overlay so it reads on the saturated brand color. */}
           <span
@@ -855,7 +855,7 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
           />
           <span className="flex flex-col gap-1">
             {/* Sans like SectionLabel: mono at this tracking breaks a short phrase apart. */}
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70 md:text-sm">{study.closing.heading}</span>
+            <span className="text-xs font-mono font-medium uppercase tracking-[0.08em] text-white/90 md:text-sm">{study.closing.heading}</span>
             <span className="text-base sm:text-2xl md:text-3xl font-semibold tracking-title break-all">{study.closing.label}</span>
           </span>
           <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white text-[var(--cs-brand)] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">

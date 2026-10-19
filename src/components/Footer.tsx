@@ -11,7 +11,7 @@ import {
 } from "@/components/icons";
 import { useEffect, useRef, useState } from "react";
 
-import CtaTunnel from "./motion/CtaTunnel";
+import CtaTunnel, { TUNNEL_STOPS } from "./motion/CtaTunnel";
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -19,6 +19,15 @@ import { SplitText } from "gsap/SplitText";
 import { getLenis, setupGsap } from "@/lib/motion";
 import SectionLabel, { LABEL_FROM, LABEL_TO } from "./SectionLabel";
 import gsap from "gsap";
+
+// The wordmark is lit by the tunnel's light: a small orange core inside the
+// name, top to bottom, fading to the tunnel's blues. The gradient is twice the
+// word's width so the core can drift side to side without running out.
+const WORDMARK_GRADIENT = `radial-gradient(ellipse 26% 110% at 50% 55%, ${TUNNEL_STOPS})`;
+/** How far the core drifts each way, as a fraction of the word's width. */
+const WORDMARK_DRIFT = 0.32;
+/** Extra painted area above and below each letter, in em (see paint()). */
+const WORDMARK_PAD = 0.3;
 
 type FooterLink = { label: string; href: string };
 type SocialLink = { label: string; href: string; icon: React.ReactNode };
@@ -39,6 +48,8 @@ export default function Footer({
   quickLinks = [
     { label: "Home", href: "/" },
     { label: "Works", href: "/works" },
+    { label: "Lab", href: "/lab" },
+    { label: "Blog", href: "/blog" },
   ],
   social = [
     {
@@ -198,7 +209,7 @@ export default function Footer({
             halo = document.createElement("span");
             halo.setAttribute("data-halo", "");
             halo.className =
-              "pointer-events-none absolute inset-0 rounded-xl opacity-0";
+              "pointer-events-none absolute inset-0 rounded-control opacity-0";
             (btn as HTMLElement).style.position = "relative";
             btn.appendChild(halo);
           }
@@ -241,6 +252,48 @@ export default function Footer({
     const box = wordmarkBoxRef.current;
     if (!text || !box) return;
 
+    let split: SplitText | null = null;
+
+    // The tunnel's light, coming down from above into the name. Each letter
+    // gets its own slice of one gradient sized to the whole word, so it reads
+    // as a single glow even while the letters rise one by one.
+    const paint = () => {
+      const pad = parseFloat(text.style.fontSize) * WORDMARK_PAD;
+      const els = split ? (split.chars as HTMLElement[]) : [text];
+      // Char boxes are tighter than the glyphs (0.8em tall, and narrowed by
+      // the negative tracking), and the gradient only paints inside the box:
+      // extend it on every side so accents and glyph edges aren't cut off,
+      // without moving the layout. Set before measuring, so offsets are the
+      // padded boxes'.
+      if (split)
+        for (const el of els) {
+          el.style.padding = `${pad}px`;
+          el.style.margin = `${-pad}px`;
+        }
+      const w = text.offsetWidth;
+      const h = text.offsetHeight + pad * 2;
+      slices = els.map((el) => {
+        el.style.backgroundImage = WORDMARK_GRADIENT;
+        el.style.backgroundSize = `${w * 2}px ${h}px`;
+        el.style.backgroundRepeat = "no-repeat";
+        el.style.backgroundClip = "text";
+        el.style.webkitBackgroundClip = "text";
+        el.style.color = "transparent";
+        return { el, x: split ? el.offsetLeft : 0, y: split ? el.offsetTop + pad : 0 };
+      });
+      wordW = w;
+      place();
+    };
+
+    // Moves the light: every slice shifts together, so it stays one glow.
+    let slices: { el: HTMLElement; x: number; y: number }[] = [];
+    let wordW = 0;
+    const glow = { drift: 0 };
+    const place = () => {
+      const dx = glow.drift * WORDMARK_DRIFT * wordW;
+      for (const { el, x, y } of slices) el.style.backgroundPosition = `${-x - wordW / 2 + dx}px ${-y}px`;
+    };
+
     // Fit the wordmark exactly to the container width.
     let lastWidth = 0;
     const fit = () => {
@@ -249,13 +302,20 @@ export default function Footer({
       text.style.fontSize = "100px";
       const w = text.offsetWidth;
       if (w) text.style.fontSize = `${(100 * box.clientWidth) / w}px`;
+      paint();
       ScrollTrigger.refresh();
     };
 
-    let split: SplitText | null = null;
     let tween: gsap.core.Tween | null = null;
+    let drift: gsap.core.Tween | null = null;
+    let io: IntersectionObserver | null = null;
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setupGsap();
+      // The light drifts slowly side to side, only while the name is on screen.
+      gsap.set(glow, { drift: -1 });
+      drift = gsap.to(glow, { drift: 1, duration: 14, ease: "sine.inOut", repeat: -1, yoyo: true, paused: true, onUpdate: place });
+      io = new IntersectionObserver(([entry]) => void (entry.isIntersecting ? drift?.play() : drift?.pause()));
+      io.observe(box);
       split = SplitText.create(text, { type: "chars" });
       // Char boxes are only 0.8em tall (leading-[0.8]) but glyphs + accents
       // reach ~1em above the baseline, so push well past the box to hide them.
@@ -287,6 +347,8 @@ export default function Footer({
 
     return () => {
       ro.disconnect();
+      io?.disconnect();
+      drift?.kill();
       tween?.scrollTrigger?.kill();
       tween?.kill();
       split?.revert();
@@ -337,14 +399,14 @@ export default function Footer({
             <Image
               data-cta-extra
               src="/images/facebrand.png"
-              className="mb-2 rounded-2xl border border-white/20 bg-white/10 object-contain"
+              className="mb-2 rounded-control border border-white/20 bg-white/10 object-contain"
               width={64}
               height={64}
               alt="Jesús Hernández"
             />
           )}
           <div data-cta-label className="[&_span]:text-white/80 [&_span[aria-hidden]]:bg-white/50">
-            <SectionLabel align="center" animate="none">From Concept to Code</SectionLabel>
+            <SectionLabel align="center" animate="none" surface="dark">From Concept to Code</SectionLabel>
           </div>
           <h3
             data-cta-title
@@ -391,24 +453,15 @@ export default function Footer({
       <div className="z-10 flex flex-col pt-16 md:pt-24">
         <div className="w-full max-w-[1280px] mx-auto px-6 md:px-8">
           <div className="grid grid-cols-2 md:grid-cols-12 gap-x-6 gap-y-10">
-            <div data-footer-col className="col-span-2 md:col-span-5 flex items-start gap-4">
-              <Link href="/" aria-label="Go to home" className="shrink-0">
-                <Image
-                  src={"/images/facebrand.png"}
-                  className="border border-black/10 rounded-lg bg-black/5 object-contain"
-                  width={48}
-                  height={48}
-                  alt="Logo"
-                />
-              </Link>
+            <div data-footer-col className="col-span-2 md:col-span-5">
               <p className="text-base text-[var(--color-ink-3)] leading-relaxed max-w-sm">
-                AI-Driven Engineer &amp; Product Designer. I build cohesive,
-                scalable and delightful digital products.
+                Product Engineer. I design and build digital products end to
+                end, from the first sketch to production.
               </p>
             </div>
 
             <nav data-footer-col aria-label="Footer" className="md:col-span-2 md:col-start-7 flex flex-col gap-3">
-              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-ink-4)]">
+              <h4 className="text-xs font-mono font-medium uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">
                 Navigation
               </h4>
               <ul className="flex flex-col gap-2">
@@ -426,7 +479,7 @@ export default function Footer({
             </nav>
 
             <div data-footer-col className="md:col-span-2 flex flex-col gap-3">
-              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-ink-4)]">
+              <h4 className="text-xs font-mono font-medium uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">
                 Connect
               </h4>
               <ul className="flex flex-col gap-2">
@@ -450,7 +503,7 @@ export default function Footer({
             </div>
 
             <div data-footer-col className="md:col-span-2 flex flex-col gap-3">
-              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-ink-4)]">
+              <h4 className="text-xs font-mono font-medium uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">
                 Location
               </h4>
               <p className="text-base text-[var(--color-ink-3)]">Argentina</p>
@@ -466,7 +519,7 @@ export default function Footer({
           <div ref={wordmarkBoxRef} className="overflow-hidden pt-[0.1em]">
             <p
               ref={wordmarkRef}
-              className="inline-block whitespace-nowrap font-semibold tracking-[-0.05em] leading-[0.8] text-[var(--black)] text-[12vw] md:text-[10vw] pb-[0.12em]"
+              className="relative inline-block whitespace-nowrap font-semibold tracking-[-0.05em] leading-[0.8] text-[var(--black)] text-[12vw] md:text-[10vw] pb-[0.12em]"
             >
               Jesús Hernández
             </p>

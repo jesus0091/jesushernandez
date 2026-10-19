@@ -5,13 +5,10 @@ import { useLayoutEffect, useRef } from "react";
 
 import { HANDOFF, HANDOFF_COVERED } from "./motion/skillsHandoff";
 import ScatterText from "./motion/ScatterText";
+import { BrushSvg, brushIn } from "./motion/Brush";
 import type gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SectionLabel, { LABEL_FROM, LABEL_TO } from "./SectionLabel";
-
-// Zigzag sweep across a 100×100 box; once thick enough it covers the viewport.
-const BRUSH_PATH =
-  "M -20 8 C 20 -6, 60 22, 120 4 C 80 30, 30 22, -20 42 C 20 54, 70 38, 120 56 C 80 76, 30 68, -20 88 C 20 100, 70 94, 120 106";
 
 const vh = (n: number) => `${Math.round(n * 100)}%`;
 
@@ -51,7 +48,6 @@ export default function WSMAQuote() {
     const extras = extrasRef.current;
     if (!pinEl || !section || !brush || !extras || prefersReducedMotion()) return;
     const gsap = setupGsap();
-    const path = brush.querySelector("path");
 
     const skills = document.getElementById("skills");
     const total = HANDOFF.lineFill + HANDOFF.brush + HANDOFF.scatter + HANDOFF.outro;
@@ -62,6 +58,12 @@ export default function WSMAQuote() {
       // moment the skills section's bottom reaches the bottom of the screen.
       // Transparent (not --color-bg) so the page grain shows through.
       gsap.set(section, { backgroundColor: "transparent", pointerEvents: "none" });
+      // Transparent, so it doesn't count as dark for the navbar until the
+      // brush's first stroke (across the top) has painted over the navbar.
+      gsap.set(section, { attr: { "data-nav-dark": "false" } });
+      // And the navbar drops its background meanwhile, so the brush passes
+      // behind the links instead of being cut off under the bar.
+      gsap.set(section, { attr: { "data-nav-clear": "blend" } });
       // The scattered letters already sit in their start positions; keep them
       // hidden until the brush has covered the screen. Opacity on the wrapper,
       // since the letters manage their own visibility.
@@ -102,9 +104,10 @@ export default function WSMAQuote() {
           },
         })
         .set(brush, { autoAlpha: 1 }, brushAt)
-        .fromTo(path, { drawSVG: "0% 0%", strokeWidth: 8 }, { drawSVG: "0% 100%", duration: HANDOFF.brush }, brushAt)
-        .to(path, { strokeWidth: 60, duration: HANDOFF.brush * 0.9 }, brushAt + HANDOFF.brush * 0.1)
+        .add(brushIn(brush, HANDOFF.brush), brushAt)
+        .set(section, { attr: { "data-nav-dark": "" } }, brushAt + HANDOFF.brush * 0.15)
         .set(section, { backgroundColor: "var(--color-ink-1)", pointerEvents: "auto" }, HANDOFF_COVERED)
+        .set(section, { attr: { "data-nav-clear": "false" } }, HANDOFF_COVERED)
         .set(extras, { opacity: 1 }, HANDOFF_COVERED)
         .set(brush, { autoAlpha: 0 }, HANDOFF_COVERED)
         .fromTo(
@@ -210,15 +213,7 @@ export default function WSMAQuote() {
         aria-hidden
         className="pointer-events-none invisible fixed inset-0 z-40"
       >
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full overflow-visible">
-          <path
-            d={BRUSH_PATH}
-            fill="none"
-            stroke="var(--color-ink-1)"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <BrushSvg />
       </div>
 
       <div ref={pinRef} className="motion-safe:-mt-[100svh]">
@@ -274,7 +269,7 @@ export default function WSMAQuote() {
           ref={extrasRef}
           className="relative z-[41] mx-auto max-w-[1280px] px-6 md:px-8 flex flex-col items-center text-center gap-4"
         >
-          <SectionLabel align="center" animate="none">What sets me apart</SectionLabel>
+          <SectionLabel align="center" animate="none" surface="dark">What sets me apart</SectionLabel>
 
           <div className="flex flex-col pb-2">
             <ScatterText

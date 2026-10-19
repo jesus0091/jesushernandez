@@ -115,7 +115,7 @@ const AboutText: React.FC<AboutTextProps> = ({
         <div className="flex-1 flex h-full w-full items-center justify-center">
           <div
             ref={boxRef}
-            className="relative rounded-2xl w-full overflow-hidden min-h-[360px] md:min-h-full"
+            className="relative rounded-card w-full overflow-hidden min-h-[360px] md:min-h-full"
           >
             <Image
               src="/images/about_me.webp"

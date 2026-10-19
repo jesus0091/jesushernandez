@@ -10,16 +10,19 @@
   --color-ink-1: #0a0a0a;
   --color-ink-2: #1a1a1a;
   --color-ink-3: #4a4a4a;
-  --color-ink-4: #7a7a7a;
+  /* Quietest text: 4.7:1 on the cream (WCAG AA). */
+  --color-ink-4: #6b6b6b;
 
   /* Single accent — kill the secondary blue */
   --color-accent: #ff6600;
   --color-accent-soft: #fff3eb;
+  /* The accent for small text: #ff6600 is 2.6:1 on the cream, this is 4.9:1 (WCAG AA). */
+  --color-accent-ink: #b34700;
+  /* Figma-style selection blue, dark enough for small text (5:1 on the cream). */
+  --color-select-ink: #0969b0;
 
   /* Section surface (brush transition), not a second accent */
   --color-blue: #1f3bd6;
-  /* Quiet text accent (hero greeting) */
-  --color-navy: #083a8f;
 
   --color-line-1: #e5e1d8;
   --color-line-2: #d4cfc4;
@@ -30,6 +33,10 @@
   --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-2xl: 24px;
+  /* The three radii the site uses: big surfaces, controls inside them, small chips. */
+  --radius-card: 20px;
+  --radius-control: 12px;
+  --radius-chip: 8px;
 
   /* ---------------- Shadows ---------------- */
   --shadow-1: 0 1px 2px rgba(10, 10, 10, 0.04), 0 0 1px rgba(10, 10, 10, 0.06);
@@ -181,21 +188,13 @@ html.lenis body {
   }
 }
 
-/* ---------------- Intro overlay (signature + brush wipe) ---------------- */
+/* ---------------- Intro overlay and page transitions (brush, see Brush.tsx) ---------------- */
 .intro {
   position: fixed;
   inset: 0;
   z-index: 999;
   overflow: clip;
   pointer-events: none;
-}
-.intro__wipe {
-  position: absolute;
-  top: -15%;
-  left: -15%;
-  width: 130%;
-  height: 130%;
-  color: var(--color-ink-1);
 }
 .intro__signature {
   position: absolute;

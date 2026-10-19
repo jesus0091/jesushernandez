@@ -57,7 +57,7 @@ export default function WorkDetail({ work }: { work: Work }) {
         <div className="flex min-h-[100svh] flex-col pt-24 pb-6 md:pt-28 md:pb-8">
           {/* Where you are (and the way back), then the title on its own line. */}
           <header className="mb-10 flex flex-1 flex-col gap-10 md:mb-12">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-semibold text-xs uppercase tracking-[0.2em]">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono font-medium text-xs uppercase tracking-[0.08em]">
               <nav aria-label="Breadcrumb">
                 <ol className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <li className="flex items-center gap-x-3">
@@ -68,7 +68,7 @@ export default function WorkDetail({ work }: { work: Work }) {
                       /
                     </span>
                   </li>
-                  <li aria-current="page" className="text-[var(--orange)]">
+                  <li aria-current="page" className="text-[var(--color-accent-ink)]">
                     {work.productName}
                   </li>
                 </ol>
@@ -92,7 +92,7 @@ export default function WorkDetail({ work }: { work: Work }) {
                   href={website.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="group relative isolate flex h-12 w-max shrink-0 items-center gap-2.5 overflow-hidden rounded-xl bg-[var(--cs-brand,#0B5ED7)] px-5 text-sm font-medium text-white transition-colors duration-300 hover:bg-[var(--cs-brand-hover,#083A8F)] md:size-[clamp(112px,11.2vw,150px)] md:flex-col-reverse md:items-start md:justify-between md:rounded-2xl md:p-4 md:text-base md:leading-tight"
+                  className="group relative isolate flex h-12 w-max shrink-0 items-center gap-2.5 overflow-hidden rounded-control bg-[var(--cs-brand,#0B5ED7)] px-5 text-sm font-medium text-white transition-colors duration-300 hover:bg-[var(--cs-brand-hover,#083A8F)] md:size-[clamp(112px,11.2vw,150px)] md:flex-col-reverse md:items-start md:justify-between md:rounded-card md:p-4 md:text-base md:leading-tight"
                 >
                   {/* The site's grain tile; overlay so it reads on the saturated brand color. */}
                   <span
@@ -111,7 +111,7 @@ export default function WorkDetail({ work }: { work: Work }) {
           </header>
 
           {/* A fixed share of the screen, with a floor for short viewports. */}
-          <div className="detail-img relative h-[38svh] min-h-60 w-full overflow-hidden rounded-2xl bg-zinc-200">
+          <div className="detail-img relative h-[38svh] min-h-60 w-full overflow-hidden rounded-card bg-zinc-200">
             {work.mosaic ? (
               <CoverMosaic tiles={work.mosaic} animated />
             ) : (
@@ -129,7 +129,7 @@ export default function WorkDetail({ work }: { work: Work }) {
         {/* Who the client is and what was done for them, with the facts as a sheet beside it. */}
         <div className="detail-content mt-14 grid grid-cols-1 gap-10 md:mt-20 lg:grid-cols-12 lg:gap-16">
           <div className="flex flex-col gap-6 lg:col-span-7">
-            {overview && <p className="font-semibold text-xs uppercase tracking-[0.2em] text-[var(--orange)]">The client</p>}
+            {overview && <p className="font-mono font-medium text-xs uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">The client</p>}
             <p
               className={
                 overview
@@ -184,7 +184,7 @@ export default function WorkDetail({ work }: { work: Work }) {
                   key={row.label}
                   className="grid grid-cols-[130px_1fr] gap-4 border-b border-[var(--color-line-2)] py-4"
                 >
-                  <dt className="pt-1 font-semibold text-[11px] uppercase tracking-[0.16em] text-[var(--muted)]">{row.label}</dt>
+                  <dt className="pt-1 font-mono font-medium text-[11px] uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">{row.label}</dt>
                   <dd className="text-sm md:text-base leading-relaxed text-[var(--black)]">{row.values.join(" · ")}</dd>
                 </div>
               ))}

@@ -73,14 +73,14 @@ export default function ResponsiveCanvas(screens: { desktop: string; tablet: str
   return (
     <div
       ref={rootRef}
-      className="rounded-3xl border border-black/[0.06] bg-white px-4 pb-4 pt-8 [background-image:linear-gradient(rgba(11,140,233,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(11,140,233,0.07)_1px,transparent_1px)] [background-size:16px_16px] md:px-6 md:pb-6 md:pt-10"
+      className="rounded-card border border-black/[0.06] bg-white px-4 pb-4 pt-8 [background-image:linear-gradient(rgba(11,140,233,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(11,140,233,0.07)_1px,transparent_1px)] [background-size:16px_16px] md:px-6 md:pb-6 md:pt-10"
     >
       <div className="relative aspect-[16/10]">
         {SIZES.map((size) => (
           <span
             key={size.name}
             data-size-label
-            className="absolute -top-6 right-0 flex gap-1.5 whitespace-nowrap text-[10px] font-medium text-[#0B8CE9] md:-top-7 md:text-[11px]"
+            className="absolute -top-6 right-0 flex gap-1.5 whitespace-nowrap text-[10px] font-medium text-[var(--color-select-ink)] md:-top-7 md:text-[11px]"
           >
             {size.name}
             <span className="font-mono opacity-70">{size.px}</span>

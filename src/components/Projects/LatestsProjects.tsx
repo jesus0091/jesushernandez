@@ -139,6 +139,9 @@ const PROJECTS: Project[] = [
   },
 ];
 
+// Newest first; the home shows the latest few, the rest live on /works.
+const LATEST = PROJECTS.slice(0, 5);
+
 // Statement under the carousel. On desktop it cycles while the cards pass:
 // each phrase rises in, reads itself word by word, then rises out.
 // The last one carries the link and stays.
@@ -152,7 +155,7 @@ const PHRASES = [
 const PHRASE_LINK = "See the full picture.";
 
 const linkClass =
-  "bg-[linear-gradient(var(--orange),var(--orange))] bg-[length:100%_1.5px] bg-bottom-left bg-no-repeat pb-0.5 text-[var(--orange)]";
+  "bg-[linear-gradient(var(--orange),var(--orange))] bg-[length:100%_1.5px] bg-bottom-left bg-no-repeat pb-0.5 text-[var(--color-accent-ink)]";
 
 /** Word wrapped in its own mask so it can rise in/out; padded so descenders aren't clipped. */
 const phraseIconClass = "mr-2 inline-block align-[-0.15em]";
@@ -190,6 +193,8 @@ export default function LatestProjects() {
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
+    // Not the viewport's first child: the caption sits above the track.
+    container: "[data-embla-track]",
     containScroll: "trimSnaps",
     dragFree: false,
     loop: false,
@@ -201,7 +206,7 @@ export default function LatestProjects() {
   const setProgress = (progress: number) => {
     const p = Math.min(1, Math.max(0, progress));
     // Start at one slot's width so the bar is never empty on arrival.
-    const min = 1 / PROJECTS.length;
+    const min = 1 / LATEST.length;
     if (progressRef.current)
       progressRef.current.style.transform = `scaleX(${min + p * (1 - min)})`;
   };
@@ -263,6 +268,19 @@ export default function LatestProjects() {
           onRefresh: (self) => setProgress(self.progress),
         },
       });
+      // The caption takes over as the header scrolls away: hidden on entry,
+      // in by the time the heading has left the screen.
+      const header = headerRef.current;
+      if (header)
+        gsap.fromTo(
+          viewport.querySelector("[data-caption]"),
+          { autoAlpha: 0, y: 8 },
+          {
+            autoAlpha: 1, y: 0, ease: "none",
+            scrollTrigger: { trigger: header, start: "bottom 35%", end: "bottom top", scrub: true },
+          }
+        );
+
       // One timeline unit per phrase; the track spans all of them.
       tl.to(track, { x: () => -distance(), ease: "none", duration: n }, 0);
 
@@ -288,6 +306,11 @@ export default function LatestProjects() {
           tl.set(phrase, { autoAlpha: 0 }, i + 1);
         }
       });
+
+      // The header's CTA comes back with the last phrase.
+      const endCta = phrasesRef.current?.querySelector<HTMLElement>("[data-end-cta]");
+      if (endCta)
+        tl.fromTo(endCta, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.2, ease: "power2.out" }, n - 1 + 0.4);
     }, viewport);
 
     return () => ctx.revert();
@@ -326,7 +349,7 @@ export default function LatestProjects() {
     >
       {/* Header inside container */}
       <div className="mx-auto max-w-[1280px] w-full px-6 md:px-8">
-        <div ref={headerRef} className="flex items-end justify-between gap-4 mb-8">
+        <div ref={headerRef} className="flex items-end justify-between gap-4 mb-3">
           <div className="flex flex-col gap-2">
             {/* Anchor to measure left offset for full-bleed carousel */}
             <div ref={anchorRef} className="absolute" aria-hidden />
@@ -362,18 +385,29 @@ export default function LatestProjects() {
         }}
         className={scrollDriven ? "overflow-hidden" : "overflow-hidden px-6 md:px-0"}
       >
+        {/* Says up front that the carousel is a cut of the full list. Inside the
+            pinned viewport, so it stays while the cards scroll by. */}
+        <p
+          data-caption
+          className={`mx-auto max-w-[1280px] w-full md:px-8 mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.08em] text-[var(--color-ink-4)] ${scrollDriven ? "px-6" : ""}`}
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" aria-hidden />
+          The {LATEST.length} most recent
+        </p>
+
         <div
           ref={trackRef}
+          data-embla-track
           className="flex gap-5 will-change-transform"
           style={{ paddingLeft: scrollDriven || !isMobile ? trackOffset : undefined }}
         >
-          {PROJECTS.map((p, i) => (
+          {LATEST.map((p, i) => (
             // Desktop: the banner's height follows the screen height (36svh,
             // clamped to 240–380px) and the width follows the 1600×707 cover.
             <div
               key={p.id}
               className="shrink-0 w-[calc(100vw-64px)] md:w-[calc(clamp(240px,36svh,380px)*1600/707)]"
-              style={(scrollDriven || !isMobile) && i === PROJECTS.length - 1 ? { marginRight: trackOffset } : undefined}
+              style={(scrollDriven || !isMobile) && i === LATEST.length - 1 ? { marginRight: trackOffset } : undefined}
             >
               <ProjectCard project={p} />
             </div>
@@ -386,7 +420,7 @@ export default function LatestProjects() {
             <div
               ref={progressRef}
               className="absolute inset-y-0 left-0 w-full origin-left bg-[var(--color-ink-1)]"
-              style={{ transform: `scaleX(${1 / PROJECTS.length})` }}
+              style={{ transform: `scaleX(${1 / LATEST.length})` }}
             />
           </div>
         </div>
@@ -395,33 +429,46 @@ export default function LatestProjects() {
         {scrollDriven && (
           <div
             ref={phrasesRef}
-            className="mx-auto max-w-[1280px] w-full px-6 md:px-8 mt-8 md:mt-10 grid text-sm md:text-lg font-medium text-[var(--muted)]"
+            className="mx-auto max-w-[1280px] w-full px-6 md:px-8 mt-8 md:mt-10 flex items-end justify-between gap-6"
           >
-            {PHRASES.map(({ text, Icon }, i) => (
-              <p
-                key={text}
-                data-phrase
-                className="[grid-area:1/1] max-w-md text-balance"
-                style={i > 0 ? { visibility: "hidden", opacity: 0 } : undefined}
-                aria-hidden={i < PHRASES.length - 1 || undefined}
-              >
-                <Icon
-                  data-phrase-icon
-                  aria-hidden
-                  size={20}
-                  className={`${phraseIconClass} ${i === PHRASES.length - 1 ? "text-[var(--orange)]" : ""}`}
-                />
-                <MaskedWords text={text} />
-                {i === PHRASES.length - 1 && (
-                  <>
-                    {" "}
-                    <Link href="/works" data-scrub-underline className={linkClass}>
-                      <MaskedWords text={PHRASE_LINK} />
-                    </Link>
-                  </>
-                )}
-              </p>
-            ))}
+            <div className="grid text-sm md:text-lg font-medium text-[var(--muted)]">
+              {PHRASES.map(({ text, Icon }, i) => (
+                <p
+                  key={text}
+                  data-phrase
+                  className="[grid-area:1/1] max-w-md text-balance"
+                  style={i > 0 ? { visibility: "hidden", opacity: 0 } : undefined}
+                  aria-hidden={i < PHRASES.length - 1 || undefined}
+                >
+                  <Icon
+                    data-phrase-icon
+                    aria-hidden
+                    size={20}
+                    className={`${phraseIconClass} ${i === PHRASES.length - 1 ? "text-[var(--orange)]" : ""}`}
+                  />
+                  <MaskedWords text={text} />
+                  {i === PHRASES.length - 1 && (
+                    <>
+                      {" "}
+                      <Link href="/works" data-scrub-underline className={linkClass}>
+                        <MaskedWords text={PHRASE_LINK} />
+                      </Link>
+                    </>
+                  )}
+                </p>
+              ))}
+            </div>
+            {/* Same CTA as the header's, back at the end of the ride. */}
+            <Link
+              href="/works"
+              data-sfx="cta"
+              data-end-cta
+              style={{ visibility: "hidden", opacity: 0 }}
+              className="inline-flex items-center gap-2 shrink-0 rounded-full px-6 py-3 bg-[var(--black)] text-white font-medium text-base transition hover:bg-zinc-800"
+            >
+              View all works
+              <ArrowRight size={16} />
+            </Link>
           </div>
         )}
       </div>

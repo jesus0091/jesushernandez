@@ -90,7 +90,7 @@ export default function HomePage() {
       >
         {/* As on a project page: the intro sits low on the first screen, the wall closes it. */}
         <div ref={contentRef} className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-1 flex-col items-start gap-2 px-6 text-left md:px-8">
-          <p ref={greetRef} className="mt-auto text-base md:text-lg font-medium text-[var(--color-navy)]">
+          <p ref={greetRef} className="mt-auto font-mono text-sm uppercase md:text-base text-[var(--color-accent-ink)]">
             My name is Jesús Hernández 👋
           </p>
 
@@ -150,7 +150,7 @@ export default function HomePage() {
           {/* The same moving wall as a project page, dealt from every project. */}
           <div
             ref={mosaicRef}
-            className="relative mt-10 h-[38svh] min-h-60 w-full overflow-hidden rounded-2xl bg-zinc-200 md:mt-12"
+            className="relative mt-10 h-[38svh] min-h-60 w-full overflow-hidden rounded-card bg-zinc-200 md:mt-12"
           >
             <CoverMosaic tiles={HERO_MOSAIC} animated />
           </div>

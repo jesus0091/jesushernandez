@@ -21,6 +21,7 @@ const CATEGORIES: Category[] = [
       "React Native", "Expo",
       "Supabase", "PostgreSQL", "Prisma", "Drizzle", "Convex", "Redis",
       "Playwright", "Vitest", "Testing Library", "Zod", "Storybook", "Git",
+      "SEO", "Web Performance", "WCAG / ARIA",
       "Claude API", "AI Prompting",
     ],
   },
@@ -137,14 +138,14 @@ export default function Skills() {
         {CATEGORIES.map((c) => (
           <div key={c.key} data-row className="relative grid grid-cols-1 gap-3 py-6 md:grid-cols-12 md:gap-8 md:py-7">
             <span data-line aria-hidden className="absolute inset-x-0 top-0 h-px origin-left bg-black/15" />
-            <h3 data-title className="text-2xl font-semibold tracking-title text-[var(--black)] md:col-span-5">
+            <h3 data-title className="text-2xl font-semibold tracking-title text-[var(--black)] md:col-span-3">
               {c.label}
             </h3>
             {/* Square-ish tags, not pills: the site's buttons are pills, so the
                 shape keeps skills from reading as clickable. */}
-            <ul className="flex flex-wrap content-start gap-x-2 gap-y-1.5 md:col-span-7">
+            <ul className="flex flex-wrap content-start gap-x-2 gap-y-1.5 md:col-span-9">
               {c.skills.map((s) => (
-                <li key={s} data-tag className="rounded-md bg-black/[0.05] px-2.5 py-1 font-mono text-sm text-[var(--color-ink-2)]">
+                <li key={s} data-tag className="rounded-chip bg-black/[0.05] px-2.5 py-1 font-mono text-sm text-[var(--color-ink-2)]">
                   <span data-tag-text data-text={s}>
                     {s}
                   </span>
@@ -154,10 +155,9 @@ export default function Skills() {
           </div>
         ))}
 
-        <p className="relative mt-4 md:mt-6 pt-8 text-base md:text-lg font-medium text-[var(--color-ink-4)]">
-          <span data-line data-line-last aria-hidden className="absolute inset-x-0 top-0 h-px origin-left bg-black/15" />
-          Always learning, always growing.
-        </p>
+        <div aria-hidden className="relative mt-4 md:mt-6">
+          <span data-line data-line-last className="absolute inset-x-0 top-0 h-px origin-left bg-black/15" />
+        </div>
       </div>
     </section>
   );

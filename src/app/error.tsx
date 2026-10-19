@@ -45,10 +45,10 @@ export default function Error({
           {/* Error details (only in development) */}
           {process.env.NODE_ENV === "development" && error.message && (
             <details className="mt-4 text-left max-w-xl mx-auto">
-              <summary className="cursor-pointer text-sm text-[var(--muted)] hover:text-[var(--orange)] font-medium">
+              <summary className="cursor-pointer text-sm text-[var(--muted)] hover:text-[var(--color-accent-ink)] font-medium">
                 View error details
               </summary>
-              <pre className="mt-2 p-4 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg text-xs overflow-auto text-red-900 dark:text-red-400">
+              <pre className="mt-2 p-4 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-control text-xs overflow-auto text-red-900 dark:text-red-400">
                 {error.message}
                 {error.digest && `\n\nDigest: ${error.digest}`}
               </pre>
@@ -80,7 +80,7 @@ export default function Error({
             If this problem persists, please{" "}
             <a
               href="mailto:jesushernandez120491@gmail.com"
-              className="text-[var(--orange)] hover:underline font-medium"
+              className="text-[var(--color-accent-ink)] hover:underline font-medium"
             >
               contact support
             </a>

@@ -22,7 +22,7 @@ export default function WorksHero() {
       />
 
       <div className="mx-auto flex w-full max-w-[1280px] flex-1 flex-col items-center justify-center gap-4 px-6 pt-24 text-center md:px-8">
-        <SectionLabel align="center">Works</SectionLabel>
+        <SectionLabel align="center" surface="dark">Works</SectionLabel>
         <SectionHeading
           as="h1"
           className="font-semibold tracking-title text-[var(--color-bg)] text-[clamp(44px,8vw,128px)] leading-[1.02]"
@@ -34,7 +34,7 @@ export default function WorksHero() {
         </p>
       </div>
 
-      <div className="flex justify-center pb-8 font-semibold text-xs uppercase tracking-[0.2em] text-[var(--color-bg)]/60">
+      <div className="flex justify-center pb-8 font-mono font-medium text-xs uppercase tracking-[0.08em] text-[var(--orange)]">
         <span className="inline-flex items-center gap-2">
           Scroll
           <ArrowDown size={14} />

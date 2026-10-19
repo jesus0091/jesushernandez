@@ -86,7 +86,7 @@ export default function SearchDemo({
       ref={rootRef}
       data-demo
       aria-hidden
-      className={`relative flex flex-col overflow-hidden rounded-2xl border border-black/10 bg-white shadow-xl shadow-black/5 ${className}`}
+      className={`relative flex flex-col overflow-hidden rounded-card border border-black/10 bg-white shadow-xl shadow-black/5 ${className}`}
     >
       {/* The browser window it all happens in; the address follows the page. */}
       <div className="flex h-10 shrink-0 items-center gap-3 border-b border-black/[0.06] bg-[#F1F3F5] px-4">

@@ -36,7 +36,7 @@ function Wall({ tiles }: { tiles: string[] }) {
                   alt=""
                   decoding="async"
                   draggable={false}
-                  className="mr-3.5 aspect-[1600/707] h-[22svh] min-h-[150px] flex-none rounded-xl object-cover select-none"
+                  className="mr-3.5 aspect-[1600/707] h-[22svh] min-h-[150px] flex-none rounded-card object-cover select-none"
                 />
               ))}
             </div>

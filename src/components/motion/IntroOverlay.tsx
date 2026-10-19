@@ -15,10 +15,7 @@ import {
 } from "@/lib/motion";
 import { useEffect, useId, useRef } from "react";
 
-// Brush scribble that covers the viewport at 80% stroke width, then retreats
-// (erased from its start while thinning) to reveal the page underneath.
-const WIPE_PATH =
-  "M-100,150 C200,-50 350,-50 150,350 C-50,750 350,700 600,250 C800,-100 1000,100 700,600 C450,1050 850,1100 1100,850";
+import { BrushSvg, brushCovered, brushOut } from "./Brush";
 
 export default function IntroOverlay() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
@@ -35,7 +32,7 @@ export default function IntroOverlay() {
     }
 
     const gsap = setupGsap();
-    const wipe = wrap.querySelector<SVGPathElement>("[data-intro-wipe] path")!;
+    const wipe = wrap.querySelector<HTMLElement>("[data-intro-wipe]")!;
     const signature = wrap.querySelector<HTMLElement>("[data-intro-signature]")!;
     const strokes = Array.from(signature.querySelectorAll<SVGPathElement>("mask path"));
 
@@ -51,8 +48,8 @@ export default function IntroOverlay() {
       },
     });
 
-    tl.set(wipe, { drawSVG: "0% 100%", strokeWidth: "80%" })
-      .set(strokes, { drawSVG: "0% 0%" })
+    brushCovered(wipe);
+    tl.set(strokes, { drawSVG: "0% 0%" })
       .set(signature, { autoAlpha: 1 });
 
     // Write the signature stroke by stroke (each revealed through its own
@@ -77,16 +74,8 @@ export default function IntroOverlay() {
         stagger: 0.03,
         ease: "power2.inOut",
       })
-      .to(
-        wipe,
-        {
-          drawSVG: "100% 100%",
-          strokeWidth: "5%",
-          duration: 0.8,
-          ease: "power1.inOut",
-        },
-        "<0.2"
-      )
+      // The brush lifts off, linear inside, eased as a whole.
+      .to(brushOut(wipe).pause(0), { progress: 1, duration: 1, ease: "sine.inOut" }, "<0.2")
       .set(signature, { autoAlpha: 0 }, "<")
       .call(markIntroRevealed, [], "<0.25");
 
@@ -102,21 +91,9 @@ export default function IntroOverlay() {
         <style>{`[data-intro]{display:none!important}`}</style>
       </noscript>
       <div ref={wrapRef} data-intro aria-hidden="true" className="intro">
-        <svg
-          data-intro-wipe
-          className="intro__wipe"
-          viewBox="0 0 1000 1000"
-          preserveAspectRatio="none"
-          fill="none"
-        >
-          <path
-            d={WIPE_PATH}
-            stroke="currentColor"
-            strokeWidth="80%"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <div data-intro-wipe className="absolute inset-0">
+          <BrushSvg covered />
+        </div>
         <div data-intro-signature className="intro__signature">
           <svg viewBox={SIGNATURE_VIEWBOX} fill="none" width="100%">
             <defs>

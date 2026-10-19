@@ -60,7 +60,7 @@ export default function StackTiles({ items }: { items: { brand: Brand; name: str
       {items.map((item) => (
         <li
           key={item.brand}
-          className={`relative isolate flex flex-col gap-6 overflow-hidden rounded-2xl p-5 text-white ${GROUNDS[item.brand]}`}
+          className={`relative isolate flex flex-col gap-6 overflow-hidden rounded-card p-5 text-white ${GROUNDS[item.brand]}`}
         >
           {/* The site's grain, so the gradients sit in the same paper as the rest. */}
           <span
@@ -68,7 +68,7 @@ export default function StackTiles({ items }: { items: { brand: Brand; name: str
             className="pointer-events-none absolute inset-0 -z-10 opacity-60 mix-blend-overlay"
             style={{ backgroundImage: "var(--grain-image)", backgroundSize: "var(--grain-size) var(--grain-size)" }}
           />
-          <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/10 ring-1 ring-white/15 backdrop-blur">
+          <span className="grid h-11 w-11 place-items-center rounded-control bg-white/10 ring-1 ring-white/15 backdrop-blur">
             <Mark brand={item.brand} />
           </span>
           <span className="mt-auto flex flex-col gap-1">

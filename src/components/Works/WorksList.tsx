@@ -59,7 +59,7 @@ export default function WorksList() {
             <Link
               key={work.id}
               href={`/works/${work.id}`}
-              className={`work-card group relative flex flex-col overflow-hidden rounded-2xl bg-white/70 backdrop-blur-sm border border-white/50 transition-[background-color,box-shadow,translate] duration-300 hover:bg-white/90 hover:-translate-y-1 hover:shadow-lg ${BENTO[i] ?? ""}`}
+              className={`work-card group relative flex flex-col overflow-hidden rounded-card bg-white/70 backdrop-blur-sm border border-white/50 transition-[background-color,box-shadow,translate] duration-300 hover:bg-white/90 hover:-translate-y-1 hover:shadow-lg ${BENTO[i] ?? ""}`}
             >
               {/* Covers are exported at 1600×707; bento cells crop them to fit. */}
               <div className="relative aspect-[1600/707] w-full bg-zinc-100 overflow-hidden lg:aspect-auto lg:min-h-0 lg:flex-1">
