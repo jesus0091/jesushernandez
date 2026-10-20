@@ -305,7 +305,7 @@ export default function LatestProjects() {
       ref={sectionRef}
       id="projects"
       // Opaque, above the section before it: it slides over "What sets me apart".
-      className="grain-surface z-10 w-full pt-20 pb-12 md:py-32"
+      className="grain-surface z-10 w-full pt-28 pb-24 md:py-32"
     >
       {/* Header inside container */}
       <div className="mx-auto max-w-[1280px] w-full px-6 md:px-8">

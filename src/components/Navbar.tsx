@@ -286,7 +286,11 @@ export default function Navbar() {
       </div>
 
       {/* ── Mobile static header (visible at top) ── */}
-      <header className="w-full md:hidden flex items-center justify-between px-6 h-[64px] absolute top-0 left-0 right-0 z-10">
+      <header
+        className="w-full md:hidden flex items-center justify-between px-6 absolute top-0 left-0 right-0 z-10"
+        // Clear of the status bar now that the page runs edge to edge.
+        style={{ paddingTop: "env(safe-area-inset-top, 0px)", height: "calc(64px + env(safe-area-inset-top, 0px))" }}
+      >
         <Link
           href="/"
           className="flex items-center gap-2.5 font-semibold text-[var(--black)] shrink-0"

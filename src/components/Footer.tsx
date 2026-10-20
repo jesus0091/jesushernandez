@@ -484,7 +484,7 @@ export default function Footer({
       <div data-footer-body className="overflow-hidden">
       <div data-footer-inner>
       {/* Cuerpo */}
-      <div className="z-10 flex flex-col pt-16 md:pt-24">
+      <div className="z-10 flex flex-col pt-24">
         <div className="w-full max-w-[1280px] mx-auto px-6 md:px-8">
           <div className="grid grid-cols-2 md:grid-cols-12 gap-x-6 gap-y-10">
             <div data-footer-col className="col-span-2 md:col-span-5">
@@ -585,7 +585,8 @@ export default function Footer({
           onClick={scrollToTop}
           aria-label={t("backToTop")}
           tabIndex={floatTop ? undefined : -1}
-          className={`md:hidden fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--black)] text-white shadow-lg transition-[opacity,translate] duration-300 ease-out ${
+          style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)", right: "calc(env(safe-area-inset-right, 0px) + 20px)" }}
+          className={`md:hidden fixed z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--black)] text-white shadow-lg transition-[opacity,translate] duration-300 ease-out ${
             floatTop ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 translate-y-3"
           }`}
         >

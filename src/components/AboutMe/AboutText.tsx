@@ -112,7 +112,7 @@ const AboutText: React.FC<AboutTextProps> = ({
     <section
       ref={sectionRef}
       id="about"
-      className="relative scroll-mt-20 pt-28 pb-8 md:pt-40 md:pb-28 flex gap-16 flex-col items-center justify-center"
+      className="relative scroll-mt-20 pt-28 pb-20 md:pt-40 md:pb-28 flex gap-16 flex-col items-center justify-center"
     >
       <div ref={gridRef} className="relative grid grid-cols-1 md:grid-cols-2 max-w-[1280px] w-full px-6 md:px-8 gap-4 md:gap-10 mx-auto">
         <div className="flex-1 flex h-full w-full items-center justify-center">

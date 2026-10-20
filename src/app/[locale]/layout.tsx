@@ -6,6 +6,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Inter, JetBrains_Mono } from "next/font/google";
 
 import Analytics from "@/components/Analytics";
+import BrowserTint from "@/components/BrowserTint";
 import IntroOverlay from "@/components/motion/IntroOverlay";
 import PageTransition from "@/components/motion/PageTransition";
 import SmoothScroll from "@/components/motion/SmoothScroll";
@@ -65,6 +66,9 @@ export async function generateMetadata({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  // Edge to edge: sections paint behind the status bar and Safari's toolbars
+  // too (fixed UI keeps to the safe areas). BrowserTint colors the bars.
+  viewportFit: "cover",
   themeColor: "#f4f1ea",
 };
 
@@ -162,6 +166,7 @@ export default async function LocaleLayout({
 
           {children}
         </NextIntlClientProvider>
+        <BrowserTint />
         <Analytics />
       </body>
     </html>

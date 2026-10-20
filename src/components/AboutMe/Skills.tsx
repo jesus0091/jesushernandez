@@ -117,7 +117,7 @@ export default function Skills() {
   }, []);
 
   return (
-    <section id="skills" ref={rootRef} className="relative pt-12 md:pt-28">
+    <section id="skills" ref={rootRef} className="relative pt-20 md:pt-28">
       <div className="mx-auto w-full max-w-[1280px] px-6 md:px-8">
         <div className="mb-10 md:mb-14 flex flex-col gap-3">
           <SectionLabel>{t("label")}</SectionLabel>
