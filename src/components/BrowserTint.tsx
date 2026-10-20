@@ -9,7 +9,8 @@ import { useEffect, useRef } from "react";
 // section. Each strip is painted in the color of the section at its edge as
 // the page scrolls, so it reads as part of that section. Chrome on Android
 // tints from theme-color, which follows the top strip.
-const STRIP = 12;
+// 6px: the smallest strip Safari still samples at the top edge.
+const STRIP = 6;
 
 /** Alpha of a computed color: rgba(r, g, b, a), or any color function's "/ a". */
 function alphaOf(color: string): number {
