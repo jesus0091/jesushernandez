@@ -137,8 +137,10 @@ export default function WSMAQuote() {
       //    next section stacks on top of it. The pin keeps the wrapper in
       //    place, so the section only offsets from 0 within it.
       const projects = document.getElementById("projects");
-      // Phones skip the tunnel: its SVG redraw per scroll frame stutters there.
-      const tunnel = window.matchMedia("(min-width: 768px)").matches ? tunnelRef.current : null;
+      // Phones skip the tunnel (its SVG redraw per scroll frame stutters there)
+      // and the phrase only blurs out under the next section, without receding.
+      const phone = !window.matchMedia("(min-width: 768px)").matches;
+      const tunnel = phone ? null : tunnelRef.current;
       if (projects) {
         const rails = Array.from(tunnel?.querySelectorAll<SVGLineElement>("[data-rail]") ?? []);
         const frames = Array.from(tunnel?.querySelectorAll<SVGRectElement>("[data-frame]") ?? []);
@@ -186,7 +188,7 @@ export default function WSMAQuote() {
             extras,
             { scale: 1, opacity: 1, filter: "blur(0px)" },
             {
-              scale: 0.1,
+              scale: phone ? 1 : 0.1,
               opacity: 0,
               filter: "blur(10px)",
               duration: 0.5,
