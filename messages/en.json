@@ -14,6 +14,14 @@
     "blog": {
       "title": "Blog",
       "description": "Writing by Jesús Hernández on product, design and engineering."
+    },
+    "about": {
+      "title": "About",
+      "description": "Jesús Hernández is a Product Engineer & Designer in Buenos Aires, Argentina, with 5+ years designing and building web and mobile products end to end, including AI features."
+    },
+    "services": {
+      "title": "Services",
+      "description": "Product design and development from idea to production: MVPs, UX/UI and design systems, Next.js and React Native apps, AI features, and taking AI-built apps to production."
     }
   },
   "og": {
@@ -36,7 +44,9 @@
     "switchTo": {
       "en": "Switch to English",
       "es": "Cambiar a español"
-    }
+    },
+    "about": "About",
+    "services": "Services"
   },
   "footer": {
     "ctaLabel": "From Concept to Code",
@@ -190,5 +200,137 @@
     "persistsBefore": "If this problem persists, please",
     "contact": "contact support",
     "persistsAfter": "."
+  },
+  "aboutPage": {
+    "label": "About",
+    "title": "Jesús Hernández",
+    "role": "Product Engineer & Designer, Buenos Aires",
+    "lead": "I design and build digital products end to end, from the first sketch to production. For more than 5 years I've worked as one person across product, UX/UI and code, so the product that ships is the one that was designed.",
+    "factsTitle": "Quick facts",
+    "facts": [
+      {
+        "term": "Role",
+        "value": "Product Engineer & Designer"
+      },
+      {
+        "term": "Based in",
+        "value": "Buenos Aires, Argentina (UTC−3)"
+      },
+      {
+        "term": "Experience",
+        "value": "5+ years designing and building digital products"
+      },
+      {
+        "term": "Languages",
+        "value": "Spanish (native) and English"
+      },
+      {
+        "term": "Works with",
+        "value": "Startups, small and mid-sized businesses, foundations and industrial companies, in Latin America and the US"
+      },
+      {
+        "term": "Working hours",
+        "value": "Remote, 1–2 hours from US Eastern Time"
+      },
+      {
+        "term": "Stack",
+        "value": "Figma, React, Next.js, TypeScript, React Native, GSAP, Supabase, Claude"
+      }
+    ],
+    "whatTitle": "What I do",
+    "what": [
+      {
+        "title": "Product & UX/UI design",
+        "body": "Research, flows, interfaces and design systems, validated with the people who'll use them."
+      },
+      {
+        "title": "Front-end & full-stack development",
+        "body": "Web apps in Next.js and React, mobile apps in React Native, with the same care for detail as the design."
+      },
+      {
+        "title": "AI in products",
+        "body": "AI features and agents inside real products, and AI-assisted workflows that ship faster without losing quality."
+      }
+    ],
+    "workTitle": "Selected work",
+    "workLink": "See all projects",
+    "elsewhereTitle": "Elsewhere",
+    "cta": "Work with me",
+    "ctaServices": "See services"
+  },
+  "services": {
+    "label": "Services",
+    "title": "Digital products, from idea to production",
+    "lead": "One person for product, design and code. I work with founders and teams who need a product designed and built end to end, or an existing one taken further.",
+    "listTitle": "What I can do for you",
+    "list": [
+      {
+        "title": "MVPs, end to end",
+        "body": "From the idea to a product in production: scope, flows, interface, development and launch."
+      },
+      {
+        "title": "Product & UX/UI design",
+        "body": "Research, user flows, interfaces and design systems in Figma, ready to build."
+      },
+      {
+        "title": "Web and mobile development",
+        "body": "Next.js and React for the web, React Native for mobile, TypeScript throughout."
+      },
+      {
+        "title": "AI features and agents",
+        "body": "Assistants, automations and AI features built into your product, with the guardrails production needs."
+      },
+      {
+        "title": "From AI prototype to production",
+        "body": "An app built with Lovable, v0, Bolt or Cursor that works in a demo but not yet in production: I review it, fix it and get it ready to ship."
+      }
+    ],
+    "forTitle": "Who I work with",
+    "for": [
+      "Founders and startups in the US and Latin America",
+      "Small and mid-sized businesses that need a web or app",
+      "Agencies and teams that need a design + development partner"
+    ],
+    "processTitle": "How we work",
+    "process": [
+      {
+        "title": "A 30-minute call",
+        "body": "We go over the problem, the people it's for and what success looks like."
+      },
+      {
+        "title": "Scope and estimate",
+        "body": "A written proposal with scope, timeline and a fixed price or a monthly rate."
+      },
+      {
+        "title": "Design and build in short cycles",
+        "body": "Weekly progress you can see and use, not a big reveal at the end."
+      },
+      {
+        "title": "Launch and handoff",
+        "body": "Production deploy, documentation, and support while it settles."
+      }
+    ],
+    "pricingTitle": "Pricing",
+    "pricing": "Every project is quoted after the first call, as a fixed price for a defined scope or as a monthly rate for ongoing work.",
+    "faqTitle": "Frequently asked questions",
+    "faq": [
+      {
+        "q": "Do you work with companies outside Argentina?",
+        "a": "Yes. I work remotely with clients in the US and Latin America, in English or Spanish, 1–2 hours from US Eastern Time."
+      },
+      {
+        "q": "Can you do only the design, or only the development?",
+        "a": "Yes. Most clients want both, but I also take design-only or development-only projects."
+      },
+      {
+        "q": "Can you take over an app built with AI tools?",
+        "a": "Yes. I review the code, fix what's fragile and prepare it for production: data, authentication, performance and deployment."
+      },
+      {
+        "q": "How do we start?",
+        "a": "Write to me with a few lines about your project. I'll reply to set up a 30-minute call."
+      }
+    ],
+    "cta": "Tell me about your project"
   }
 }

@@ -19,6 +19,16 @@ describe("sitemap", () => {
     }
   });
 
+  it("lists translated slugs with reciprocal alternates", () => {
+    const found = byUrl("https://jesushernandez.site/es/sobre-mi");
+    expect(found).toHaveLength(1);
+    expect(found[0].alternates?.languages).toEqual({
+      en: "https://jesushernandez.site/about",
+      es: "https://jesushernandez.site/es/sobre-mi",
+      "x-default": "https://jesushernandez.site/about",
+    });
+  });
+
   it("lists indexed projects in English only, without alternates", () => {
     const found = byUrl("https://jesushernandez.site/works/ristario");
     expect(found).toHaveLength(1);

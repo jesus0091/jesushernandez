@@ -4,7 +4,8 @@ import { useLocale, useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { usePathname } from "@/i18n/navigation";
 import { localizePath } from "@/i18n/paths";
-import { routing } from "@/i18n/routing";
+import { pathInLocale } from "@/i18n/slugs";
+import { routing, type Locale } from "@/i18n/routing";
 
 type Props = {
   className?: string;
@@ -51,7 +52,7 @@ export default function LocaleSwitch({ className = "", light = false }: Props) {
             ) : (
               // Not next-intl's Link: with locale="en" it would point at /en, a redirect.
               <NextLink
-                href={localizePath(pathname, locale)}
+                href={localizePath(pathInLocale(pathname, current as Locale, locale), locale)}
                 lang={locale}
                 data-sfx="nav"
                 aria-label={t(`switchTo.${locale}`)}

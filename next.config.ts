@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import path from "path";
+import { LOCALIZED_SLUGS } from "./src/i18n/slugs";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -22,10 +23,16 @@ const nextConfig: NextConfig = {
         destination: `${prefix}/works/move-the-chain`,
         permanent: true,
       })),
-      // Old standalone pages, now sections of the home page.
-      { source: `${prefix}/about`, destination: `${prefix}/#about`, permanent: true },
+      // Old standalone page, now /works.
       { source: `${prefix}/projects`, destination: `${prefix}/works`, permanent: true },
-    ]);
+    ]).concat(
+      // Spanish pages have Spanish URLs: the English-path one redirects there.
+      LOCALIZED_SLUGS.map(({ en, es }) => ({ source: `/es${en}`, destination: `/es${es}`, permanent: true })),
+    );
+  },
+  // …and the Spanish URL is served by the route at the English path.
+  async rewrites() {
+    return LOCALIZED_SLUGS.map(({ en, es }) => ({ source: `/es${es}`, destination: `/es${en}` }));
   },
   // Security headers only take effect as real HTTP headers, not <meta> tags.
   async headers() {

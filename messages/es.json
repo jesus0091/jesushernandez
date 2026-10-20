@@ -14,6 +14,14 @@
     "blog": {
       "title": "Blog",
       "description": "Textos de Jesús Hernández sobre producto, diseño e ingeniería."
+    },
+    "about": {
+      "title": "Sobre mí",
+      "description": "Jesús Hernández es Product Engineer & Designer en Buenos Aires, Argentina, con más de 5 años diseñando y construyendo productos web y móviles de punta a punta, incluidas funciones con IA."
+    },
+    "services": {
+      "title": "Servicios",
+      "description": "Diseño y desarrollo de productos digitales de la idea a producción: MVPs, UX/UI y design systems, apps con Next.js y React Native, funciones con IA y apps hechas con IA llevadas a producción."
     }
   },
   "og": {
@@ -36,7 +44,9 @@
     "switchTo": {
       "en": "Switch to English",
       "es": "Cambiar a español"
-    }
+    },
+    "about": "Sobre mí",
+    "services": "Servicios"
   },
   "footer": {
     "ctaLabel": "Del concepto al código",
@@ -190,5 +200,137 @@
     "persistsBefore": "Si el problema continúa,",
     "contact": "contacta con soporte",
     "persistsAfter": "."
+  },
+  "aboutPage": {
+    "label": "Sobre mí",
+    "title": "Jesús Hernández",
+    "role": "Product Engineer & Designer, Buenos Aires",
+    "lead": "Diseño y construyo productos digitales de punta a punta, desde el primer boceto hasta producción. Hace más de 5 años trabajo como una sola persona entre producto, UX/UI y código, para que el producto que sale sea el que se diseñó.",
+    "factsTitle": "En resumen",
+    "facts": [
+      {
+        "term": "Rol",
+        "value": "Product Engineer & Designer"
+      },
+      {
+        "term": "Ubicación",
+        "value": "Buenos Aires, Argentina (UTC−3)"
+      },
+      {
+        "term": "Experiencia",
+        "value": "Más de 5 años diseñando y construyendo productos digitales"
+      },
+      {
+        "term": "Idiomas",
+        "value": "Español (nativo) e inglés"
+      },
+      {
+        "term": "Trabajo con",
+        "value": "Startups, pymes, fundaciones y empresas industriales, en Latinoamérica y Estados Unidos"
+      },
+      {
+        "term": "Horario",
+        "value": "Remoto, a 1–2 horas de la hora del este de EE. UU."
+      },
+      {
+        "term": "Stack",
+        "value": "Figma, React, Next.js, TypeScript, React Native, GSAP, Supabase, Claude"
+      }
+    ],
+    "whatTitle": "Qué hago",
+    "what": [
+      {
+        "title": "Diseño de producto y UX/UI",
+        "body": "Investigación, flujos, interfaces y design systems, validados con quienes los van a usar."
+      },
+      {
+        "title": "Desarrollo front-end y full-stack",
+        "body": "Apps web con Next.js y React, apps móviles con React Native, con el mismo cuidado por el detalle que el diseño."
+      },
+      {
+        "title": "IA en productos",
+        "body": "Funciones y agentes de IA dentro de productos reales, y flujos de trabajo con IA que entregan más rápido sin perder calidad."
+      }
+    ],
+    "workTitle": "Proyectos destacados",
+    "workLink": "Ver todos los proyectos",
+    "elsewhereTitle": "En otros sitios",
+    "cta": "Trabajemos juntos",
+    "ctaServices": "Ver servicios"
+  },
+  "services": {
+    "label": "Servicios",
+    "title": "Productos digitales, de la idea a producción",
+    "lead": "Una sola persona para producto, diseño y código. Trabajo con fundadores y equipos que necesitan diseñar y construir un producto de punta a punta, o llevar uno existente más lejos.",
+    "listTitle": "Qué puedo hacer por ti",
+    "list": [
+      {
+        "title": "MVPs de punta a punta",
+        "body": "De la idea a un producto en producción: alcance, flujos, interfaz, desarrollo y lanzamiento."
+      },
+      {
+        "title": "Diseño de producto y UX/UI",
+        "body": "Investigación, flujos de usuario, interfaces y design systems en Figma, listos para construir."
+      },
+      {
+        "title": "Desarrollo web y móvil",
+        "body": "Next.js y React para la web, React Native para móvil, TypeScript en todo."
+      },
+      {
+        "title": "Funciones y agentes de IA",
+        "body": "Asistentes, automatizaciones y funciones de IA integradas en tu producto, con los controles que necesita producción."
+      },
+      {
+        "title": "Del prototipo con IA a producción",
+        "body": "Una app hecha con Lovable, v0, Bolt o Cursor que funciona en la demo pero todavía no en producción: la reviso, la corrijo y la dejo lista para lanzar."
+      }
+    ],
+    "forTitle": "Con quién trabajo",
+    "for": [
+      "Fundadores y startups en Estados Unidos y Latinoamérica",
+      "Pymes que necesitan una web o una app",
+      "Agencias y equipos que necesitan un socio de diseño y desarrollo"
+    ],
+    "processTitle": "Cómo trabajamos",
+    "process": [
+      {
+        "title": "Una llamada de 30 minutos",
+        "body": "Repasamos el problema, para quién es y cómo se ve el éxito."
+      },
+      {
+        "title": "Alcance y presupuesto",
+        "body": "Una propuesta por escrito con alcance, plazos y un precio cerrado o una tarifa mensual."
+      },
+      {
+        "title": "Diseño y desarrollo en ciclos cortos",
+        "body": "Avances semanales que puedes ver y usar, no una gran entrega al final."
+      },
+      {
+        "title": "Lanzamiento y traspaso",
+        "body": "Despliegue en producción, documentación y acompañamiento mientras se estabiliza."
+      }
+    ],
+    "pricingTitle": "Precios",
+    "pricing": "Cada proyecto se presupuesta después de la primera llamada, con un precio cerrado para un alcance definido o una tarifa mensual para trabajo continuo.",
+    "faqTitle": "Preguntas frecuentes",
+    "faq": [
+      {
+        "q": "¿Trabajas con empresas fuera de Argentina?",
+        "a": "Sí. Trabajo en remoto con clientes de Estados Unidos y Latinoamérica, en español o en inglés, a 1–2 horas de la hora del este de EE. UU."
+      },
+      {
+        "q": "¿Puedes hacer solo el diseño, o solo el desarrollo?",
+        "a": "Sí. La mayoría de los clientes quiere las dos cosas, pero también tomo proyectos solo de diseño o solo de desarrollo."
+      },
+      {
+        "q": "¿Puedes hacerte cargo de una app hecha con herramientas de IA?",
+        "a": "Sí. Reviso el código, corrijo lo frágil y la preparo para producción: datos, autenticación, rendimiento y despliegue."
+      },
+      {
+        "q": "¿Cómo empezamos?",
+        "a": "Escríbeme con unas líneas sobre tu proyecto. Te respondo para coordinar una llamada de 30 minutos."
+      }
+    ],
+    "cta": "Cuéntame tu proyecto"
   }
 }

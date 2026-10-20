@@ -12,6 +12,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { CONTACT_EMAIL, contactHref } from "@/lib/contact";
+import { pathInLocale } from "@/i18n/slugs";
 import type { Locale } from "@/i18n/routing";
 
 import CtaTunnel, { TUNNEL_STOPS } from "./motion/CtaTunnel";
@@ -73,6 +74,8 @@ export default function Footer({
   const links = quickLinks ?? [
     { label: tNav("home"), href: "/" },
     { label: tNav("works"), href: "/works" },
+    { label: tNav("about"), href: pathInLocale("/about", "en", locale) },
+    { label: tNav("services"), href: pathInLocale("/services", "en", locale) },
     { label: tNav("lab"), href: "/lab" },
     { label: tNav("blog"), href: "/blog" },
   ];

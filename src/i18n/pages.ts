@@ -1,5 +1,6 @@
 import { WORKS } from "@/data/works";
 import type { Locale } from "./routing";
+import { esPath } from "./slugs";
 
 /**
  * Every public page, once: which languages it exists in, its path in each,
@@ -23,6 +24,8 @@ const BOTH = (path: string) => ({ en: path, es: path });
 
 export const PAGES: Record<string, Page> = {
   "/": { paths: BOTH("/"), index: true, updated: "2026-10-20" },
+  "/about": { paths: { en: "/about", es: esPath("/about") }, index: true, updated: "2026-10-20" },
+  "/services": { paths: { en: "/services", es: esPath("/services") }, index: true, updated: "2026-10-20" },
   "/works": { paths: { en: "/works" }, index: true, updated: "2026-10-16" },
   // Empty until they have their first entries.
   "/blog": { paths: BOTH("/blog"), index: false, updated: "2026-10-19" },
