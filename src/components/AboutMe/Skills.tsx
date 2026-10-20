@@ -119,7 +119,7 @@ export default function Skills() {
       <div className="mx-auto w-full max-w-[1280px] px-6 md:px-8">
         <div className="mb-10 md:mb-14 flex flex-col gap-3">
           <SectionLabel>{t("label")}</SectionLabel>
-          <SectionHeading className="text-3xl md:text-6xl leading-tighter font-semibold tracking-title text-[var(--black)]">
+          <SectionHeading className="text-2xl sm:text-3xl md:text-6xl leading-tighter font-semibold tracking-title text-[var(--black)]">
             {t("heading")}
           </SectionHeading>
         </div>

@@ -137,13 +137,15 @@ export default function WSMAQuote() {
       //    next section stacks on top of it. The pin keeps the wrapper in
       //    place, so the section only offsets from 0 within it.
       const projects = document.getElementById("projects");
-      const tunnel = tunnelRef.current;
-      if (projects && tunnel) {
-        const rails = Array.from(tunnel.querySelectorAll<SVGLineElement>("[data-rail]"));
-        const frames = Array.from(tunnel.querySelectorAll<SVGRectElement>("[data-frame]"));
+      // Phones skip the tunnel: its SVG redraw per scroll frame stutters there.
+      const tunnel = window.matchMedia("(min-width: 768px)").matches ? tunnelRef.current : null;
+      if (projects) {
+        const rails = Array.from(tunnel?.querySelectorAll<SVGLineElement>("[data-rail]") ?? []);
+        const frames = Array.from(tunnel?.querySelectorAll<SVGRectElement>("[data-frame]") ?? []);
         // p: 0 → 1 over the exit. Rails draw out from the vanishing point,
         // frames drift away into the depth.
         const renderTunnel = (p: number) => {
+          if (!tunnel) return;
           tunnel.style.opacity = String(gsap.utils.clamp(0, 1, p / 0.15));
           const reach = TUNNEL_REACH * gsap.utils.clamp(0, 1, p / 0.3);
           rails.forEach((line, i) => {
@@ -163,7 +165,7 @@ export default function WSMAQuote() {
         };
         const tunnelState = { p: 0 };
         renderTunnel(0);
-        tunnel.style.opacity = "0";
+        if (tunnel) tunnel.style.opacity = "0";
 
         gsap
           .timeline({
@@ -228,7 +230,7 @@ export default function WSMAQuote() {
         <svg
           ref={tunnelRef}
           aria-hidden
-          className="pointer-events-none absolute inset-0 h-full w-full opacity-0"
+          className="pointer-events-none absolute inset-0 h-full w-full opacity-0 max-md:hidden"
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
         >
@@ -279,7 +281,7 @@ export default function WSMAQuote() {
               style={{ fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.0125em" }}
               tweenRef={scatterRef}
             >
-              {t("line")}<span className={t("accentOnNewLine") === "true" ? "block text-[var(--color-accent)]" : "text-[var(--color-accent)]"}>{t("accent")}</span>
+              {t("line")}<span className={t("accentOnNewLine") === "true" ? "block text-[var(--color-accent)]" : "max-md:block text-[var(--color-accent)]"}>{t("accent")}</span>
             </ScatterText>
           </div>
 

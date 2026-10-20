@@ -112,29 +112,30 @@ const AboutText: React.FC<AboutTextProps> = ({
     <section
       ref={sectionRef}
       id="about"
-      className="relative scroll-mt-20 pt-16 pb-8 md:py-28 flex gap-16 flex-col items-center justify-center"
+      className="relative scroll-mt-20 pt-28 pb-8 md:pt-40 md:pb-28 flex gap-16 flex-col items-center justify-center"
     >
       <div ref={gridRef} className="relative grid grid-cols-1 md:grid-cols-2 max-w-[1280px] w-full px-6 md:px-8 gap-4 md:gap-10 mx-auto">
         <div className="flex-1 flex h-full w-full items-center justify-center">
+          {/* Phones get a short band framed on the face; from md up it fills the column. */}
           <div
             ref={boxRef}
-            className="relative rounded-card w-full overflow-hidden min-h-[360px] md:min-h-full"
+            className="relative rounded-card w-full overflow-hidden aspect-[16/10] md:aspect-auto md:min-h-full"
           >
             <Image
               src="/images/about_me.webp"
               alt="Jesús Hernández"
               fill
-              className="object-cover object-top"
+              className="object-cover object-[50%_20%] md:object-top"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
-            <div className="absolute bottom-0 left-0 right-0 flex flex-row gap-1 p-4 justify-end">
+            <div className="absolute bottom-0 left-0 right-0 flex flex-row gap-1 p-3 md:p-4 justify-end">
               <Link
                 href="https://www.linkedin.com/in/jesushernandez91/"
                 data-sfx="social"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={tSocial("linkedin")}
-                className="flex w-12 h-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
+                className="flex w-10 h-10 md:w-12 md:h-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
               >
                 <LinkedinLogo />
               </Link>
@@ -144,7 +145,7 @@ const AboutText: React.FC<AboutTextProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={tSocial("github")}
-                className="flex w-12 h-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
+                className="flex w-10 h-10 md:w-12 md:h-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
               >
                 <GithubLogo />
               </Link>
@@ -154,7 +155,7 @@ const AboutText: React.FC<AboutTextProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={tSocial("behance")}
-                className="flex w-12 h-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
+                className="flex w-10 h-10 md:w-12 md:h-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
               >
                 <BehanceLogo />
               </Link>
@@ -166,13 +167,13 @@ const AboutText: React.FC<AboutTextProps> = ({
 
           <div className="flex flex-col gap-3">
             <SectionLabel>{t("label")}</SectionLabel>
-            <SectionHeading className="select-none text-3xl md:text-6xl leading-tighter font-semibold tracking-title text-[var(--black)]">
+            <SectionHeading className="select-none max-md:text-balance text-2xl sm:text-3xl md:text-6xl leading-tighter font-semibold tracking-title text-[var(--black)]">
               {t("heading")}
             </SectionHeading>
           </div>
           <p
             ref={paraRef}
-            className="flex flex-wrap gap-y-1 gap-x-1.5 md:gap-1.5 text-sm md:text-lg font-medium text-[var(--muted)]"
+            className="flex flex-wrap gap-y-1 gap-x-1.5 md:gap-1.5 text-base md:text-lg font-medium text-[var(--muted)]"
           >
             {segments.map((seg, si) =>
               seg.text.trim().split(" ").map((w, wi) => (

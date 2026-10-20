@@ -67,15 +67,20 @@ export default function HomePage() {
       const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
       stopWaiting = onIntroReveal(() => tl.play());
 
+      // Phones: the location and the socials share a row, so they come in
+      // together, and the wall follows sooner and quicker.
+      const phone = window.matchMedia("(max-width: 767px)").matches;
+      const wall = phone ? 0.6 : 1;
+
       tl.to(greetRef.current, { autoAlpha: 1, y: 0, duration: 0.4 })
         .to(subtitleRef.current, { autoAlpha: 1, y: 0, duration: 0.5 }, "+=0.9")
         .to(
           socialLinks,
-          { autoAlpha: 1, y: 0, scale: 1, duration: 0.4, stagger: 0.06 },
-          ">0.05"
+          { autoAlpha: 1, y: 0, scale: 1, duration: 0.4, stagger: phone ? 0 : 0.06 },
+          phone ? "<" : ">0.05"
         )
-        .to(mosaicRef.current, { y: 0, duration: 1 }, "<0.1")
-        .to(mosaicVeilRef.current, { autoAlpha: 0, duration: 1 }, "<");
+        .to(mosaicRef.current, { y: 0, duration: wall }, phone ? "<0.15" : "<0.1")
+        .to(mosaicVeilRef.current, { autoAlpha: 0, duration: wall }, "<");
     }, section);
 
     return () => {
@@ -110,17 +115,17 @@ export default function HomePage() {
               <ScrambleTitle lead="Product" words={HERO_WORDS} />
             </div>
 
-            {/* Location with the socials under it. On desktop it's pinned to the
+            {/* Location with the socials beside it (phones) or under it. On desktop it's pinned to the
                 title's right, spanning its x-height (top) to its baseline (bottom),
                 in em of the title's size; the title's changing width never shifts it. */}
-            <div className="flex flex-col md:absolute md:right-0 md:top-[0.367em] md:bottom-[0.152em] md:items-end md:justify-between md:text-right">
+            <div className="flex flex-row items-center justify-between md:absolute md:right-0 md:top-[0.367em] md:bottom-[0.152em] md:flex-col md:items-end md:text-right">
               <div
                 ref={subtitleRef}
                 className="text-base flex md:text-lg font-medium text-[var(--muted)]"
               >
                 <p className="md:-mt-[0.16em] md:leading-none">{t("location")}</p>
               </div>
-              <div ref={footerSocialRef} className="flex flex-row gap-1 mt-1 -ml-2.5 md:mt-0 md:ml-0 md:-mr-2.5 md:-mb-2.5">
+              <div ref={footerSocialRef} className="flex flex-row gap-1 -mr-2.5 md:-mb-2.5">
                 <Link
                   href="https://www.linkedin.com/in/jesushernandez91/"
                   data-sfx="social"

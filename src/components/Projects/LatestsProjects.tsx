@@ -315,7 +315,7 @@ export default function LatestProjects() {
             <div ref={anchorRef} className="absolute" aria-hidden />
             <SectionLabel className="mb-1">{t("label")}</SectionLabel>
             <Link href="/works" className="block max-w-3xl">
-              <SectionHeading className="text-3xl md:text-6xl text-[var(--black)] font-semibold tracking-title">
+              <SectionHeading className="text-2xl sm:text-3xl md:text-6xl leading-tighter text-[var(--black)] font-semibold tracking-title">
                 {t("headingTop")}
                 <br />
                 {t("headingBottom")}
@@ -385,20 +385,20 @@ export default function LatestProjects() {
           </div>
         </div>
 
-        {/* Rotating statement — pinned with the cards (desktop) */}
+        {/* Rotating statement — pinned with the cards. On phones the CTA drops below it, so the phrase keeps the full width. */}
         {scrollDriven && (
           <div
             ref={phrasesRef}
-            className="mx-auto max-w-[1280px] w-full px-6 md:px-8 mt-8 md:mt-10 flex items-end justify-between gap-6"
+            className="mx-auto max-w-[1280px] w-full px-6 md:px-8 mt-8 md:mt-10 flex flex-col items-start md:flex-row md:items-end justify-between gap-6"
           >
-            <div className="grid text-sm md:text-lg font-medium text-[var(--muted)]">
+            <div className="grid w-full md:w-auto text-base md:text-lg font-medium text-[var(--muted)]">
               {phraseTexts.map((text, i) => {
                 const Icon = PHRASE_ICONS[i];
                 return (
                 <p
                   key={i}
                   data-phrase
-                  className="[grid-area:1/1] max-w-md text-balance"
+                  className="[grid-area:1/1] md:max-w-md md:text-balance"
                   style={i > 0 ? { visibility: "hidden", opacity: 0 } : undefined}
                   aria-hidden={i < phraseTexts.length - 1 || undefined}
                 >
@@ -428,24 +428,24 @@ export default function LatestProjects() {
         )}
       </div>
 
-      {/* Footer — texto + CTA (mobile / reduced motion) */}
-      <div className="mx-auto max-w-[1280px] w-full px-6 md:px-8 mt-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        {!scrollDriven && (
+      {/* Footer — texto + CTA (reduced motion; the scroll ride ends on its own CTA) */}
+      {!scrollDriven && (
+        <div className="mx-auto max-w-[1280px] w-full px-6 md:px-8 mt-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <ScrubWords className="text-sm md:text-lg font-medium text-[var(--muted)] max-w-md">
             <BookOpenText aria-hidden size={20} className={`${phraseIconClass} text-[var(--orange)]`} />
             {phraseTexts[phraseTexts.length - 1]}
           </ScrubWords>
-        )}
-        <div className="flex items-center gap-3 shrink-0">
-          <Link
-            href="/works"
-            className="md:hidden inline-flex items-center gap-2 rounded-full px-5 py-2.5 bg-[var(--black)] text-white font-medium text-sm transition hover:bg-zinc-800"
-          >
-            {t("viewAll")}
-            <ArrowRight size={16} />
-          </Link>
+          <div className="flex items-center gap-3 shrink-0">
+            <Link
+              href="/works"
+              className="md:hidden inline-flex items-center gap-2 rounded-full px-5 py-2.5 bg-[var(--black)] text-white font-medium text-sm transition hover:bg-zinc-800"
+            >
+              {t("viewAll")}
+              <ArrowRight size={16} />
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

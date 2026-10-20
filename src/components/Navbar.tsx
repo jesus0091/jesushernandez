@@ -288,19 +288,36 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2.5 font-semibold text-[var(--black)] shrink-0"
         >
-          <Image
-            src="/images/facebrand.png"
-            alt={t("logoAlt")}
-            className="border border-black/10 rounded-control bg-black/5 object-contain w-9 h-9"
-            width={36}
-            height={36}
-            priority
-          />
+          {/* The face is the fixed avatar below; this keeps its place. */}
+          <span aria-hidden className="w-11 h-11 shrink-0" />
           <span className="text-base font-semibold tracking-tight">
             Jesús Hernández
           </span>
         </Link>
       </header>
+
+      {/* ── Mobile avatar (fixed, always visible, the hamburger's size and level) ── */}
+      <Link
+        href="/"
+        onClick={onSamePage("/")}
+        className="md:hidden fixed z-[70]"
+        style={{
+          top: "calc(env(safe-area-inset-top, 0px) + 12px)",
+          left: "calc(env(safe-area-inset-left, 0px) + 24px)",
+        }}
+      >
+        <Image
+          src="/images/facebrand.png"
+          alt={t("logoAlt")}
+          className={[
+            "border rounded-control object-contain w-11 h-11 transition-colors duration-300",
+            dark || open ? "border-white/20 bg-white/10" : "border-black/10 bg-[var(--color-bg)]",
+          ].join(" ")}
+          width={44}
+          height={44}
+          priority
+        />
+      </Link>
 
       {/* ── Mobile hamburger button (fixed, always visible) ── */}
       <button

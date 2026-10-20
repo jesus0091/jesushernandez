@@ -53,6 +53,9 @@
   /* ---------------- Tracking ---------------- */
   /* Every title, at any size. */
   --tracking-title: -0.0125em;
+  /* Section titles (leading-tighter). The fluid text-3xl sets no line height,
+     so without it phone titles inherit the body's and wrap loosely. */
+  --leading-tighter: 1.05;
 
   /* ---------------- Fluid type scale ---------------- */
   --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8125rem);

@@ -103,6 +103,17 @@ export default function Footer({
     else window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Phones: the back-to-top link becomes a floating button, shown while the
+  // footer's body is on screen.
+  const [floatTop, setFloatTop] = useState(false);
+  useEffect(() => {
+    const body = footerRef.current?.querySelector("[data-footer-body]");
+    if (!body) return;
+    const io = new IntersectionObserver(([entry]) => setFloatTop(entry.isIntersecting));
+    io.observe(body);
+    return () => io.disconnect();
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -305,7 +316,11 @@ export default function Footer({
       if (box.clientWidth === lastWidth) return;
       lastWidth = box.clientWidth;
       text.style.fontSize = "100px";
-      const w = text.offsetWidth;
+      // The negative tracking also follows the last letter, so the line's box
+      // ends before the last glyph's ink: fit the ink (plus a hair for the
+      // glyph's own overhang), or the box clips the final letter.
+      const tracking = Math.min(0, parseFloat(getComputedStyle(text).letterSpacing) || 0);
+      const w = text.offsetWidth - tracking + 2;
       if (w) text.style.fontSize = `${(100 * box.clientWidth) / w}px`;
       paint();
       // Refreshing every trigger is the costliest step of loading the page,
@@ -407,7 +422,7 @@ export default function Footer({
       className={`relative flex flex-col ${className}`}
     >
       <CtaTunnel still={isCard}>
-        <div className="flex flex-col items-center gap-4 text-center px-6">
+        <div className="flex flex-col items-center gap-4 text-center px-12 md:px-6">
           {isCard && (
             <Image
               data-cta-extra
@@ -423,7 +438,7 @@ export default function Footer({
           </div>
           <h3
             data-cta-title
-            className="text-3xl sm:text-4xl md:text-7xl font-semibold tracking-title text-white"
+            className="text-2xl sm:text-4xl md:text-7xl leading-tighter font-semibold tracking-title text-white"
           >
             {t("ctaTitleTop")} <br /> {t("ctaTitleBottom")}
           </h3>
@@ -542,7 +557,7 @@ export default function Footer({
 
         <div
           data-footer-col
-          className="w-full flex flex-col-reverse pb-6 md:pb-8 max-w-[1280px] mx-auto px-6 md:px-8 sm:flex-row items-center justify-between gap-3 pt-5 relative before:absolute before:top-0 before:inset-x-6 md:before:inset-x-8 before:h-px before:bg-black/15"
+          className="w-full flex flex-col-reverse pb-24 md:pb-8 max-w-[1280px] mx-auto px-6 md:px-8 sm:flex-row items-center justify-between gap-3 pt-5 relative before:absolute before:top-0 before:inset-x-6 md:before:inset-x-8 before:h-px before:bg-black/15"
         >
           <p className="text-sm text-center text-[var(--color-ink-3)]">
             © {year} Jesús Hernández. {t("copyright")}
@@ -550,7 +565,7 @@ export default function Footer({
           <button
             type="button"
             onClick={scrollToTop}
-            className="group inline-flex items-center gap-1.5 text-sm text-[var(--color-ink-3)] hover:text-[var(--color-ink-1)] transition-colors"
+            className="group hidden md:inline-flex items-center gap-1.5 text-sm text-[var(--color-ink-3)] hover:text-[var(--color-ink-1)] transition-colors"
           >
             {t("backToTop")}
             <ArrowUp
@@ -559,6 +574,17 @@ export default function Footer({
             />
           </button>
         </div>
+        <button
+          type="button"
+          onClick={scrollToTop}
+          aria-label={t("backToTop")}
+          tabIndex={floatTop ? undefined : -1}
+          className={`md:hidden fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--black)] text-white shadow-lg transition-[opacity,translate] duration-300 ease-out ${
+            floatTop ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 translate-y-3"
+          }`}
+        >
+          <ArrowUp size={20} />
+        </button>
       </div>
       </div>
       </div>
