@@ -15,6 +15,8 @@ const CARD_RADIUS = 24;
 const EXPAND_END = 0.4;
 
 const WORD_GAP = 0.12;
+// The tunnel's color at the screen edges (measured on an iPhone screenshot).
+const TUNNEL_EDGE = "#0a0a2c";
 const WORD_ANGLES = [-35, 145, 35, -145, -75, 105, 75, -105, -55, 125, 55, -125];
 
 export type TunnelVariant = "rings" | "warp";
@@ -258,6 +260,9 @@ export default function ShaderTunnel({ variant, children }: { variant: TunnelVar
       const vh = stage.clientHeight;
       const y = Math.max(0, (vh - CARD_H(vw, vh)) / 2) * (1 - state.expand);
       stage.dataset.navDark = y < 36 ? "true" : "false";
+      // Fully grown, the card fills the stage: give the (sticky) stage the
+      // tunnel's edge color behind the canvas, for Safari's bars (BrowserTint).
+      stage.style.backgroundColor = state.expand >= 1 ? TUNNEL_EDGE : "";
 
       const t = gsap.utils.clamp(0, 1, (progress - EXPAND_END * 0.75) / (1 - EXPAND_END * 0.75));
       const portrait = vh > vw;
@@ -366,8 +371,8 @@ export default function ShaderTunnel({ variant, children }: { variant: TunnelVar
     <section ref={sectionRef} className="relative h-[280vh] md:h-[340vh]">
       <div
         ref={stageRef}
-        // The tunnel's edge color, for Safari's bars while it fills the screen.
-        data-browser-tint="#0a0a2c"
+        // Tints Safari's bars while it fills the screen (BrowserTint).
+        data-browser-tint
         // The navbar goes transparent over it, so the card grows up under the links.
         data-nav-clear="true"
         className="sticky top-0 h-lvh w-full overflow-hidden data-[fallback=true]:bg-[#01020c]"
