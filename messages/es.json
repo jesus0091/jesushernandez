@@ -1,8 +1,8 @@
 {
   "meta": {
-    "siteTitle": "Jesús Hernández | Product Engineer & Designer",
+    "siteTitle": "Jesús Hernández | Product Engineer y diseñador UX/UI en Buenos Aires",
     "titleTemplate": "%s | Jesús Hernández",
-    "description": "Product Engineer y Designer en Argentina. Diseño y construyo productos digitales de punta a punta, desde el primer boceto hasta producción.",
+    "description": "Product Engineer & Designer en Buenos Aires, Argentina. Diseño y construyo productos digitales de punta a punta, desde el primer boceto hasta producción.",
     "works": {
       "title": "Proyectos",
       "description": "Trabajos seleccionados de Jesús Hernández: sitios y productos diseñados y construidos de punta a punta, desde la investigación hasta el lanzamiento."
@@ -63,7 +63,7 @@
   },
   "home": {
     "greeting": "Me llamo Jesús Hernández 👋",
-    "srTitle": "Jesús Hernández, Product Engineer & Product Designer",
+    "srTitle": "Jesús Hernández — Product Engineer & Designer, Buenos Aires",
     "location": "En Argentina",
     "linkedin": "Perfil de LinkedIn",
     "github": "Perfil de GitHub",
@@ -73,7 +73,7 @@
     "label": "Sobre mí",
     "heading": "La mente creativa detrás del código",
     "cta": "Mira mi trabajo",
-    "body": "Soy <b>AI-Driven Engineer</b> y <b>Product Designer</b> en <b>Buenos Aires, Argentina.</b> Combino <b>diseño y desarrollo</b> en un solo perfil, lo que significa que puedo llevar un producto del <b>concepto a una interfaz pulida</b> sin perder coherencia en el camino. Me importan mucho los <b>detalles:</b> el <b>espaciado</b> correcto, la <b>interacción</b> correcta, las palabras correctas. Así construyo <b>productos digitales</b> que se sienten tan bien como funcionan."
+    "body": "Soy <b>Product Engineer & Designer</b> en <b>Buenos Aires, Argentina,</b> y construyo <b>productos con IA.</b> Combino <b>diseño y desarrollo</b> en un solo perfil, lo que significa que puedo llevar un producto del <b>concepto a una interfaz pulida</b> sin perder coherencia en el camino. Me importan mucho los <b>detalles:</b> el <b>espaciado</b> correcto, la <b>interacción</b> correcta, las palabras correctas. Así construyo <b>productos digitales</b> que se sienten tan bien como funcionan."
   },
   "skills": {
     "label": "Habilidades",
@@ -121,7 +121,7 @@
     "items": {
       "ristario": {
         "title": "Diseño y desarrollo de sitio web",
-        "role": "UX/UI Designer & FullStack Developer",
+        "role": "Product Engineer & Designer",
         "summary": "Diseño y desarrollo completos del sitio web de Ristario. Del concepto a producción, incluyendo diseño UX/UI, branding e implementación full-stack."
       },
       "move-the-chain": {

@@ -36,7 +36,7 @@ export const WORKS: Work[] = [
     title: "A free QR menu, priced in two currencies",
     titleLines: ["A free QR menu,", "priced in two currencies"],
     productName: "Ristario",
-    role: "UX/UI Designer & FullStack Developer",
+    role: "Product Engineer & Designer",
     description:
       "Full ownership of Ristario's digital presence from concept to production. Designed the brand identity, UI system, and all visual assets, then implemented the full website in Next.js. Shipped as a single handoff-free project.",
     overview: {

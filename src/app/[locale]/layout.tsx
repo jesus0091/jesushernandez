@@ -5,12 +5,13 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Inter, JetBrains_Mono } from "next/font/google";
 
+import Analytics from "@/components/Analytics";
 import IntroOverlay from "@/components/motion/IntroOverlay";
 import PageTransition from "@/components/motion/PageTransition";
 import SmoothScroll from "@/components/motion/SmoothScroll";
 import UiSounds from "@/components/UiSounds";
 import { routing } from "@/i18n/routing";
-import { SITE, absoluteUrl, shareFor } from "@/i18n/seo";
+import { PERSON_ID, SITE, absoluteUrl, shareFor } from "@/i18n/seo";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -46,20 +47,6 @@ export async function generateMetadata({
       template: t("titleTemplate"),
     },
     description: t("description"),
-    keywords: [
-      "Product Engineer",
-      "Design Engineer",
-      "Product Designer",
-      "AI Engineer",
-      "Frontend Engineer",
-      "Full-Stack Developer",
-      "React",
-      "Next.js",
-      "TypeScript",
-      "Portfolio",
-      "Web Design",
-      "Web Development",
-    ],
     authors: [{ name: "Jesús Hernández", url: SITE }],
     creator: "Jesús Hernández",
     publisher: "Jesús Hernández",
@@ -98,29 +85,36 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "meta" });
 
+  // One person entity with a stable @id: the site, and later every article,
+  // points at it instead of describing the author again.
   const personJsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
+    "@id": PERSON_ID,
     name: "Jesús Hernández",
-    url: SITE,
+    url: `${SITE}/`,
     jobTitle: "Product Engineer & Designer",
     description: t("description"),
-    inLanguage: locale,
     image: `${SITE}/images/about_me.webp`,
     address: {
       "@type": "PostalAddress",
       addressLocality: "Buenos Aires",
       addressCountry: "AR",
     },
+    knowsLanguage: ["es", "en"],
     knowsAbout: [
+      "Product Engineering",
       "Product Design",
       "UX/UI Design",
       "Design Systems",
+      "Web Animation",
+      "GSAP",
       "React",
       "Next.js",
       "TypeScript",
       "React Native",
       "AI Engineering",
+      "AI-assisted Development",
     ],
     sameAs: [
       "https://www.linkedin.com/in/jesushernandez91/",
@@ -132,10 +126,12 @@ export default async function LocaleLayout({
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${SITE}/#website`,
     name: "Jesús Hernández",
     url: absoluteUrl("/", locale),
     inLanguage: locale,
-    author: { "@type": "Person", name: "Jesús Hernández", url: SITE },
+    author: { "@id": PERSON_ID },
+    publisher: { "@id": PERSON_ID },
   };
 
   return (
@@ -166,6 +162,7 @@ export default async function LocaleLayout({
 
           {children}
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );

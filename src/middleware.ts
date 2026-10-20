@@ -6,7 +6,15 @@ import { routing } from "./i18n/routing";
 const intlMiddleware = createMiddleware(routing);
 const WORK_IDS = new Set(WORKS.map((w) => w.id));
 
+// AI crawlers and AI user fetches. Static pages leave no function logs, so the
+// middleware notes each visit in the runtime log (Vercel → Logs, filter "ai-bot").
+// The *-User agents mean a person asked an assistant something that led here.
+const AI_BOT = /OAI-SearchBot|ChatGPT-User|GPTBot|Claude-SearchBot|Claude-User|ClaudeBot|PerplexityBot|Perplexity-User|Google-Extended|CCBot|bingbot/i;
+
 export default function middleware(request: NextRequest) {
+  const bot = request.headers.get("user-agent")?.match(AI_BOT)?.[0];
+  if (bot) console.log(JSON.stringify({ tag: "ai-bot", bot, path: request.nextUrl.pathname }));
+
   const response = intlMiddleware(request);
 
   // An unknown work id matches [locale]/works/[id], but Next then renders the

@@ -58,7 +58,7 @@ export default async function WorkDetailPage({ params }: Props) {
   return (
     <>
       <Navbar />
-      <main>
+      <main id="main-content">
         <WorkDetail work={work} />
       </main>
       <Footer cta="card" />

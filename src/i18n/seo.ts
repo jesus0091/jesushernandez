@@ -1,17 +1,14 @@
 import type { Metadata } from "next";
+import { pageFor } from "./pages";
 import { localizePath } from "./paths";
 import { routing, type Locale } from "./routing";
 
 export const SITE = "https://jesushernandez.site";
 
-/** Paths with a real Spanish version. Phase 2 adds /works and the projects. */
-export const TRANSLATED_PATHS: string[] = ["/", "/lab", "/blog"];
+/** The JSON-LD @id of the site's author, referenced by every page and article. */
+export const PERSON_ID = `${SITE}/#person`;
 
 export const OG_LOCALE: Record<Locale, string> = { en: "en_US", es: "es_LA" };
-
-export function isTranslated(path: string): boolean {
-  return TRANSLATED_PATHS.includes(path);
-}
 
 /** Absolute URL of a path in a locale; the English home stays "/" like the sitemap. */
 export function absoluteUrl(path: string, locale: Locale): string {
@@ -19,22 +16,38 @@ export function absoluteUrl(path: string, locale: Locale): string {
   return local === "/" ? `${SITE}/` : `${SITE}${local}`;
 }
 
-/** Canonical for this locale, plus hreflang links when the page exists in both. */
-export function alternatesFor(path: string, locale: Locale): Metadata["alternates"] {
-  const canonical = absoluteUrl(path, locale);
-  if (!isTranslated(path)) return { canonical };
-
-  const languages: Record<string, string> = {};
-  for (const l of routing.locales) languages[l] = absoluteUrl(path, l);
-  languages["x-default"] = languages[routing.defaultLocale];
-  return { canonical, languages };
+/** Absolute URL of each language version of a page (only those that exist). */
+export function languageUrls(key: string): Partial<Record<Locale, string>> {
+  const { paths } = pageFor(key);
+  return Object.fromEntries(
+    routing.locales.filter((l) => paths[l]).map((l) => [l, absoluteUrl(paths[l]!, l)]),
+  );
 }
 
-/** Untranslated Spanish pages show English content: keep them out of the index. */
-export function robotsFor(path: string, locale: Locale): Metadata["robots"] | undefined {
-  return locale !== routing.defaultLocale && !isTranslated(path)
-    ? { index: false, follow: true }
-    : undefined;
+/** True when the page exists in more than one language. */
+export function isTranslated(key: string): boolean {
+  return Object.keys(pageFor(key).paths).length > 1;
+}
+
+/**
+ * Canonical for this locale, plus hreflang links when the page exists in more
+ * than one language. A locale without its own version keeps a self canonical
+ * (it is noindexed, and noindex shouldn't point a canonical elsewhere).
+ */
+export function alternatesFor(key: string, locale: Locale): Metadata["alternates"] {
+  const urls = languageUrls(key);
+  const canonical = urls[locale] ?? absoluteUrl(key, locale);
+  if (!isTranslated(key)) return { canonical };
+  return { canonical, languages: { ...urls, "x-default": urls[routing.defaultLocale]! } };
+}
+
+/**
+ * Out of the index: pages flagged as not ready, and a locale's view of a page
+ * that has no version in that language (it shows the English content).
+ */
+export function robotsFor(key: string, locale: Locale): Metadata["robots"] | undefined {
+  const page = pageFor(key);
+  return !page.index || !page.paths[locale] ? { index: false, follow: true } : undefined;
 }
 
 /**

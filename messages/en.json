@@ -2,7 +2,7 @@
   "meta": {
     "siteTitle": "Jesús Hernández | Product Engineer & Designer",
     "titleTemplate": "%s | Jesús Hernández",
-    "description": "Product Engineer and Designer based in Argentina. I design and build digital products end to end, from the first sketch to production.",
+    "description": "Product Engineer & Designer based in Buenos Aires, Argentina. I design and build digital products end to end, from the first sketch to production.",
     "works": {
       "title": "Works",
       "description": "Selected work by Jesús Hernández: websites and products designed and built end to end, from research to launch."
@@ -63,7 +63,7 @@
   },
   "home": {
     "greeting": "My name is Jesús Hernández 👋",
-    "srTitle": "Jesús Hernández, Product Engineer & Product Designer",
+    "srTitle": "Jesús Hernández — Product Engineer & Designer, Buenos Aires",
     "location": "Based in Argentina",
     "linkedin": "LinkedIn profile",
     "github": "GitHub profile",
@@ -73,7 +73,7 @@
     "label": "About Me",
     "heading": "The Creative Mind Behind the Code",
     "cta": "Look at My Work",
-    "body": "I'm a <b>AI-Driven Engineer</b> and <b>Product Designer</b> based in <b>Buenos Aires, Argentina.</b> I combine <b>design and development</b> in a single profile, which means I can take a product from <b>concept to polished interface</b> without losing coherence along the way. I care deeply about the <b>details:</b> the right <b>spacing,</b> the right <b>interaction,</b> the right words. That's how I build <b>digital products</b> that feel as good as they work."
+    "body": "I'm a <b>Product Engineer & Designer</b> based in <b>Buenos Aires, Argentina,</b> building <b>AI-driven products.</b> I combine <b>design and development</b> in a single profile, which means I can take a product from <b>concept to polished interface</b> without losing coherence along the way. I care deeply about the <b>details:</b> the right <b>spacing,</b> the right <b>interaction,</b> the right words. That's how I build <b>digital products</b> that feel as good as they work."
   },
   "skills": {
     "label": "Skills",
@@ -121,7 +121,7 @@
     "items": {
       "ristario": {
         "title": "Website Design & Development",
-        "role": "UX/UI Designer & FullStack Developer",
+        "role": "Product Engineer & Designer",
         "summary": "Complete design and development of Ristario website. From concept to production, including UX/UI design, branding, and full-stack implementation."
       },
       "move-the-chain": {

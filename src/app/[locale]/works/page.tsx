@@ -37,7 +37,7 @@ export default async function WorksPage({
   return (
     <>
       <Navbar />
-      <main>
+      <main id="main-content">
         <WorksHero />
         <WorksList />
       </main>

@@ -1,35 +1,24 @@
 import type { MetadataRoute } from "next";
-import { WORKS } from "@/data/works";
+import { PAGES } from "@/i18n/pages";
 import { routing } from "@/i18n/routing";
-import { TRANSLATED_PATHS, absoluteUrl, isTranslated } from "@/i18n/seo";
+import { absoluteUrl, isTranslated, languageUrls } from "@/i18n/seo";
 
-const PRIORITY: Record<string, number> = { "/": 1, "/works": 0.9 };
-
+// Only indexable pages, once per language they exist in. lastModified is the
+// page's real content date (src/i18n/pages.ts), so it only moves when the
+// content does. changefreq and priority are left out: Google ignores them.
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-  const paths = [
-    ...new Set([
-      ...TRANSLATED_PATHS,
-      "/works",
-      ...WORKS.map((w) => `/works/${w.id}`),
-    ]),
-  ];
+  return Object.entries(PAGES)
+    .filter(([, page]) => page.index)
+    .flatMap(([key, page]) => {
+      const translated = isTranslated(key);
+      const languages = { ...languageUrls(key), "x-default": absoluteUrl(page.paths.en ?? key, routing.defaultLocale) };
 
-  // A translated page is listed once per language, each pointing at the other.
-  // Everything else is English only, with no alternates.
-  return paths.flatMap((path) => {
-    const translated = isTranslated(path);
-    const locales = translated ? routing.locales : [routing.defaultLocale];
-    const languages = Object.fromEntries(
-      routing.locales.map((l) => [l, absoluteUrl(path, l)]),
-    );
-
-    return locales.map((locale) => ({
-      url: absoluteUrl(path, locale),
-      lastModified,
-      changeFrequency: "monthly" as const,
-      priority: PRIORITY[path] ?? 0.7,
-      ...(translated && { alternates: { languages } }),
-    }));
-  });
+      return routing.locales
+        .filter((locale) => page.paths[locale])
+        .map((locale) => ({
+          url: absoluteUrl(page.paths[locale]!, locale),
+          lastModified: page.updated,
+          ...(translated && { alternates: { languages } }),
+        }));
+    });
 }

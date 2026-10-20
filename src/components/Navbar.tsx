@@ -7,7 +7,9 @@ import SoundToggle from "@/components/SoundToggle";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { usePathname } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { contactHref } from "@/lib/contact";
+import type { Locale } from "@/i18n/routing";
 import LocaleSwitch from "@/components/LocaleSwitch";
 import gsap from "gsap";
 
@@ -65,6 +67,7 @@ export default function Navbar() {
   // Without the locale prefix, so it compares with the links' hrefs.
   const pathname = usePathname();
   const t = useTranslations("nav");
+  const locale = useLocale() as Locale;
 
   // A link to the page you're already on does nothing in Next: take it to
   // the top instead.
@@ -248,7 +251,7 @@ export default function Navbar() {
             <LocaleSwitch light={light} />
             <SoundToggle dark={light} />
             <Link
-              href="mailto:jesushernandez120491@gmail.com"
+              href={contactHref(locale)}
               data-sfx="cta"
               className={[
                 "flex items-center gap-2 whitespace-nowrap rounded-full font-medium transition-all duration-300 px-4 lg:px-5 py-2 text-[15px]",
@@ -396,7 +399,7 @@ export default function Navbar() {
           <div className="menu-item border-t border-white/10 pt-8 flex flex-col gap-6">
             <LocaleSwitch light className="-ml-2" />
             <Link
-              href="mailto:jesushernandez120491@gmail.com"
+              href={contactHref(locale)}
               onClick={() => setOpen(false)}
               className="flex items-center gap-3 text-white/50 text-base font-medium hover:text-white transition-colors duration-200"
             >

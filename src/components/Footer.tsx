@@ -10,7 +10,9 @@ import {
   Envelope,
 } from "@/components/icons";
 import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { CONTACT_EMAIL, contactHref } from "@/lib/contact";
+import type { Locale } from "@/i18n/routing";
 
 import CtaTunnel, { TUNNEL_STOPS } from "./motion/CtaTunnel";
 import Image from "next/image";
@@ -45,7 +47,7 @@ type FooterProps = {
 export default function Footer({
   className = "",
   cta = "tunnel",
-  contactEmail = "jesushernandez120491@gmail.com",
+  contactEmail = CONTACT_EMAIL,
   quickLinks,
   social = [
     {
@@ -66,6 +68,7 @@ export default function Footer({
   ],
 }: FooterProps) {
   const t = useTranslations("footer");
+  const locale = useLocale() as Locale;
   const tNav = useTranslations("nav");
   const links = quickLinks ?? [
     { label: tNav("home"), href: "/" },
@@ -445,7 +448,7 @@ export default function Footer({
           <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
             <Link
               ref={ctaBtnRef}
-              href={`mailto:${contactEmail}`}
+              href={contactEmail === CONTACT_EMAIL ? contactHref(locale) : `mailto:${contactEmail}`}
               data-cta
               data-sfx="cta"
               className="relative inline-flex items-center rounded-full gap-2 border border-white/20 bg-[#050b3a]/60 px-6 py-3 text-base cursor-pointer font-medium text-white hover:bg-white/10 transition active:scale-[0.96]"
