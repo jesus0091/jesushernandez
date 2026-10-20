@@ -3,12 +3,12 @@
 import { useEffect, useRef } from "react";
 
 // Safari 26 (iOS) tints its top and bottom bars with the background color of
-// a full-width fixed element at that edge (theme-color is ignored), and still
-// samples it at opacity 0. The page's own fixed layers (the grain, the intro)
-// are transparent, so without these strips Safari falls back to the cream
-// <html> background over every section. Each strip takes the color of the
-// section at its edge as the page scrolls. Chrome on Android tints from
-// theme-color, which follows the top strip.
+// a full-width fixed element at that edge (theme-color is ignored). The
+// page's own fixed layers (the grain, the intro) are transparent, so without
+// these strips Safari falls back to the cream <html> background over every
+// section. Each strip is painted in the color of the section at its edge as
+// the page scrolls, so it reads as part of that section. Chrome on Android
+// tints from theme-color, which follows the top strip.
 const STRIP = 12;
 
 /** Alpha of a computed color: rgba(r, g, b, a), or any color function's "/ a". */
@@ -66,7 +66,7 @@ export default function BrowserTint() {
     };
   }, []);
 
-  const strip = "pointer-events-none fixed inset-x-0 z-[2147483647] opacity-0";
+  const strip = "pointer-events-none fixed inset-x-0 z-[99999]";
   return (
     <>
       <div ref={topRef} data-browser-tint aria-hidden className={`${strip} top-0`} style={{ height: STRIP }} />
