@@ -16,7 +16,7 @@ import {
   RocketLaunch,
   TreeStructure,
 } from "@/components/icons";
-import { prefersReducedMotion, setupGsap } from "@/lib/motion";
+import { largeViewportHeight, prefersReducedMotion, setupGsap } from "@/lib/motion";
 import ScrubWords from "../motion/ScrubWords";
 import ProcessVisual from "./ProcessVisual";
 import ResponsiveCanvas from "./ResponsiveCanvas";
@@ -444,7 +444,7 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
           const extra = demos[panels - 1]?.offsetParent ? 1.5 : 0;
           const size = () => {
             // Half a screen of scroll per panel, so six of them don't take forever.
-            wrap.style.height = `${window.innerHeight + (distance() / 2) * ((panels + extra) / panels)}px`;
+            wrap.style.height = `${largeViewportHeight() + (distance() / 2) * ((panels + extra) / panels)}px`;
             // The trail leaves the opening panel and wanders to each node in turn.
             if (!rail || !start) return;
             const origin = track.getBoundingClientRect();

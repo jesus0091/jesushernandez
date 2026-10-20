@@ -1,6 +1,6 @@
 "use client";
 
-import { prefersReducedMotion, setupGsap } from "@/lib/motion";
+import { isTouchScreen, prefersReducedMotion, setupGsap } from "@/lib/motion";
 import { useLayoutEffect, useRef } from "react";
 
 import type { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -49,6 +49,7 @@ export default function ScatterText({ children, className = "", style, scrollTri
         // letter fades in as it starts travelling (no simultaneous pop-in).
         const delays = self.chars.map(() => gsap.utils.random(0, 0.6));
         const delay = (i: number) => delays[i];
+        const blur = !isTouchScreen();
 
         const driven = externalRef.current;
         const prevProgress = driven?.current?.progress() ?? 0;
@@ -72,9 +73,10 @@ export default function ScatterText({ children, className = "", style, scrollTri
             rotation: () => gsap.utils.random(-90, 90),
             // Some start large, as if coming towards the viewer.
             scale: () => gsap.utils.random(0.4, 2.2),
-            filter: "blur(16px)",
+            // A blur per letter is the heaviest paint on the page; touch screens skip it.
+            filter: blur ? "blur(16px)" : "none",
           },
-          { x: 0, y: 0, rotation: 0, scale: 1, filter: "blur(0px)", duration: 1, ease: "power2.out", stagger: delay },
+          { x: 0, y: 0, rotation: 0, scale: 1, filter: blur ? "blur(0px)" : "none", duration: 1, ease: "power2.out", stagger: delay },
           0
         ).fromTo(self.chars, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "none", stagger: delay }, 0);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { prefersReducedMotion, setLenis, setupGsap } from "@/lib/motion";
+import { isTouchScreen, prefersReducedMotion, setLenis, setupGsap } from "@/lib/motion";
 
 import Lenis from "lenis";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -19,7 +19,15 @@ export default function SmoothScroll() {
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
 
+    // Touch screens scroll natively (Lenis only smooths the wheel). There,
+    // scroll on the JS thread so pinned sections stay in sync with the finger
+    // and the address bar stops sliding in and out mid-animation, which is
+    // what resizes the viewport and makes Safari iOS jump.
+    const touch = isTouchScreen();
+    if (touch) ScrollTrigger.normalizeScroll(true);
+
     return () => {
+      if (touch) ScrollTrigger.normalizeScroll(false);
       gsap.ticker.remove(tick);
       lenis.destroy();
       setLenis(null);

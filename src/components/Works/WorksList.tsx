@@ -59,7 +59,7 @@ export default function WorksList() {
             <Link
               key={work.id}
               href={`/works/${work.id}`}
-              className={`work-card group relative flex flex-col overflow-hidden rounded-card bg-white/70 backdrop-blur-sm border border-white/50 transition-[background-color,box-shadow,translate] duration-300 hover:bg-white/90 hover:-translate-y-1 hover:shadow-lg ${BENTO[i] ?? ""}`}
+              className={`work-card group relative flex flex-col overflow-hidden rounded-card bg-white/70 backdrop-blur-sm pointer-coarse:backdrop-blur-none border border-white/50 transition-[background-color,box-shadow,translate] duration-300 hover:bg-white/90 hover:-translate-y-1 hover:shadow-lg ${BENTO[i] ?? ""}`}
             >
               {/* Covers are exported at 1600×707; bento cells crop them to fit. */}
               <div className="relative aspect-[1600/707] w-full bg-zinc-100 overflow-hidden lg:aspect-auto lg:min-h-0 lg:flex-1">
@@ -80,7 +80,7 @@ export default function WorksList() {
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="absolute top-4 left-4 right-4 flex items-center gap-2">
-                  <span className="truncate rounded-full bg-white/80 backdrop-blur-md px-3 py-1 text-xs font-semibold text-[var(--black)]">
+                  <span className="truncate rounded-full bg-white/80 backdrop-blur-md pointer-coarse:backdrop-blur-none px-3 py-1 text-xs font-semibold text-[var(--black)]">
                     {work.category}
                   </span>
                 </div>

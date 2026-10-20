@@ -1,6 +1,6 @@
 "use client";
 
-import { prefersReducedMotion, setupGsap } from "@/lib/motion";
+import { isTouchScreen, prefersReducedMotion, setupGsap } from "@/lib/motion";
 import { useLayoutEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 
@@ -71,14 +71,16 @@ export default function Skills() {
         );
       });
 
+      // Touch screens skip the blur: repainting it per frame stutters on Safari iOS.
+      const blur = !isTouchScreen();
       q<HTMLElement>("[data-row]").forEach((row) => {
         const texts = row.querySelectorAll<HTMLElement>("[data-tag-text]");
         // Scrubbed, but done by the time the row's top reaches 70% of the viewport.
         const tl = gsap.timeline({ scrollTrigger: { trigger: row, start: "top bottom", end: "top 70%", scrub: 0.6 } });
         tl.fromTo(
           row.querySelector("[data-title]"),
-          { filter: "blur(12px)", opacity: 0, x: -24 },
-          { filter: "blur(0px)", opacity: 1, x: 0, duration: 0.5, ease: "power2.out" },
+          { filter: blur ? "blur(12px)" : "none", opacity: 0, x: -24 },
+          { filter: blur ? "blur(0px)" : "none", opacity: 1, x: 0, duration: 0.5, ease: "power2.out" },
           0
         ).fromTo(
           row.querySelectorAll("[data-tag]"),

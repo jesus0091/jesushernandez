@@ -31,7 +31,7 @@ export default function ProjectCard({ project }: { project: Project }) {
     <Link
       href={`/works/${p.id}`}
       aria-label={t("openAria", { name: p.productName, role })}
-      className="group relative block overflow-hidden rounded-card border border-black/[0.06] bg-white/70 backdrop-blur-sm transition-colors duration-300 ease-out hover:border-black/[0.12] hover:bg-white"
+      className="group relative block overflow-hidden rounded-card border border-black/[0.06] bg-white/70 backdrop-blur-sm pointer-coarse:backdrop-blur-none transition-colors duration-300 ease-out hover:border-black/[0.12] hover:bg-white"
     >
       <article>
         {/* Covers are exported at 1600×707. */}
@@ -52,7 +52,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           )}
 
           <span
-            className={`absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium backdrop-blur-md ${
+            className={`absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium backdrop-blur-md pointer-coarse:backdrop-blur-none ${
               p.mode === "solo"
                 ? "bg-white/85 text-[var(--color-accent-ink)]"
                 : "bg-black/70 text-white"

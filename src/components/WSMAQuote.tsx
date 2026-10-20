@@ -1,6 +1,6 @@
 "use client";
 
-import { prefersReducedMotion, setupGsap } from "@/lib/motion";
+import { largeViewportHeight, prefersReducedMotion, setupGsap } from "@/lib/motion";
 import { useLayoutEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 
@@ -180,7 +180,7 @@ export default function WSMAQuote() {
               invalidateOnRefresh: true,
             },
           })
-          .fromTo(section, { y: 0 }, { y: () => window.innerHeight, duration: 1, immediateRender: false }, 0)
+          .fromTo(section, { y: 0 }, { y: () => largeViewportHeight(), duration: 1, immediateRender: false }, 0)
           .fromTo(tunnelState, { p: 0 }, { p: 1, duration: 1, immediateRender: false, onUpdate: () => renderTunnel(tunnelState.p) }, 0)
           // The phrase sinks toward the vanishing point, speeding up, and is gone
           // by the time the next section covers the middle of the screen.
