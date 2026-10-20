@@ -366,6 +366,8 @@ export default function ShaderTunnel({ variant, children }: { variant: TunnelVar
     <section ref={sectionRef} className="relative h-[280vh] md:h-[340vh]">
       <div
         ref={stageRef}
+        // The tunnel's edge color, for Safari's bars while it fills the screen.
+        data-browser-tint="#0a0a2c"
         // The navbar goes transparent over it, so the card grows up under the links.
         data-nav-clear="true"
         className="sticky top-0 h-lvh w-full overflow-hidden data-[fallback=true]:bg-[#01020c]"
