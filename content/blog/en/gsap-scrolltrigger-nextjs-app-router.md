@@ -12,6 +12,7 @@ keywords:
   - lenis scrolltrigger
   - gsap reduced motion
 pillar: motion-frontend
+draft: true
 alternateSlug: gsap-scrolltrigger-nextjs
 ---
 

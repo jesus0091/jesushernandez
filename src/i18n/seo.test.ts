@@ -40,7 +40,8 @@ describe("seo", () => {
     expect(robotsFor("/works", "en")).toBeUndefined();
     expect(robotsFor("/", "es")).toBeUndefined();
     expect(robotsFor("/lab", "en")).toEqual({ index: false, follow: true });
-    expect(robotsFor("/blog", "es")).toEqual({ index: false, follow: true });
+    expect(robotsFor("/blog", "es")).toBeUndefined();
+    expect(robotsFor("/blog/gsap-scrolltrigger-nextjs-app-router", "en")).toEqual({ index: false, follow: true });
     expect(robotsFor("/works/ristario", "en")).toBeUndefined();
     expect(robotsFor("/works/iacon", "en")).toEqual({ index: false, follow: true });
   });

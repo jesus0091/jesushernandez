@@ -35,8 +35,24 @@ describe("sitemap", () => {
     expect(found[0].alternates).toBeUndefined();
   });
 
+  it("lists blog posts under each language's own slug", () => {
+    const found = byUrl("https://jesushernandez.site/es/blog/vibe-coding-en-produccion");
+    expect(found).toHaveLength(1);
+    expect(found[0].alternates?.languages).toEqual({
+      en: "https://jesushernandez.site/blog/is-vibe-coding-bad",
+      es: "https://jesushernandez.site/es/blog/vibe-coding-en-produccion",
+      "x-default": "https://jesushernandez.site/blog/is-vibe-coding-bad",
+    });
+    expect(urls).toContain("https://jesushernandez.site/blog");
+    expect(urls).toContain("https://jesushernandez.site/es/blog");
+  });
+
+  it("leaves out drafts", () => {
+    expect(urls.some((u) => u.includes("gsap-scrolltrigger"))).toBe(false);
+  });
+
   it("leaves out pages without content and Spanish works", () => {
-    for (const path of ["/blog", "/es/blog", "/lab", "/es/lab", "/works/iacon", "/works/move-the-chain"]) {
+    for (const path of ["/lab", "/es/lab", "/works/iacon", "/works/move-the-chain"]) {
       expect(urls).not.toContain(`https://jesushernandez.site${path}`);
     }
     expect(urls.some((u) => u.includes("/es/works"))).toBe(false);

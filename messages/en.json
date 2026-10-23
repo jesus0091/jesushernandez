@@ -332,5 +332,15 @@
       }
     ],
     "cta": "Tell me about your project"
+  },
+  "blog": {
+    "label": "Blog",
+    "title": "Notes from production",
+    "lead": "What works, what breaks and what it costs when you take a product from design to production. Written from real projects, not tutorials.",
+    "empty": "The first posts are on their way.",
+    "minutes": "{minutes} min read",
+    "updated": "Updated {date}",
+    "back": "All posts",
+    "draft": "Draft"
   }
 }

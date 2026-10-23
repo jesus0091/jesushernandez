@@ -12,6 +12,7 @@ keywords:
   - splittext gsap
   - lenis scrolltrigger
 pillar: motion-frontend
+draft: true
 alternateSlug: gsap-scrolltrigger-nextjs-app-router
 ---
 
@@ -414,4 +415,4 @@ Casi siempre es una de tres cosas: los triggers de la página anterior no se rev
 
 ---
 
-Si estás armando algo con este tipo de movimiento y quieres otra mirada sobre la arquitectura del scroll, en la [página de servicios](/es/services) cuento cómo trabajo. El carrusel fijado y la transición hacia la cita que describo aquí están funcionando en la [home](/es).
+Si estás armando algo con este tipo de movimiento y quieres otra mirada sobre la arquitectura del scroll, en la [página de servicios](/es/servicios) cuento cómo trabajo. El carrusel fijado y la transición hacia la cita que describo aquí están funcionando en la [home](/es).

@@ -332,5 +332,15 @@
       }
     ],
     "cta": "Cuéntame tu proyecto"
+  },
+  "blog": {
+    "label": "Blog",
+    "title": "Notas desde producción",
+    "lead": "Qué funciona, qué se rompe y cuánto cuesta llevar un producto del diseño a producción. Escrito desde proyectos reales, no desde tutoriales.",
+    "empty": "Los primeros posts están en camino.",
+    "minutes": "{minutes} min de lectura",
+    "updated": "Actualizado el {date}",
+    "back": "Todos los posts",
+    "draft": "Borrador"
   }
 }

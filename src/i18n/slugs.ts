@@ -7,6 +7,10 @@
 export const LOCALIZED_SLUGS: { en: string; es: string }[] = [
   { en: "/about", es: "/sobre-mi" },
   { en: "/services", es: "/servicios" },
+  // Blog posts: the English slug is the route, each post's alternateSlug its
+  // Spanish URL. src/lib/blog.test.ts checks this list against content/blog.
+  { en: "/blog/is-vibe-coding-bad", es: "/blog/vibe-coding-en-produccion" },
+  { en: "/blog/gsap-scrolltrigger-nextjs-app-router", es: "/blog/gsap-scrolltrigger-nextjs" },
 ];
 
 /** Spanish path for an English one (unchanged when it isn't translated). */
