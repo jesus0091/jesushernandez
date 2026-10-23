@@ -74,7 +74,6 @@ export default function ProcessBuild({
     const ctx = gsap.context(() => {
       const q = gsap.utils.selector(root);
       const n = steps.length;
-      const bar = q("[data-bar]")[0] as HTMLElement | undefined;
       const phases = q("[data-phase]") as HTMLElement[];
       const rail = q("[data-rail]")[0] as HTMLElement | undefined;
 
@@ -91,7 +90,6 @@ export default function ProcessBuild({
             const step = Math.min(n - 1, Math.floor(self.progress * n));
             phases.forEach((el, i) => (el.dataset.on = String(i === step)));
             if (rail) rail.style.transform = `scaleY(${self.progress})`;
-            if (bar) bar.style.transform = `scaleX(${self.progress})`;
           },
         },
       });
@@ -449,10 +447,6 @@ export default function ProcessBuild({
             </ol>
           </div>
         </div>
-        {/* At the bottom: a bar that fills as the whole is built (the list names the step). */}
-        <span aria-hidden className="relative h-1 w-full shrink-0 overflow-hidden rounded-full bg-black/[0.06]">
-          <span data-bar className="absolute inset-0 origin-left scale-x-0 rounded-full bg-[var(--orange)]" />
-        </span>
       </div>
     </div>
   );
