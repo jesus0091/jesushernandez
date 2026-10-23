@@ -46,12 +46,9 @@ function highlight(line: string): React.ReactNode {
  */
 export default function ProcessBuild({
   steps,
-  identity,
   fallback,
 }: {
   steps: Step[];
-  /** The project's colors and type, shown as they're chosen in the design step. */
-  identity: { palette: { name: string; hex: string }[]; fonts: { family: string; role: string }[] };
   fallback: React.ReactNode;
 }) {
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -88,7 +85,11 @@ export default function ProcessBuild({
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             const step = Math.min(n - 1, Math.floor(self.progress * n));
-            phases.forEach((el, i) => (el.dataset.on = String(i === step)));
+            phases.forEach((el, i) => {
+              el.dataset.on = String(i === step);
+              // Steps already built stay marked, in a softer orange.
+              el.dataset.done = String(i < step);
+            });
             if (rail) rail.style.transform = `scaleY(${self.progress})`;
           },
         },
@@ -105,14 +106,12 @@ export default function ProcessBuild({
       gsap.set(q("[data-wire-label]"), { autoAlpha: 0 });
       gsap.set(q("[data-shot]"), { clipPath: "inset(0% 0% 100% 0%)" });
       gsap.set(q("[data-approve]"), { autoAlpha: 0, scale: 0.8 });
-      gsap.set(q("[data-style]"), { autoAlpha: 0, scale: 0.85, y: 16 });
-      gsap.set(q("[data-swatch]"), { scale: 0 });
       gsap.set(q("[data-scan]"), { autoAlpha: 0, top: "0%" });
       gsap.set(q("[data-load]"), { scaleX: 0 });
       gsap.set(q("[data-code]"), { xPercent: -110, autoAlpha: 0 });
       gsap.set(q("[data-code-line]"), { clipPath: "inset(0% 100% 0% 0%)" });
       gsap.set(q("[data-code-status]"), { autoAlpha: 0 });
-      gsap.set(q("[data-checks]"), { autoAlpha: 0, y: 20 });
+      gsap.set(q("[data-checks]"), { autoAlpha: 0, y: 24 });
       gsap.set(q("[data-check]"), { autoAlpha: 0.35 });
       gsap.set(q("[data-check-done]"), { autoAlpha: 0 });
       gsap.set(q("[data-url]"), { clipPath: "inset(0% 100% 0% 0%)" });
@@ -143,11 +142,7 @@ export default function ProcessBuild({
 
       const protoAt = at("prototype");
       if (protoAt >= 0) {
-        // One thing at a time: the style is chosen, then the design it makes appears.
-        tl.to(q("[data-style]"), { autoAlpha: 1, scale: 1, y: 0, ease: "back.out(1.6)", ...span(0, 0.12) }, protoAt + 0.04)
-          .to(q("[data-swatch]"), { scale: 1, stagger: 0.03, ease: "back.out(3)", ...span(0, 0.05) }, protoAt + 0.1)
-          .to(q("[data-style]"), { autoAlpha: 0, scale: 0.92, ease: "power2.in", ...span(0, 0.1) }, protoAt + 0.3)
-          .to(q("[data-shot]"), { clipPath: "inset(0% 0% 0% 0%)", ease: "power1.inOut", ...span(0, 0.35) }, protoAt + 0.32)
+        tl.to(q("[data-shot]"), { clipPath: "inset(0% 0% 0% 0%)", ease: "power1.inOut", ...span(0, 0.35) }, protoAt + 0.32)
           .fromTo(q("[data-shot]"), { scale: 1.08 }, { scale: 1, ease: "power2.out", ...span(0, 0.45) }, protoAt + 0.32)
           .to(q("[data-guide-x], [data-guide-y], [data-dim]"), { autoAlpha: 0, ...span(0, 0.2) }, protoAt + 0.3)
           .to(q("[data-approve]"), { autoAlpha: 1, scale: 1, ease: "back.out(2)", ...span(0, 0.1) }, protoAt + 0.72);
@@ -174,7 +169,7 @@ export default function ProcessBuild({
 
       const demoAt = at("demo");
       if (demoAt >= 0) {
-        tl.to(q("[data-checks]"), { autoAlpha: 0, y: -12, ...span(0, 0.12) }, demoAt + 0.02)
+        tl.to(q("[data-checks]"), { autoAlpha: 0, y: 16, ...span(0, 0.12) }, demoAt + 0.02)
           .to(q("[data-url-dev]"), { autoAlpha: 0, ...span(0, 0.06) }, demoAt + 0.1)
           .to(q("[data-url]"), { clipPath: "inset(0% 0% 0% 0%)", ease: "steps(18)", ...span(0, 0.3) }, demoAt + 0.12)
           .to(q("[data-load]"), { scaleX: 1, ease: "power1.inOut", ...span(0, 0.12) }, demoAt + 0.38)
@@ -222,7 +217,7 @@ export default function ProcessBuild({
             <span
               data-dim
               aria-hidden
-              className="absolute inset-x-[6%] top-[2.5%] flex items-center gap-2 font-mono text-[9px] text-[var(--color-accent-ink)] md:text-[10px]"
+              className="absolute inset-x-[6%] top-[2.5%] flex items-center gap-2 text-[10px] font-medium text-[var(--color-accent-ink)] md:text-[11px]"
             >
               <span className="h-2 w-px bg-current" />
               <span className="h-px flex-1 bg-current opacity-50" />
@@ -239,7 +234,7 @@ export default function ProcessBuild({
                   <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]/80" />
                 </span>
                 {/* While it's being built it runs locally; at launch the real address types over it. */}
-                <span className="relative mx-auto flex h-6 w-full max-w-[60%] min-w-0 items-center justify-center gap-1.5 overflow-hidden rounded-md bg-black/[0.04] px-3 font-mono text-[10px] text-[var(--black)] md:text-[11px]">
+                <span className="relative mx-auto flex h-6 w-full max-w-[60%] min-w-0 items-center justify-center gap-1.5 overflow-hidden rounded-md bg-black/[0.04] px-3 text-[10px] text-[var(--black)] md:text-[11px]">
                   <svg aria-hidden viewBox="0 0 16 16" className="h-2.5 w-2.5 shrink-0 fill-current opacity-40">
                     <path d="M4 7V5a4 4 0 1 1 8 0v2h1v8H3V7h1Zm2 0h4V5a2 2 0 1 0-4 0v2Z" />
                   </svg>
@@ -250,7 +245,7 @@ export default function ProcessBuild({
                   <span data-load className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-[var(--orange)]" />
                 </span>
                 {demo && (
-                  <span data-live className="flex items-center gap-1.5 font-mono text-[11px] font-medium text-emerald-600">
+                  <span data-live className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-600">
                     <span className="relative flex h-2 w-2">
                       <span className="absolute inset-0 animate-ping rounded-full bg-emerald-400" />
                       <span className="relative h-2 w-2 rounded-full bg-emerald-500" />
@@ -288,11 +283,15 @@ export default function ProcessBuild({
                   <div data-wire className="absolute inset-0 flex flex-col gap-[6%] p-[5%]">
                     <div className="flex items-center gap-[3%]">
                       <span data-wire-part className="h-3 w-[12%] origin-left rounded-sm bg-black/15" />
-                      <span className="flex flex-1 justify-end gap-[3%]">
+                      <span className="flex flex-1 items-center justify-end gap-[3%] text-[9px] md:text-[11px]">
+                        {/* Menu items as bars, one per page of the sitemap, as long as its name. */}
                         {sitemap.pages.map((page) => (
-                          <span key={page.label} data-wire-label className="font-mono text-[9px] text-black/45 md:text-[11px]">
-                            {page.label}
-                          </span>
+                          <span
+                            key={page.label}
+                            data-wire-label
+                            className="h-2 rounded-sm bg-black/[0.12]"
+                            style={{ width: `${Math.max(4, page.label.length) * 0.45}em` }}
+                          />
                         ))}
                       </span>
                     </div>
@@ -334,23 +333,6 @@ export default function ProcessBuild({
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                   {proto.reviewer} · {proto.comment}
                 </span>
-                {/* The design's system: its colors and type, as they're chosen. */}
-                <div
-                  data-style
-                  className="absolute left-[6%] top-[22%] flex flex-col gap-2 rounded-xl bg-white p-3 shadow-2xl ring-1 ring-black/5 md:gap-2.5 md:p-4"
-                >
-                  <span className="flex flex-wrap gap-1.5">
-                    {identity.palette.slice(0, 6).map((c) => (
-                      <span key={c.hex} data-swatch title={c.name} className="h-5 w-5 rounded-full ring-1 ring-black/10 md:h-6 md:w-6" style={{ background: c.hex }} />
-                    ))}
-                  </span>
-                  {identity.fonts[0] && (
-                    <span className="flex items-baseline gap-2">
-                      <span className="text-xl font-semibold leading-none text-[var(--black)] md:text-3xl">Aa</span>
-                      <span className="text-[10px] text-[var(--muted)] md:text-xs">{identity.fonts[0].family}</span>
-                    </span>
-                  )}
-                </div>
               </>
             )}
 
@@ -385,9 +367,9 @@ export default function ProcessBuild({
             {checks && (
               <div
                 data-checks
-                className="absolute right-[3%] top-[16%] w-[46%] rounded-xl bg-white p-3 text-[10px] shadow-[0_24px_50px_-20px_rgb(0_0_0/0.35)] ring-1 ring-black/[0.06] md:w-[36%] md:p-4 md:text-xs"
+                className="absolute bottom-[6%] right-[3%] w-[46%] rounded-xl bg-white p-3 text-[10px] shadow-[0_24px_50px_-20px_rgb(0_0_0/0.35)] ring-1 ring-black/[0.06] md:w-[36%] md:p-4 md:text-xs"
               >
-                <p className={`${KICKER} mb-2 text-[var(--muted)]`}>{checks.label}</p>
+                <p className="mb-2 text-xs font-semibold text-[var(--black)] md:text-sm">{checks.label}</p>
                 <ul className="grid grid-cols-2 gap-x-3 gap-y-1.5">
                   {checks.checks.map((check) => (
                     <li key={check} data-check className="flex items-center gap-1.5 text-[var(--black)]">
@@ -406,7 +388,7 @@ export default function ProcessBuild({
                 className="absolute bottom-[6%] left-[4%] w-[68%] rounded-xl bg-white p-3 shadow-[0_30px_60px_-20px_rgb(0_0_0/0.4)] ring-1 ring-black/[0.06] md:w-[54%] md:p-4"
               >
                 <p className="truncate text-[10px] text-[var(--muted)] md:text-xs">
-                  <span className="font-mono">{demo.query}</span>
+                  <span>{demo.query}</span>
                 </p>
                 <p className="mt-1.5 truncate text-[10px] text-emerald-700 md:text-xs">{demo.url}</p>
                 <p className="truncate text-xs font-medium text-[#1a0dab] md:text-base">{demo.title}</p>
@@ -423,23 +405,23 @@ export default function ProcessBuild({
                 <span data-rail className="absolute inset-0 origin-top scale-y-0 bg-[var(--orange)]" />
               </span>
               {steps.map((step, i) => (
-                <li key={step.phase} data-phase data-on={i === 0} className="group/p relative py-1.5 md:py-2">
+                <li key={step.phase} data-phase data-on={i === 0} className="group/p relative py-2 md:py-2.5">
                   <span
                     aria-hidden
-                    className="absolute -left-6 top-[0.85rem] h-2 w-2 -translate-x-1/2 rounded-full bg-[var(--color-line-2)] transition-colors duration-300 group-data-[on=true]/p:bg-[var(--orange)] md:top-[0.95rem]"
+                    className="absolute -left-6 top-[0.85rem] h-2 w-2 -translate-x-1/2 rounded-full bg-[var(--color-line-2)] transition-colors duration-300 group-data-[done=true]/p:bg-[var(--orange)]/50 group-data-[on=true]/p:bg-[var(--orange)] md:top-[0.95rem]"
                   />
                   {/* Phase, then title, then (for the current step) the text. */}
-                  <span className={`${KICKER} block text-[var(--muted)]/50 transition-colors duration-300 group-data-[on=true]/p:text-[var(--color-accent-ink)]`}>
+                  <span className={`${KICKER} block text-[var(--muted)]/50 transition-colors duration-300 group-data-[done=true]/p:text-[var(--orange)]/70 group-data-[on=true]/p:text-[var(--color-accent-ink)]`}>
                     {two(i + 1)} · {step.phase}
                   </span>
-                  {/* Sized here, not by text-4xl (a fluid 48–72px that carries no line height). */}
-                  <h3 className="mt-1 text-balance text-lg font-semibold leading-tighter tracking-title text-[var(--black)]/25 transition-colors duration-300 group-data-[on=true]/p:text-[var(--black)] md:text-xl lg:text-[clamp(20px,1.7vw,26px)]">
-                    {step.title}
-                  </h3>
-                  {/* Opens for the current step only (grid rows 0fr → 1fr). */}
+                  {/* Closed steps show only their phase; the current one opens its title and text (grid rows 0fr → 1fr). */}
                   <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out group-data-[on=true]/p:grid-rows-[1fr]">
                     <div className="overflow-hidden">
-                      <p className="text-pretty pb-1 pt-2 text-sm leading-relaxed text-[var(--muted)] md:text-base">{step.text}</p>
+                      {/* Sized here, not by text-4xl (a fluid 48–72px that carries no line height). */}
+                      <h3 className="mt-1.5 text-balance text-xl font-semibold leading-tighter tracking-title text-[var(--black)] md:text-2xl lg:text-[clamp(22px,1.9vw,30px)]">
+                        {step.title}
+                      </h3>
+                      <p className="text-pretty pb-2 pt-2 text-sm leading-relaxed text-[var(--muted)] md:text-base">{step.text}</p>
                     </div>
                   </div>
                 </li>

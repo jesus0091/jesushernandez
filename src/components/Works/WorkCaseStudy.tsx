@@ -502,7 +502,6 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
       >
         <ProcessBuild
           steps={study.process.steps}
-          identity={{ palette: identity.palette, fonts: identity.type.fonts }}
           fallback={
                 <ol
                   data-steps
