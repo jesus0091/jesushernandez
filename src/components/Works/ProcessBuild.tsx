@@ -20,6 +20,19 @@ const kindOf = (step: Step): ProcessVisual["kind"] | "demo" | null => step.visua
 const visualOf = <K extends ProcessVisual["kind"]>(steps: Step[], kind: K) =>
   steps.find((s) => s.visual?.kind === kind)?.visual as Extract<ProcessVisual, { kind: K }> | undefined;
 
+/** A step's facts, from its own visual: what went into it or came out of it. */
+function detailOf(step: Step): { label: string; items: string[] } | null {
+  const v = step.visual;
+  if (v?.kind === "notes") return { label: v.groups.map((g) => g.label).join(" · "), items: v.groups.flatMap((g) => g.notes) };
+  if (v?.kind === "sitemap")
+    return { label: "Pages", items: [v.root, ...v.pages.map((p) => (p.children ? `${p.label}: ${p.children.join(", ")}` : p.label))] };
+  if (v?.kind === "prototype") return { label: "Delivered", items: [v.desktop.label, v.phone.label, `${v.reviewer}: ${v.comment}`] };
+  if (v?.kind === "code") return { label: "Built", items: [v.file, v.status] };
+  if (v?.kind === "checks") return { label: v.label, items: v.checks };
+  if (step.demo) return { label: "Found by", items: [`“${step.demo.query}”`, step.demo.url] };
+  return null;
+}
+
 /**
  * The process, built in place: the screen stays, and with the scroll the
  * product's own page is put together on it one step at a time (guides and
@@ -27,7 +40,16 @@ const visualOf = <K extends ProcessVisual["kind"]>(steps: Step[], kind: K) =>
  * step's text changes beside it. Without motion (or JS) the steps are a plain
  * list, `fallback`, which also stays in the page for screen readers.
  */
-export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallback: React.ReactNode }) {
+export default function ProcessBuild({
+  steps,
+  identity,
+  fallback,
+}: {
+  steps: Step[];
+  /** The project's colors and type, shown as they're chosen in the design step. */
+  identity: { palette: { name: string; hex: string }[]; fonts: { family: string; role: string }[] };
+  fallback: React.ReactNode;
+}) {
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   const notes = visualOf(steps, "notes")?.groups.flatMap((g) => g.notes).slice(0, NOTE_SPOTS.length) ?? [];
@@ -79,6 +101,8 @@ export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallb
           .to(text, { autoAlpha: 1, y: 0, duration: 0.14, ease: "power2.out" }, i + 0.04);
       });
 
+      // The screen starts tilted back, unbuilt, and settles flat as it's made.
+      gsap.set(q("[data-frame]"), { rotateX: 12, scale: 0.92, transformPerspective: 1400, transformOrigin: "50% 100%" });
       // Everything the screen will hold starts unbuilt.
       gsap.set(q("[data-guide-x]"), { scaleX: 0 });
       gsap.set(q("[data-guide-y]"), { scaleY: 0 });
@@ -89,6 +113,10 @@ export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallb
       gsap.set(q("[data-shot]"), { clipPath: "inset(0% 0% 100% 0%)" });
       gsap.set(q("[data-phone]"), { autoAlpha: 0, yPercent: 30 });
       gsap.set(q("[data-approve]"), { autoAlpha: 0, scale: 0.8 });
+      gsap.set(q("[data-style]"), { autoAlpha: 0, scale: 0.85, y: 16 });
+      gsap.set(q("[data-swatch]"), { scale: 0 });
+      gsap.set(q("[data-scan]"), { autoAlpha: 0, top: "0%" });
+      gsap.set(q("[data-load]"), { scaleX: 0 });
       gsap.set(q("[data-code]"), { xPercent: -110, autoAlpha: 0 });
       gsap.set(q("[data-code-line]"), { clipPath: "inset(0% 100% 0% 0%)" });
       gsap.set(q("[data-code-status]"), { autoAlpha: 0 });
@@ -112,7 +140,8 @@ export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallb
       const wireAt = at("sitemap");
       if (wireAt >= 0) {
         // The notes clear off as the layout takes their place.
-        tl.to(q("[data-note]"), { autoAlpha: 0, y: -10, stagger: 0.02, ...span(0, 0.12) }, wireAt + 0.02)
+        // The notes fly up into the menu: the brief becomes the structure.
+        tl.to(q("[data-note]"), { autoAlpha: 0, yPercent: -320, scale: 0.35, stagger: 0.025, ease: "power2.in", ...span(0, 0.16) }, wireAt + 0.02)
           .set(q("[data-wire]"), { autoAlpha: 1 }, wireAt + 0.1)
           .to(q("[data-wire-part]"), { scaleX: 1, stagger: 0.04, ease: "power2.out", ...span(0, 0.18) }, wireAt + 0.12)
           .to(q("[data-wire-label]"), { autoAlpha: 1, stagger: 0.04, ...span(0, 0.1) }, wireAt + 0.3);
@@ -120,15 +149,21 @@ export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallb
 
       const protoAt = at("prototype");
       if (protoAt >= 0) {
-        tl.to(q("[data-shot]"), { clipPath: "inset(0% 0% 0% 0%)", ease: "power1.inOut", ...span(0, 0.45) }, protoAt + 0.1)
+        tl.to(q("[data-style]"), { autoAlpha: 1, scale: 1, y: 0, ease: "back.out(1.6)", ...span(0, 0.14) }, protoAt + 0.04)
+          .to(q("[data-swatch]"), { scale: 1, stagger: 0.03, ease: "back.out(3)", ...span(0, 0.05) }, protoAt + 0.12)
+          .to(q("[data-shot]"), { clipPath: "inset(0% 0% 0% 0%)", ease: "power1.inOut", ...span(0, 0.45) }, protoAt + 0.1)
+          .fromTo(q("[data-shot]"), { scale: 1.08 }, { scale: 1, ease: "power2.out", ...span(0, 0.6) }, protoAt + 0.1)
           .to(q("[data-guide-x], [data-guide-y]"), { autoAlpha: 0, ...span(0, 0.2) }, protoAt + 0.3)
           .to(q("[data-phone]"), { autoAlpha: 1, yPercent: 0, ease: "power3.out", ...span(0, 0.3) }, protoAt + 0.45)
           .to(q("[data-approve]"), { autoAlpha: 1, scale: 1, ease: "back.out(2)", ...span(0, 0.12) }, protoAt + 0.72);
       }
 
+      // The tilt eases out over the first steps; flat once the design is in.
+      tl.to(q("[data-frame]"), { rotateX: 0, scale: 1, ease: "power1.out", duration: Math.max(1, protoAt + 0.7) }, 0);
+
       const codeAt = at("code");
       if (codeAt >= 0) {
-        tl.to(q("[data-approve]"), { autoAlpha: 0, ...span(0, 0.08) }, codeAt + 0.02)
+        tl.to(q("[data-approve], [data-style]"), { autoAlpha: 0, ...span(0, 0.08) }, codeAt + 0.02)
           .to(q("[data-code]"), { xPercent: 0, autoAlpha: 1, ease: "power3.out", ...span(0, 0.22) }, codeAt + 0.08)
           .to(q("[data-code-line]"), { clipPath: "inset(0% 0% 0% 0%)", stagger: 0.06, ...span(0, 0.06) }, codeAt + 0.3)
           .to(q("[data-code-status]"), { autoAlpha: 1, ...span(0, 0.08) }, codeAt + 0.85);
@@ -138,6 +173,9 @@ export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallb
       if (checksAt >= 0) {
         tl.to(q("[data-code]"), { xPercent: -110, autoAlpha: 0, ease: "power2.in", ...span(0, 0.18) }, checksAt + 0.02)
           .to(q("[data-checks]"), { autoAlpha: 1, y: 0, ease: "power3.out", ...span(0, 0.15) }, checksAt + 0.12)
+          .set(q("[data-scan]"), { autoAlpha: 1 }, checksAt + 0.2)
+          .to(q("[data-scan]"), { top: "100%", ease: "none", ...span(0, 0.6) }, checksAt + 0.2)
+          .set(q("[data-scan]"), { autoAlpha: 0 }, checksAt + 0.8)
           .to(q("[data-check]"), { autoAlpha: 1, stagger: 0.07, ...span(0, 0.04) }, checksAt + 0.28)
           .to(q("[data-check-done]"), { autoAlpha: 1, ...span(0, 0.08) }, checksAt + 0.85);
       }
@@ -146,6 +184,8 @@ export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallb
       if (demoAt >= 0) {
         tl.to(q("[data-checks]"), { autoAlpha: 0, y: -12, ...span(0, 0.12) }, demoAt + 0.02)
           .to(q("[data-url]"), { clipPath: "inset(0% 0% 0% 0%)", ease: "steps(18)", ...span(0, 0.3) }, demoAt + 0.12)
+          .to(q("[data-load]"), { scaleX: 1, ease: "power1.inOut", ...span(0, 0.12) }, demoAt + 0.38)
+          .to(q("[data-load]"), { autoAlpha: 0, ...span(0, 0.05) }, demoAt + 0.5)
           .to(q("[data-live]"), { autoAlpha: 1, scale: 1, ease: "back.out(2)", ...span(0, 0.1) }, demoAt + 0.45)
           .to(q("[data-result]"), { autoAlpha: 1, yPercent: 0, ease: "power3.out", ...span(0, 0.25) }, demoAt + 0.55);
       }
@@ -185,7 +225,7 @@ export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallb
 
         <div className="flex min-h-0 flex-1 flex-col gap-6 lg:grid lg:grid-cols-12 lg:items-center lg:gap-10">
           {/* The screen being built. */}
-          <div className="relative order-1 mx-auto aspect-[4/3] max-h-full w-full min-h-0 max-w-full lg:order-2 lg:col-span-7 lg:aspect-[16/10]">
+          <div data-frame className="relative order-1 mx-auto aspect-[4/3] max-h-full w-full min-h-0 max-w-full lg:order-2 lg:col-span-7 lg:aspect-[16/10]">
             <div className="absolute inset-0 flex flex-col overflow-hidden rounded-card border border-black/[0.08] bg-white shadow-[0_24px_60px_-30px_rgb(0_0_0/0.35)]">
               {/* Browser bar: the address types itself in at launch. */}
               <div className="flex shrink-0 items-center gap-3 border-b border-black/[0.06] px-3 py-2 md:px-4 md:py-2.5">
@@ -194,12 +234,16 @@ export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallb
                   <span className="h-2.5 w-2.5 rounded-full bg-black/10" />
                   <span className="h-2.5 w-2.5 rounded-full bg-black/10" />
                 </span>
-                <span className="flex h-6 min-w-0 flex-1 items-center rounded-full bg-black/[0.04] px-3 font-mono text-[11px] text-[var(--black)]">
+                <span className="relative flex h-6 min-w-0 flex-1 items-center overflow-hidden rounded-full bg-black/[0.04] px-3 font-mono text-[11px] text-[var(--black)]">
                   <span data-url className="truncate">{demo?.url ?? ""}</span>
+                  <span data-load className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-[var(--orange)]" />
                 </span>
                 {demo && (
                   <span data-live className="flex items-center gap-1.5 font-mono text-[11px] font-medium text-emerald-600">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inset-0 animate-ping rounded-full bg-emerald-400" />
+                      <span className="relative h-2 w-2 rounded-full bg-emerald-500" />
+                    </span>
                     Live
                   </span>
                 )}
@@ -251,11 +295,18 @@ export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallb
                   </div>
                 )}
 
-                {/* Design: the real page, revealed over its wireframe. */}
+                {/* Design: the real page, revealed over its wireframe. Not lazy: it and the
+                    phone start hidden, and a lazy image only loads once it shows. */}
                 {proto && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img data-shot src={proto.desktop.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover object-top" />
+                  <img data-shot src={proto.desktop.image} alt="" decoding="async" className="absolute inset-0 h-full w-full object-cover object-top" />
                 )}
+
+                {/* Testing: a scan passes down the page as the checks tick. */}
+                <span
+                  data-scan
+                  className="pointer-events-none absolute inset-x-0 h-16 -translate-y-1/2 bg-[linear-gradient(to_bottom,transparent,rgb(16_185_129/0.18),transparent)] after:absolute after:inset-x-0 after:top-1/2 after:h-px after:bg-emerald-500/70"
+                />
               </div>
             </div>
 
@@ -264,7 +315,7 @@ export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallb
               <>
                 <div data-phone className="absolute -bottom-3 right-[4%] w-[18%] overflow-hidden rounded-[14%/7%] border-[3px] border-[var(--color-ink-1)] bg-white shadow-xl md:w-[15%]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={proto.phone.image} alt="" loading="lazy" className="aspect-[9/19] w-full object-cover object-top" />
+                  <img src={proto.phone.image} alt="" decoding="async" className="aspect-[9/19] w-full object-cover object-top" />
                 </div>
                 <span
                   data-approve
@@ -273,6 +324,25 @@ export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallb
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                   {proto.reviewer} · {proto.comment}
                 </span>
+                {/* The design's system: its colors and type, as they're chosen. */}
+                <div
+                  data-style
+                  className="absolute left-[-3%] top-[10%] flex w-[38%] flex-col gap-2.5 rounded-xl bg-white p-3 shadow-2xl ring-1 ring-black/5 md:w-[30%] md:p-4"
+                >
+                  <span className={`${KICKER} text-[var(--muted)]`}>Colors</span>
+                  <span className="flex flex-wrap gap-1.5">
+                    {identity.palette.slice(0, 6).map((c) => (
+                      <span key={c.hex} data-swatch title={c.name} className="h-5 w-5 rounded-full ring-1 ring-black/10 md:h-6 md:w-6" style={{ background: c.hex }} />
+                    ))}
+                  </span>
+                  <span className={`${KICKER} text-[var(--muted)]`}>Type</span>
+                  {identity.fonts.slice(0, 2).map((f) => (
+                    <span key={`${f.family}-${f.role}`} className="flex items-baseline justify-between gap-2">
+                      <span className="text-lg font-semibold leading-none text-[var(--black)] md:text-2xl">Aa</span>
+                      <span className="truncate text-[10px] text-[var(--muted)] md:text-xs">{f.family} · {f.role}</span>
+                    </span>
+                  ))}
+                </div>
               </>
             )}
 
@@ -288,6 +358,7 @@ export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallb
                       {line || " "}
                     </span>
                   ))}
+                  <span aria-hidden className="mt-0.5 h-3 w-1.5 animate-pulse bg-white/70" />
                 </div>
                 <div data-code-status className="border-t border-white/10 px-3 py-1.5 text-emerald-400">
                   ✓ {code.status}
@@ -335,10 +406,24 @@ export default function ProcessBuild({ steps, fallback }: { steps: Step[]; fallb
                 <span className={`${KICKER} text-[var(--color-accent-ink)]`}>
                   {two(i + 1)} · {step.phase}
                 </span>
-                <h3 className="text-balance text-2xl font-semibold leading-tight tracking-title text-[var(--black)] md:text-4xl">
+                {/* Sized here, not by text-4xl (a fluid 48–72px that carries no line height). */}
+                <h3 className="text-balance text-[clamp(26px,7vw,34px)] font-semibold leading-tighter tracking-title text-[var(--black)] lg:text-[clamp(30px,2.8vw,44px)]">
                   {step.title}
                 </h3>
                 <p className="text-pretty text-sm leading-relaxed text-[var(--muted)] md:text-base">{step.text}</p>
+                {detailOf(step) && (
+                  // Facts of the step; there's no room for them under a phone's screen.
+                  <div className="hidden flex-col gap-2 md:flex">
+                    <span className={`${KICKER} text-[var(--muted)]`}>{detailOf(step)!.label}</span>
+                    <span className="flex flex-wrap gap-1.5">
+                      {detailOf(step)!.items.map((item) => (
+                        <span key={item} className="rounded-full border border-black/10 px-2.5 py-1 text-xs text-[var(--black)]">
+                          {item}
+                        </span>
+                      ))}
+                    </span>
+                  </div>
+                )}
                 <p className="mt-1 flex flex-col gap-0.5 rounded-control bg-white/70 px-4 py-3">
                   <span className="text-xs text-[var(--muted)]">The client gets</span>
                   <span className="text-sm font-semibold text-[var(--black)]">{step.client}</span>
