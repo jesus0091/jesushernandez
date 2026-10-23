@@ -74,7 +74,6 @@ export default function ProcessBuild({
     const ctx = gsap.context(() => {
       const q = gsap.utils.selector(root);
       const n = steps.length;
-      const counter = q("[data-counter]")[0] as HTMLElement | undefined;
       const bar = q("[data-bar]")[0] as HTMLElement | undefined;
       const phases = q("[data-phase]") as HTMLElement[];
       const rail = q("[data-rail]")[0] as HTMLElement | undefined;
@@ -90,7 +89,6 @@ export default function ProcessBuild({
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             const step = Math.min(n - 1, Math.floor(self.progress * n));
-            if (counter) counter.textContent = `${two(step + 1)} / ${two(n)}`;
             phases.forEach((el, i) => (el.dataset.on = String(i === step)));
             if (rail) rail.style.transform = `scaleY(${self.progress})`;
             if (bar) bar.style.transform = `scaleX(${self.progress})`;
@@ -430,24 +428,20 @@ export default function ProcessBuild({
                 <li key={step.phase} data-phase data-on={i === 0} className="group/p relative py-1.5 md:py-2">
                   <span
                     aria-hidden
-                    className="absolute -left-6 top-[1.05rem] h-2 w-2 -translate-x-1/2 rounded-full bg-[var(--color-line-2)] transition-colors duration-300 group-data-[on=true]/p:bg-[var(--orange)] md:top-[1.2rem]"
+                    className="absolute -left-6 top-[0.85rem] h-2 w-2 -translate-x-1/2 rounded-full bg-[var(--color-line-2)] transition-colors duration-300 group-data-[on=true]/p:bg-[var(--orange)] md:top-[0.95rem]"
                   />
-                  <div className="flex items-baseline gap-3">
-                    <span className={`${KICKER} w-5 shrink-0 text-[var(--muted)]/50 transition-colors duration-300 group-data-[on=true]/p:text-[var(--color-accent-ink)]`}>
-                      {two(i + 1)}
-                    </span>
-                    {/* Sized here, not by text-4xl (a fluid 48–72px that carries no line height). */}
-                    <h3 className="text-balance text-lg font-semibold leading-tighter tracking-title text-[var(--black)]/25 transition-colors duration-300 group-data-[on=true]/p:text-[var(--black)] md:text-xl lg:text-[clamp(20px,1.7vw,26px)]">
-                      {step.title}
-                    </h3>
-                  </div>
+                  {/* Phase, then title, then (for the current step) the text. */}
+                  <span className={`${KICKER} block text-[var(--muted)]/50 transition-colors duration-300 group-data-[on=true]/p:text-[var(--color-accent-ink)]`}>
+                    {two(i + 1)} · {step.phase}
+                  </span>
+                  {/* Sized here, not by text-4xl (a fluid 48–72px that carries no line height). */}
+                  <h3 className="mt-1 text-balance text-lg font-semibold leading-tighter tracking-title text-[var(--black)]/25 transition-colors duration-300 group-data-[on=true]/p:text-[var(--black)] md:text-xl lg:text-[clamp(20px,1.7vw,26px)]">
+                    {step.title}
+                  </h3>
                   {/* Opens for the current step only (grid rows 0fr → 1fr). */}
                   <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out group-data-[on=true]/p:grid-rows-[1fr]">
-                    <div className="overflow-hidden pl-8">
-                      <p className="flex flex-col gap-1.5 pb-1 pt-2">
-                        <span className={`${KICKER} text-[var(--muted)]`}>{step.phase}</span>
-                        <span className="text-pretty text-sm leading-relaxed text-[var(--muted)] md:text-base">{step.text}</span>
-                      </p>
+                    <div className="overflow-hidden">
+                      <p className="text-pretty pb-1 pt-2 text-sm leading-relaxed text-[var(--muted)] md:text-base">{step.text}</p>
                     </div>
                   </div>
                 </li>
@@ -455,15 +449,10 @@ export default function ProcessBuild({
             </ol>
           </div>
         </div>
-        {/* At the bottom: which step, and a bar that fills as the whole is built. */}
-        <div className={`${KICKER} flex items-center gap-4 text-[var(--muted)]`}>
-          <span data-counter className="text-[var(--black)] tabular-nums">
-            01 / {two(steps.length)}
-          </span>
-          <span className="relative h-1 flex-1 overflow-hidden rounded-full bg-black/[0.06]">
-            <span data-bar className="absolute inset-0 origin-left scale-x-0 rounded-full bg-[var(--orange)]" />
-          </span>
-        </div>
+        {/* At the bottom: a bar that fills as the whole is built (the list names the step). */}
+        <span aria-hidden className="relative h-1 w-full shrink-0 overflow-hidden rounded-full bg-black/[0.06]">
+          <span data-bar className="absolute inset-0 origin-left scale-x-0 rounded-full bg-[var(--orange)]" />
+        </span>
       </div>
     </div>
   );
