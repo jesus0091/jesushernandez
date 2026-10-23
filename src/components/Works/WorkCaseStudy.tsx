@@ -16,8 +16,9 @@ import {
   RocketLaunch,
   TreeStructure,
 } from "@/components/icons";
-import { largeViewportHeight, prefersReducedMotion, setupGsap } from "@/lib/motion";
+import { prefersReducedMotion, setupGsap } from "@/lib/motion";
 import ScrubWords from "../motion/ScrubWords";
+import ProcessBuild from "./ProcessBuild";
 import ProcessVisual from "./ProcessVisual";
 import ResponsiveCanvas from "./ResponsiveCanvas";
 import SearchDemo from "./SearchDemo";
@@ -40,16 +41,6 @@ const BODY = "text-pretty text-sm md:text-base leading-relaxed text-[var(--muted
 const KICKER = "font-mono font-medium text-xs uppercase tracking-[0.08em]";
 const RULE = "border-[var(--color-line-2)]";
 const CARD = "rounded-card border border-black/[0.06] bg-white";
-// Tinted stage the screenshots sit on, in the project's own colors (see CaseTheme).
-// A full-screen panel's content: as wide as the page's column.
-const PANEL = "w-[min(1216px,calc(100vw-4rem))]";
-// Panels hang from the same height, so every node sits on one line.
-const PANEL_TOP = "pt-[clamp(2.5rem,9svh,7rem)]";
-// Panel type sized by the window's width and height alike, so a short window shrinks the
-// text instead of pushing the step's visual off the panel.
-const PANEL_LEAD = "text-pretty text-[clamp(15px,min(1.25vw,2.2svh),18px)] leading-relaxed";
-// A step's visual: takes what is left of the panel, capped so it never runs down to the screen's edge.
-const PANEL_VISUAL = "max-h-[min(19rem,34svh)] min-h-0 w-full max-w-3xl flex-[1_1_0px]";
 // The dark sheet: night blue with the project's blue and teal glowing in from the corners.
 const NIGHT =
   "bg-[#0a0d14] bg-[image:radial-gradient(70%_60%_at_100%_0%,color-mix(in_srgb,var(--cs-glow-a)_40%,transparent)_0%,transparent_70%),radial-gradient(60%_60%_at_0%_100%,color-mix(in_srgb,var(--cs-glow-b)_33%,transparent)_0%,transparent_70%)]";
@@ -59,30 +50,6 @@ const STAGE = "rounded-card bg-[linear-gradient(135deg,var(--cs-stage-from),var(
 
 const two = (n: number) => String(n).padStart(2, "0");
 const slug = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-
-/**
- * The path a hand would draw from one stop to the next. It leaves `from` over
- * the top of that panel's content (`clear` wide), drops down the open space
- * beside it as far as `drop`, curls into a loop there, and climbs back up into
- * the next node, `gap` further on. `alt` gives every other stretch a shallower
- * drop and an earlier loop, so two in a row don't read as a pattern.
- */
-function stretch(from: number, gap: number, clear: number, drop: number, alt: boolean) {
-  const at = (x: number, y: number) => `${(from + x).toFixed(1)},${y.toFixed(1)}`;
-  const curve = (...points: [number, number][]) => ` C${points.map(([x, y]) => at(x, y)).join(" ")}`;
-  const free = gap - clear;
-  const depth = drop * (alt ? 0.62 : 1);
-  const loop = clear + free * (alt ? 0.4 : 0.52);
-  const r = Math.min(70, free * 0.11);
-  return (
-    `M${at(0, 0)}` +
-    curve([clear * 0.4, -30], [clear * 0.8, -30], [clear + free * 0.06, 12]) +
-    curve([clear + free * 0.2, 60], [clear + free * 0.08, depth], [loop - r * 0.6, depth]) +
-    curve([loop + r, depth], [loop + r, depth - r * 1.3], [loop, depth - r * 1.3]) +
-    curve([loop - r, depth - r * 1.3], [loop - r, depth], [loop + r * 0.6, depth]) +
-    curve([clear + free * 0.82, depth], [gap - free * 0.3, 0], [gap, 0])
-  );
-}
 
 function Shot({ src, alt, className = "h-auto" }: { src: string; alt: string; className?: string }) {
   return (
@@ -130,7 +97,7 @@ function Chapter({
       id={slug(label)}
       className={`flex scroll-mt-28 flex-col gap-10 md:gap-14 ${dark ? `relative isolate overflow-hidden rounded-card p-6 md:p-12 ${NIGHT}` : ""} ${
         bleed ? "relative isolate py-16 md:py-28" : ""
-      } group-data-[h=on]/h:min-h-0 group-data-[h=on]/h:flex-1 group-data-[h=on]/h:gap-0`}
+      }`}
     >
       {dark && (
         <span
@@ -161,7 +128,7 @@ function Chapter({
       </div>
 
       {heading && (
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between md:gap-12 group-data-[h=on]/h:hidden">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between md:gap-12">
           <SectionHeading className={`${HEADING} ${strong} max-w-3xl`}>
             {/* A "\n" in the heading is where it breaks. */}
             {heading.split("\n").map((line, i) => (
@@ -401,103 +368,6 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
       const all = <T extends Element = HTMLElement>(selector: string) => gsap.utils.toArray<T>(selector, root);
       const enter = (trigger: Element, start = "top 85%") => ({ trigger, start, once: true });
 
-      // Horizontal chapters: the section holds the whole screen while its panels
-      // slide sideways with the scroll. Set up first, because it changes the
-      // page's height under every trigger below. Wide screens only, and only
-      // where a panel fits in the window; otherwise it stays a grid.
-      const mm = gsap.matchMedia();
-      mm.add("(min-width: 1024px)", () => {
-        const undo: (() => void)[] = [];
-        all("[data-hscroll]").forEach((wrap) => {
-          const track = wrap.querySelector<HTMLElement>("[data-hscroll-track]");
-          if (!track) return;
-          wrap.dataset.h = "on";
-          if (track.scrollHeight > track.clientHeight) {
-            delete wrap.dataset.h;
-            return;
-          }
-          // Every panel is a screen wide; the last one stops where the first started.
-          const distance = () => Math.max(0, track.offsetWidth - window.innerWidth);
-          const nodes = gsap.utils.toArray<HTMLElement>("[data-hscroll-node]", track);
-          const rail = track.querySelector<SVGElement>("[data-hscroll-rail]");
-          const start = track.querySelector<HTMLElement>("[data-hscroll-start]");
-          // Each stretch is drawn by its real length: a dash as long as the path,
-          // pulled back by what is left to draw. (A normalized pathLength breaks
-          // up on paths this long in Firefox.)
-          const fills = gsap.utils.toArray<SVGPathElement>("[data-hscroll-fill]", track);
-          const lengths: number[] = [];
-          // Everything that follows the scroll besides the track is painted from
-          // the timeline's time (one unit per panel), not tweened: a refresh then
-          // has nothing to reset. The line reaches a node as its panel comes to rest.
-          let time = 0;
-          const draw = (i: number) => {
-            const length = lengths[i] ?? 0;
-            const p = gsap.utils.clamp(0, 1, time - i);
-            fills[i].style.strokeDasharray = `${length} ${length}`;
-            fills[i].style.strokeDashoffset = `${length * (1 - p)}`;
-            fills[i].style.visibility = p > 0 ? "visible" : "hidden";
-          };
-          // Each step's visual is played by the scroll as its panel arrives. The one
-          // on the last panel plays once the track has stopped, on scroll of its own.
-          const demos = nodes.map((node) => node.closest("li")?.querySelector<HTMLElement>("[data-demo]") ?? null);
-          const panels = nodes.length;
-          const extra = demos[panels - 1]?.offsetParent ? 1.5 : 0;
-          const size = () => {
-            // Half a screen of scroll per panel, so six of them don't take forever.
-            wrap.style.height = `${largeViewportHeight() + (distance() / 2) * ((panels + extra) / panels)}px`;
-            // The trail leaves the opening panel and wanders to each node in turn.
-            if (!rail || !start) return;
-            const origin = track.getBoundingClientRect();
-            const stops = [start, ...nodes].map((el) => el.getBoundingClientRect());
-            const x = stops.map((stop) => stop.left + stop.width / 2 - stops[0].left - stops[0].width / 2);
-            rail.style.left = `${stops[0].left + stops[0].width / 2 - origin.left}px`;
-            rail.style.top = `${stops[0].top + stops[0].height / 2 - origin.top}px`;
-            // How far down the trail may wander, and how wide the content it has to pass first is.
-            const drop = Math.max(60, track.clientHeight - (stops[0].top + stops[0].height / 2 - origin.top) - 56);
-            const clear = [start, ...nodes].map((el) => el.closest<HTMLElement>("[data-hscroll-clear]")?.offsetWidth ?? 0);
-            const stretches = nodes.map((_, i) => stretch(x[i], x[i + 1] - x[i], clear[i], drop, i % 2 === 1));
-            rail.querySelector("[data-hscroll-base]")?.setAttribute("d", stretches.join(""));
-            fills.forEach((path, i) => {
-              path.setAttribute("d", stretches[i]);
-              lengths[i] = path.getTotalLength();
-              draw(i);
-            });
-          };
-          size();
-          ScrollTrigger.addEventListener("refreshInit", size);
-          const paint = (progress: number) => {
-            time = progress * (panels + extra);
-            fills.forEach((_, i) => draw(i));
-            nodes.forEach((node, i) => (node.dataset.on = String(time >= i + 0.98)));
-            demos.forEach((demo, i) => {
-              // The last one is done a little before the scroll lets go of the section.
-              const p = i === panels - 1 && extra ? (time - panels) / (extra * 0.85) : (time - i - 0.45) / 0.5;
-              demo?.dispatchEvent(new CustomEvent("demo-progress", { detail: gsap.utils.clamp(0, 1, p) }));
-            });
-          };
-          gsap
-            .timeline({
-              defaults: { ease: "none" },
-              scrollTrigger: {
-                trigger: wrap,
-                start: "top top",
-                end: "bottom bottom",
-                scrub: true,
-                invalidateOnRefresh: true,
-                onUpdate: (self) => paint(self.progress),
-                onRefresh: (self) => paint(self.progress),
-              },
-            })
-            .to(track, { x: () => -distance(), duration: panels }, 0)
-            .to({}, { duration: extra }, panels);
-          undo.push(() => {
-            ScrollTrigger.removeEventListener("refreshInit", size);
-            wrap.style.height = "";
-            delete wrap.dataset.h;
-          });
-        });
-        return () => undo.forEach((fn) => fn());
-      });
       // Chapter rules draw across before the chapter's text arrives.
       all("[data-rule]").forEach((el) =>
         gsap.from(el, { scaleX: 0, duration: 1.2, ease: "power3.inOut", scrollTrigger: enter(el, "top 92%") }),
@@ -622,139 +492,49 @@ export default function WorkCaseStudy({ study }: { study: CaseStudy }) {
         </ScrubWords>
       </Chapter>
 
-      {/* The project as the client lived it; on wide screens the steps slide past sideways (see [data-hscroll]). */}
-      <div data-hscroll className="group/h">
-        <div
-          data-hscroll-pane
-          className="group-data-[h=on]/h:sticky group-data-[h=on]/h:top-0 group-data-[h=on]/h:flex group-data-[h=on]/h:h-[100svh] group-data-[h=on]/h:flex-col group-data-[h=on]/h:pb-[clamp(2rem,9svh,6rem)] group-data-[h=on]/h:pt-20"
-        >
-          <Chapter
-            n={at("Process")}
-            total={total}
-            label="Process"
-            rule={false}
-            heading={study.process.heading}
-            summary={study.process.summary}
-          >
-            <ol
-              data-steps
-              className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 group-data-[h=on]/h:hidden"
-            >
-              {study.process.steps.map((step) => (
-                <li key={step.phase} className="flex flex-col gap-5">
-                  <span className="flex items-center gap-3" aria-hidden>
-                    <span
-                      data-step-dot
-                      className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[var(--color-ink-1)] font-mono text-xs text-[var(--color-bg)]"
-                    >
-                      <WorkGlyph name={step.icon} size={18} />
-                    </span>
-                    <span data-step-line className="h-px flex-1 origin-left bg-[var(--color-line-2)]" />
-                  </span>
-                  <span data-step-body className="flex flex-1 flex-col gap-2 pr-8">
-                    <span className={`${KICKER} text-[var(--color-accent-ink)]`}>{step.phase}</span>
-                    <span className="text-xl font-semibold tracking-title text-[var(--black)]">{step.title}</span>
-                    <span className={BODY}>{step.text}</span>
-                  </span>
-                  <span data-step-body className="mr-8 flex flex-col gap-0.5 rounded-control bg-white/70 px-4 py-3">
-                    <span className="text-xs text-[var(--muted)]">The client gets</span>
-                    <span className="text-sm font-semibold text-[var(--black)]">{step.client}</span>
-                  </span>
-                  {step.visual && <ProcessVisual visual={step.visual} className="mr-8 aspect-[4/3]" />}
-                  {step.demo && <SearchDemo demo={step.demo} className="mr-8 aspect-[16/10]" />}
-                </li>
-              ))}
-            </ol>
-            {/* The same steps as full-screen panels, the heading being the first one. */}
-            <div
-              data-hscroll-track
-              className="relative hidden w-max will-change-transform group-data-[h=on]/h:flex group-data-[h=on]/h:min-h-0 group-data-[h=on]/h:flex-1"
-            >
-              {/* The trail that joins the steps; its shape and place come from the scroll setup (see stretch()). */}
-              <svg
-                aria-hidden
-                data-hscroll-rail
-                width="1"
-                height="1"
-                fill="none"
-                strokeLinecap="round"
-                className="pointer-events-none absolute overflow-visible"
-              >
-                <path data-hscroll-base stroke="var(--color-line-2)" strokeWidth="1" />
-                {study.process.steps.map((step) => (
-                  <path
-                    key={step.phase}
-                    data-hscroll-fill
-                    visibility="hidden"
-                    stroke="var(--orange)"
-                    strokeWidth="1.5"
-                  />
-                ))}
-              </svg>
-              {/* Laid out like a step, so the trail can leave from here on the nodes' own line. */}
-              <div className={`flex w-screen shrink-0 items-start ${PANEL_TOP}`}>
-                <div className={PANEL}>
-                <div data-hscroll-clear className="flex w-max max-w-5xl flex-col items-start gap-[clamp(16px,3svh,32px)]">
-                  <span data-hscroll-start className="relative z-10 grid h-14 w-3 place-items-center">
-                    <span className="h-3 w-3 rounded-full bg-[var(--orange)]" />
-                  </span>
-                  <h2 className="max-w-5xl text-balance whitespace-pre-line font-semibold leading-[0.92] tracking-title text-[var(--black)] text-[clamp(40px,min(6.4vw,10svh),112px)]">
-                    {study.process.heading}
-                  </h2>
-                  <p className={`max-w-xl ${PANEL_LEAD} text-[var(--muted)]`}>{study.process.summary}</p>
-                </div>
-                </div>
-              </div>
-              <ol className="flex">
-                {study.process.steps.map((step) => (
-                  <li key={step.phase} className={`flex w-screen shrink-0 ${PANEL_TOP}`}>
-                    <div className={`${PANEL} grid grid-cols-12 gap-10`}>
-                      {/* Set in from the left, so the drawn part of the line has room to show. */}
-                      <div data-hscroll-clear className="col-span-8 col-start-3 flex min-h-0 flex-col items-start gap-[clamp(10px,2.2svh,24px)]">
+      {/* The project as the client lived it, built in place on one screen as the page scrolls (ProcessBuild). */}
+      <Chapter
+        n={at("Process")}
+        total={total}
+        label="Process"
+        heading={study.process.heading}
+        summary={study.process.summary}
+      >
+        <ProcessBuild
+          steps={study.process.steps}
+          fallback={
+                <ol
+                  data-steps
+                  className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 lg:grid-cols-3"
+                >
+                  {study.process.steps.map((step) => (
+                    <li key={step.phase} className="flex flex-col gap-5">
+                      <span className="flex items-center gap-3" aria-hidden>
                         <span
-                          data-hscroll-node
-                          className="relative z-10 mb-[clamp(0px,1.5svh,16px)] grid h-14 w-14 place-items-center rounded-full border border-[var(--color-line-2)] bg-[var(--color-bg)] text-[var(--muted)] transition-colors duration-500 data-[on=true]:border-[var(--orange)] data-[on=true]:bg-[var(--color-accent-soft)] data-[on=true]:text-[var(--orange)]"
+                          data-step-dot
+                          className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[var(--color-ink-1)] font-mono text-xs text-[var(--color-bg)]"
                         >
-                          <WorkGlyph name={step.icon} size={24} />
+                          <WorkGlyph name={step.icon} size={18} />
                         </span>
+                        <span data-step-line className="h-px flex-1 origin-left bg-[var(--color-line-2)]" />
+                      </span>
+                      <span data-step-body className="flex flex-1 flex-col gap-2 pr-8">
                         <span className={`${KICKER} text-[var(--color-accent-ink)]`}>{step.phase}</span>
-                        <h3 className="text-balance font-semibold leading-[1.05] tracking-title text-[var(--black)] text-[clamp(28px,min(4.2vw,6.5svh),72px)]">
-                          {step.title}
-                        </h3>
-                        <p className={`max-w-xl ${PANEL_LEAD} text-[var(--muted)]`}>{step.text}</p>
-                        {/* Where a visual has room to show what the client gets, it stands in for naming it. */}
-                        {!step.demo && (
-                          <p
-                            className={`flex flex-col gap-0.5 rounded-control bg-white/70 px-5 py-4 ${step.visual ? "[@media(min-height:640px)]:hidden" : ""}`}
-                          >
-                            <span className="text-xs text-[var(--muted)]">The client gets</span>
-                            <span className="text-base font-semibold text-[var(--black)]">{step.client}</span>
-                          </p>
-                        )}
-                        {/* Takes what is left of the panel; only where the window is tall enough to give it room. */}
-                        {step.visual && (
-                          <ProcessVisual
-                            visual={step.visual}
-                            hosted
-                            className={`hidden ${PANEL_VISUAL} [@media(min-height:640px)]:block`}
-                          />
-                        )}
-                        {step.demo && (
-                          <SearchDemo
-                            demo={step.demo}
-                            hosted
-                            className={`hidden ${PANEL_VISUAL} [@media(min-height:640px)]:flex`}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </Chapter>
-        </div>
-      </div>
+                        <span className="text-xl font-semibold tracking-title text-[var(--black)]">{step.title}</span>
+                        <span className={BODY}>{step.text}</span>
+                      </span>
+                      <span data-step-body className="mr-8 flex flex-col gap-0.5 rounded-control bg-white/70 px-4 py-3">
+                        <span className="text-xs text-[var(--muted)]">The client gets</span>
+                        <span className="text-sm font-semibold text-[var(--black)]">{step.client}</span>
+                      </span>
+                      {step.visual && <ProcessVisual visual={step.visual} className="mr-8 aspect-[4/3]" />}
+                      {step.demo && <SearchDemo demo={step.demo} className="mr-8 aspect-[16/10]" />}
+                    </li>
+                  ))}
+                </ol>
+          }
+        />
+      </Chapter>
 
       {/* A mosaic of the system's parts. */}
       <Chapter
