@@ -42,7 +42,7 @@ describe("blog", () => {
 
   it("wraps tables so they scroll on their own", () => {
     const post = getPost("es", "is-vibe-coding-bad")!;
-    expect(post.html).toContain('<div class="post-table"><table>');
+    expect(post.html).toContain('<div class="post-table" tabindex="0" role="region" aria-label="Table"><table>');
   });
 
   it("opens external links in a new tab, internal ones in place", () => {

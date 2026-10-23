@@ -68,7 +68,7 @@ const markdown = new Marked({
 
 /** Tables scroll inside their own box, so a wide one never scrolls the page sideways. */
 const wrapTables = (html: string) =>
-  html.replace(/<table>/g, '<div class="post-table"><table>').replace(/<\/table>/g, "</table></div>");
+  html.replace(/<table>/g, '<div class="post-table" tabindex="0" role="region" aria-label="Table"><table>').replace(/<\/table>/g, "</table></div>");
 
 /** gray-matter parses bare YAML dates as Date objects. */
 const isoDate = (value: unknown) =>

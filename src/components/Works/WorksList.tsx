@@ -48,7 +48,11 @@ export default function WorksList() {
   }, []);
 
   return (
-    <section className="w-full pt-16 pb-24 md:pt-24 md:pb-32">
+    <section aria-labelledby="works-list-heading" className="w-full pt-16 pb-24 md:pt-24 md:pb-32">
+      {/* Names the list for assistive tech, so the cards' h3 sit under an h2. */}
+      <h2 id="works-list-heading" className="sr-only">
+        All projects
+      </h2>
       <div
         ref={gridRef}
         className="mx-auto max-w-[1280px] px-6 md:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:auto-rows-[280px] gap-6"

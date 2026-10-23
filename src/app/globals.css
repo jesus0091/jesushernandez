@@ -11,13 +11,13 @@
   --color-ink-2: #1a1a1a;
   --color-ink-3: #4a4a4a;
   /* Quietest text: 4.7:1 on the cream (WCAG AA). */
-  --color-ink-4: #6b6b6b;
+  --color-ink-4: #5e5e5e;
 
   /* Single accent — kill the secondary blue */
   --color-accent: #ff6600;
   --color-accent-soft: #fff3eb;
   /* The accent for small text: #ff6600 is 2.6:1 on the cream, this is 4.9:1 (WCAG AA). */
-  --color-accent-ink: #b34700;
+  --color-accent-ink: #a03f00;
   /* Figma-style selection blue, dark enough for small text (5:1 on the cream). */
   --color-select-ink: #0969b0;
 
@@ -117,9 +117,12 @@ body::-webkit-scrollbar {
   color: #ffffff;
 }
 
-:where(a, button, input, textarea, select):focus-visible {
-  outline: 2px solid var(--color-accent);
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  /* Two tones, so the ring shows on cream and on black alike (WCAG 1.4.11:
+     ≥3:1); the pure orange alone is 2.6:1 on the page color. */
+  outline: 2px solid var(--color-accent-ink);
   outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--color-bg);
   border-radius: var(--radius-md);
 }
 
@@ -443,4 +446,10 @@ body::after {
   .post-body tr:last-child td {
     border-bottom: 0;
   }
+}
+
+/* The pause control (MotionToggle): animations that move on their own stop. */
+html[data-motion="paused"] .works-wall-row,
+html[data-motion="paused"] .skill-logos-track {
+  animation-play-state: paused;
 }

@@ -4,6 +4,7 @@ import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { getLenis } from "@/lib/motion";
 import { Envelope } from "@/components/icons";
 import SoundToggle from "@/components/SoundToggle";
+import MotionToggle from "@/components/MotionToggle";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { usePathname } from "@/i18n/navigation";
@@ -53,6 +54,8 @@ export default function Navbar() {
   const rafRef = useRef<number | null>(null);
   const scrollYRef = useRef(0);
   const overlayRef = useRef<HTMLDivElement | null>(null);
+  const menuButtonRef = useRef<HTMLButtonElement | null>(null);
+  const wasOpen = useRef(false);
   const prevBodyPaddingRightRef = useRef<string>("");
 
   const [open, setOpen] = useState(false);
@@ -138,6 +141,34 @@ export default function Navbar() {
     }
     return () => { unlockScroll(); };
   }, [open, lockScroll, unlockScroll]);
+
+  // Keyboard: opening moves focus into the menu and keeps it there (with the
+  // close button); closing hands it back to the button (WCAG 2.4.3, 2.1.2).
+  useEffect(() => {
+    const overlay = overlayRef.current;
+    const button = menuButtonRef.current;
+    if (!open) {
+      if (wasOpen.current) button?.focus();
+      wasOpen.current = false;
+      return;
+    }
+    wasOpen.current = true;
+    const focusables = () => [
+      ...(overlay?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])") ?? []),
+      ...(button ? [button] : []),
+    ];
+    focusables()[0]?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const list = focusables();
+      const i = list.indexOf(document.activeElement as HTMLElement);
+      const next = e.shiftKey ? (i <= 0 ? list.length - 1 : i - 1) : (i === list.length - 1 ? 0 : i + 1);
+      e.preventDefault();
+      list[next]?.focus();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   const onScroll = useCallback(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -251,6 +282,7 @@ export default function Navbar() {
 
           <div className="flex items-center gap-2">
             <LocaleSwitch light={light} />
+            <MotionToggle dark={light} />
             <SoundToggle dark={light} />
             <Link
               href={contactHref(locale)}
@@ -333,6 +365,7 @@ export default function Navbar() {
         type="button"
         aria-label={open ? t("closeMenu") : t("openMenu")}
         aria-expanded={open}
+        ref={menuButtonRef}
         aria-controls="mobile-fullscreen-menu"
         onClick={() => setOpen((v) => !v)}
         className="md:hidden fixed z-[70] flex items-center justify-center w-11 h-11 rounded-full transition-colors duration-300"
@@ -370,6 +403,8 @@ export default function Navbar() {
         role="dialog"
         aria-modal="true"
         aria-label={t("menuLabel")}
+        // Hidden by a clip-path when closed: keep its links out of the tab order and the a11y tree too.
+        inert={!open}
         className="md:hidden fixed inset-0 z-[60] bg-[var(--black)] flex flex-col justify-center px-8 pb-16"
         style={{
           clipPath: open
@@ -403,7 +438,10 @@ export default function Navbar() {
           </ul>
 
           <div className="menu-item border-t border-white/10 pt-8 flex flex-col gap-6">
-            <LocaleSwitch light className="-ml-2" />
+            <div className="-ml-2 flex items-center gap-2">
+              <LocaleSwitch light />
+              <MotionToggle dark />
+            </div>
             <Link
               href={contactHref(locale)}
               onClick={() => setOpen(false)}

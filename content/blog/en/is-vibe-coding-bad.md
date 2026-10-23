@@ -124,7 +124,7 @@ If you have an app built with Lovable, v0, Bolt or Cursor that works in the demo
 
 For a prototype, yes. It's the fastest way I know to find out whether an idea works on a screen. For production, use AI to write code inside decisions someone has already made: the structure, the design system, the data model, the checks. Keep the decisions with a developer who answers for the result.
 
-If you already have an app built with AI that works in the demo but isn't ready for real users, that's the gap I work on: reviewing the code, fixing the data model, replacing the generic UI and taking it to production. [Here's how I work](/services). The full Ristario case study, with the brand, the screens and the stack, is [here](/works/ristario).
+If you already have an app built with AI that works in the demo but isn't ready for real users, that's the gap I work on: reviewing the code, fixing the data model, replacing the generic UI and taking it to production. [Here's how I work](/services). The [full Ristario case study](/works/ristario) has the brand, the screens and the stack.
 
 ## FAQ
 

@@ -30,7 +30,6 @@ export default function ProjectCard({ project }: { project: Project }) {
   return (
     <Link
       href={`/works/${p.id}`}
-      aria-label={t("openAria", { name: p.productName, role })}
       className="group relative block overflow-hidden rounded-card border border-black/[0.06] bg-white/70 backdrop-blur-sm pointer-coarse:backdrop-blur-none transition-colors duration-300 ease-out hover:border-black/[0.12] hover:bg-white"
     >
       <article>

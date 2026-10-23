@@ -442,12 +442,12 @@ export default function Footer({
           <div data-cta-label className="[&_span]:text-white/80 [&_span[aria-hidden]]:bg-white/50">
             <SectionLabel align="center" animate="none" surface="dark">{t("ctaLabel")}</SectionLabel>
           </div>
-          <h3
+          <h2
             data-cta-title
             className="text-2xl sm:text-4xl md:text-7xl leading-tighter font-semibold tracking-title text-white"
           >
             {t("ctaTitleTop")} <br /> {t("ctaTitleBottom")}
-          </h3>
+          </h2>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
             <Link
               ref={ctaBtnRef}
@@ -494,9 +494,9 @@ export default function Footer({
             </div>
 
             <nav data-footer-col aria-label={t("navAria")} className="md:col-span-2 md:col-start-7 flex flex-col gap-3">
-              <h4 className="text-xs font-mono font-medium uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">
+              <h3 className="text-xs font-mono font-medium uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">
                 {t("navigation")}
-              </h4>
+              </h3>
               <ul className="flex flex-col gap-2">
                 {links.map((l) => (
                   <li key={l.href}>
@@ -512,9 +512,9 @@ export default function Footer({
             </nav>
 
             <div data-footer-col className="md:col-span-2 flex flex-col gap-3">
-              <h4 className="text-xs font-mono font-medium uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">
+              <h3 className="text-xs font-mono font-medium uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">
                 {t("connect")}
-              </h4>
+              </h3>
               <ul className="flex flex-col gap-2">
                 {social.map((s) => (
                   <li key={s.label}>
@@ -536,9 +536,9 @@ export default function Footer({
             </div>
 
             <div data-footer-col className="md:col-span-2 flex flex-col gap-3">
-              <h4 className="text-xs font-mono font-medium uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">
+              <h3 className="text-xs font-mono font-medium uppercase tracking-[0.08em] text-[var(--color-accent-ink)]">
                 {t("location")}
-              </h4>
+              </h3>
               <p className="text-base text-[var(--color-ink-3)]">{t("country")}</p>
               <p className="text-base tabular-nums text-[var(--color-ink-1)]">
                 {localTime ? `${localTime} ART` : "\u00a0"}

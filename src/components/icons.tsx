@@ -25,6 +25,8 @@ import {
   MagnifyingGlass as PMagnifyingGlass,
   Palette as PPalette,
   PenNib as PPenNib,
+  Pause as PPause,
+  Play as PPlay,
   Question as PQuestion,
   RocketLaunch as PRocketLaunch,
   Sparkle as PSparkle,
@@ -58,6 +60,8 @@ export const Compass = duotone(PCompass);
 export const Devices = duotone(PDevices);
 export const Envelope = duotone(PEnvelope);
 export const FlowArrow = duotone(PFlowArrow);
+export const Pause = duotone(PPause);
+export const Play = duotone(PPlay);
 export const Gauge = duotone(PGauge);
 export const GithubLogo = duotone(PGithubLogo);
 export const House = duotone(PHouse);

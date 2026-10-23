@@ -39,14 +39,16 @@
     "menuSr": "Menu",
     "closeSr": "Close",
     "menuLabel": "Navigation menu",
-    "logoAlt": "Logo",
+    "logoAlt": "Jesús Hernández",
     "language": "Language",
     "switchTo": {
       "en": "Switch to English",
       "es": "Cambiar a español"
     },
     "about": "About",
-    "services": "Services"
+    "services": "Services",
+    "pauseMotion": "Pause animations",
+    "playMotion": "Play animations"
   },
   "footer": {
     "ctaLabel": "From Concept to Code",

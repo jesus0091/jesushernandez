@@ -278,7 +278,8 @@ export default function WSMAQuote() {
         >
           <SectionLabel align="center" animate="none" surface="dark">{t("label")}</SectionLabel>
 
-          <div className="flex flex-col pb-2">
+          {/* The section's statement is its heading (it read as a heading but wasn't one). */}
+          <h2 className="flex flex-col pb-2">
             <ScatterText
               className="text-[var(--color-bg)]"
               style={{ fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.0125em" }}
@@ -286,7 +287,7 @@ export default function WSMAQuote() {
             >
               {t("line")}<span className={t("accentOnNewLine") === "true" ? "block text-[var(--color-accent)]" : "max-md:block text-[var(--color-accent)]"}>{t("accent")}</span>
             </ScatterText>
-          </div>
+          </h2>
 
           <p data-wsma-fade className="text-sm md:text-lg font-medium text-[var(--color-bg)]/60 max-w-md mt-1">
             {t("subTop")}

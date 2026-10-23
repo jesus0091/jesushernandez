@@ -411,7 +411,7 @@ export default function ProcessBuild({
                     className="absolute -left-6 top-[0.85rem] h-2 w-2 -translate-x-1/2 rounded-full bg-[var(--color-line-2)] transition-colors duration-300 group-data-[done=true]/p:bg-[var(--orange)]/50 group-data-[on=true]/p:bg-[var(--orange)] md:top-[0.95rem]"
                   />
                   {/* Phase, then title, then (for the current step) the text. */}
-                  <span className={`${KICKER} block text-[var(--muted)]/50 transition-colors duration-300 group-data-[done=true]/p:text-[var(--orange)]/70 group-data-[on=true]/p:text-[var(--color-accent-ink)]`}>
+                  <span className={`${KICKER} block text-[var(--color-ink-4)] transition-colors duration-300 group-data-[done=true]/p:text-[var(--color-accent-ink)] group-data-[on=true]/p:text-[var(--color-accent-ink)]`}>
                     {two(i + 1)} · {step.phase}
                   </span>
                   {/* Closed steps show only their phase; the current one opens its title and text (grid rows 0fr → 1fr). */}

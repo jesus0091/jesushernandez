@@ -314,13 +314,14 @@ export default function LatestProjects() {
             {/* Anchor to measure left offset for full-bleed carousel */}
             <div ref={anchorRef} className="absolute" aria-hidden />
             <SectionLabel className="mb-1">{t("label")}</SectionLabel>
-            <Link href="/works" className="block max-w-3xl">
+            {/* Not a link: "View all works" beside it already goes there. */}
+            <div className="max-w-3xl">
               <SectionHeading className="text-2xl sm:text-3xl md:text-6xl leading-tighter text-[var(--black)] font-semibold tracking-title">
                 {t("headingTop")}
                 <br />
                 {t("headingBottom")}
               </SectionHeading>
-            </Link>
+            </div>
             <p className="text-sm md:text-lg font-medium text-[var(--muted)] max-w-lg mt-1">
               {t("subtitle")}
             </p>

@@ -55,7 +55,8 @@ export default function LocaleSwitch({ className = "", light = false }: Props) {
                 href={localizePath(pathInLocale(pathname, current as Locale, locale), locale)}
                 lang={locale}
                 data-sfx="nav"
-                aria-label={t(`switchTo.${locale}`)}
+                // The visible code first (WCAG 2.5.3, label in name), then what it does.
+                aria-label={`${locale.toUpperCase()} · ${t(`switchTo.${locale}`)}`}
                 className={`px-2 py-2 rounded-full transition-all duration-200 ${tone}`}
               >
                 {locale}

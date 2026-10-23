@@ -124,7 +124,7 @@ Si tienes una app hecha con Lovable, v0, Bolt o Cursor que funciona en la demo p
 
 Para un prototipo, sí. Es la forma más rápida que conozco de saber si una idea funciona en pantalla. Para producción, usa la IA para escribir código dentro de decisiones que alguien ya tomó: la estructura, el sistema de diseño, el modelo de datos, los controles. Y que esas decisiones queden en manos de un desarrollador que responda por el resultado.
 
-Si ya tienes una app hecha con IA que funciona en la demo pero no está lista para usuarios reales, ese es justo el hueco en el que trabajo: reviso el código, ordeno el modelo de datos, reemplazo la UI genérica y la llevo a producción. [Así trabajo](/es/servicios). El caso completo de Ristario, con la marca, las pantallas y el stack, está [aquí](/es/works/ristario).
+Si ya tienes una app hecha con IA que funciona en la demo pero no está lista para usuarios reales, ese es justo el hueco en el que trabajo: reviso el código, ordeno el modelo de datos, reemplazo la UI genérica y la llevo a producción. [Así trabajo](/es/servicios). El [caso completo de Ristario](/es/works/ristario) tiene la marca, las pantallas y el stack.
 
 ## Preguntas frecuentes
 

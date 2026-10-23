@@ -39,14 +39,16 @@
     "menuSr": "Menú",
     "closeSr": "Cerrar",
     "menuLabel": "Menú de navegación",
-    "logoAlt": "Logo",
+    "logoAlt": "Jesús Hernández",
     "language": "Idioma",
     "switchTo": {
       "en": "Switch to English",
       "es": "Cambiar a español"
     },
     "about": "Sobre mí",
-    "services": "Servicios"
+    "services": "Servicios",
+    "pauseMotion": "Pausar animaciones",
+    "playMotion": "Reanudar animaciones"
   },
   "footer": {
     "ctaLabel": "Del concepto al código",
