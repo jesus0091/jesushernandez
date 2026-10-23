@@ -76,7 +76,7 @@ export default function Footer({
     { label: tNav("works"), href: "/works" },
     { label: tNav("about"), href: pathInLocale("/about", "en", locale) },
     { label: tNav("services"), href: pathInLocale("/services", "en", locale) },
-    { label: tNav("lab"), href: "/lab" },
+    // Lab is hidden until it has content (see Navbar.tsx).
     { label: tNav("blog"), href: "/blog" },
   ];
   const isCard = cta === "card";

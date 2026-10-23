@@ -13,11 +13,13 @@ import type { Locale } from "@/i18n/routing";
 import LocaleSwitch from "@/components/LocaleSwitch";
 import gsap from "gsap";
 
+// Lab is hidden until it has its first entries (the page still exists, out of
+// the index); bring it back by moving it into the list.
 const links = [
   { href: "/works", key: "works", sectionId: undefined },
-  { href: "/lab", key: "lab", sectionId: undefined },
   { href: "/blog", key: "blog", sectionId: undefined },
 ] as const;
+// const hidden = [{ href: "/lab", key: "lab", sectionId: undefined }];
 
 // Vertical center of the navbar; a dark section counts once it covers it.
 const NAV_PROBE_Y = 36;
