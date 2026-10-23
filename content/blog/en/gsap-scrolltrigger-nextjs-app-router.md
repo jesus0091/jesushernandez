@@ -28,7 +28,7 @@ Every scroll animation on jesushernandez.site runs on GSAP 3.13 inside a Next.js
 - **Reduced motion means no animation code runs at all.** Components return early, and the content is simply there.
 - **Since April 2025 everything here is free**, including SplitText and the other former bonus plugins, for commercial use ([Webflow's announcement](https://webflow.com/blog/gsap-becomes-free)).
 
-[[DEMO: short screen recording of the home page scroll: hero recedes, project carousel pins and scrolls sideways, quote section brush handoff]]
+<figure><video src="/blog/gsap-scrolltrigger/home-scroll.mp4" poster="/blog/gsap-scrolltrigger/home-scroll.jpg" width="1280" height="800" autoplay muted loop playsinline preload="metadata"></video><figcaption>The home page of this site: the hero recedes, a brush hands off to the skills section, the quote reveals, and the project carousel pins and scrolls sideways.</figcaption></figure>
 
 ## Why does GSAP need special handling in the Next.js App Router?
 
@@ -227,7 +227,7 @@ onSplit: (self) => {
 
 For paragraphs, `ScrubWords` uses `aria: "none"`. By default SplitText adds an `aria-label` with the full text to the split element, but an `aria-label` on a `<p>` is ignored anyway, and the individual words read correctly on their own.
 
-[[DEMO: side by side of a SectionHeading on /about in English and Spanish, showing accents not clipped by the line masks]]
+<figure><img src="/blog/gsap-scrolltrigger/section-heading-accents.webp" width="1280" height="744" alt="The heading “What I do” above its Spanish version “Qué hago”, with the accent and descenders intact" loading="lazy"><figcaption>The same SectionHeading on /about in English and Spanish, after the reveal. The line masks leave room for the accent on “é” and the descender on “g”.</figcaption></figure>
 
 ## How do you make Lenis and ScrollTrigger work together in Next.js?
 
@@ -299,7 +299,7 @@ The second is the transition itself. `PageTransition` intercepts internal link c
 
 The home page's entrance timeline has a similar guard. It's created `paused` and only plays when the intro overlay signals it's revealing the page, with a 6-second fallback so content is never stuck hidden if the signal gets lost (for example after a hot reload).
 
-[[DEMO: recording of a page transition from / to /works, showing the brush cover, route change and reveal at scroll position 0]]
+<figure><video src="/blog/gsap-scrolltrigger/page-transition.mp4" poster="/blog/gsap-scrolltrigger/page-transition.jpg" width="1280" height="800" autoplay muted loop playsinline preload="metadata"></video><figcaption>A page transition from / to /works: the brush covers the page, the route changes, and the new page reveals from the top.</figcaption></figure>
 
 ## How do you pin sections that measure correctly on every screen?
 
@@ -348,7 +348,7 @@ What each piece prevents:
 - **Measuring with `offsetLeft`, not `getBoundingClientRect()`**, because the track is already being translated by the animation and bounding rects include that transform.
 - **`refreshPriority`** is the one people miss. ScrollTrigger calculates positions in creation order. In React, child components can create their triggers in a different order than they appear on the page. The quote section further down uses `refreshPriority: 2` and the carousel uses `1`, so pins are measured top to bottom and each one includes the spacing of the pins above it ([ScrollTrigger docs](https://gsap.com/docs/v3/Plugins/ScrollTrigger/)).
 
-Refreshing has a cost, too. The footer fits a big name to its container's width, which changes the page height. Rather than calling `ScrollTrigger.refresh()` on every fit, it only does so when the computed font size actually changed, because refreshing every trigger is one of the most expensive steps on page load. [[TODO: metric — main-thread time of ScrollTrigger.refresh() on the home page, from a Performance trace]]
+Refreshing has a cost, too. The footer fits a big name to its container's width, which changes the page height. Rather than calling `ScrollTrigger.refresh()` on every fit, it only does so when the computed font size actually changed, because refreshing every trigger is one of the most expensive steps on page load.
 
 On phones, distances built from `window.innerHeight` jump as the address bar moves. `lib/motion.ts` has a `largeViewportHeight()` helper that measures `100lvh` with a hidden probe element and only re-measures when the width changes. Pinned sections use it for their scroll distances.
 

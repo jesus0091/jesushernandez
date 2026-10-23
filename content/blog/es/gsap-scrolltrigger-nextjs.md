@@ -28,7 +28,7 @@ Casi todo lo que se mueve en jesushernandez.site está hecho con GSAP 3.13, en u
 - **Con movimiento reducido no corre ni una línea de animación.** Los componentes salen antes de crear nada y el contenido simplemente está ahí.
 - **Desde abril de 2025 todo esto es gratis**, SplitText incluido, también para uso comercial ([anuncio de Webflow](https://webflow.com/blog/gsap-becomes-free)).
 
-[[DEMO: grabación corta del scroll de la home: el hero se aleja, el carrusel de proyectos se fija y avanza de lado, transición de pincel hacia la sección de la cita]]
+<figure><video src="/blog/gsap-scrolltrigger/home-scroll.mp4" poster="/blog/gsap-scrolltrigger/home-scroll.jpg" width="1280" height="800" autoplay muted loop playsinline preload="metadata"></video><figcaption>La home de este sitio: el hero se aleja, un pincel da paso a la sección de skills, aparece la cita y el carrusel de proyectos se fija y avanza de lado.</figcaption></figure>
 
 ## ¿Por qué GSAP necesita cuidados especiales en el App Router de Next.js?
 
@@ -227,7 +227,7 @@ onSplit: (self) => {
 
 En los párrafos, `ScrubWords` usa `aria: "none"`. Por defecto SplitText le pone al elemento un `aria-label` con el texto completo, pero en un `<p>` ese atributo se ignora igual, y las palabras sueltas se leen bien por sí solas.
 
-[[DEMO: comparación de un SectionHeading de /about en inglés y en español, mostrando que las máscaras no cortan los acentos]]
+<figure><img src="/blog/gsap-scrolltrigger/section-heading-accents.webp" width="1280" height="744" alt="El título “What I do” sobre su versión en español “Qué hago”, con la tilde y los trazos inferiores completos" loading="lazy"><figcaption>El mismo SectionHeading de /about en inglés y en español, después de la animación. Las máscaras de línea dejan lugar para la tilde de “é” y el trazo inferior de la “g”.</figcaption></figure>
 
 ## ¿Cómo hacer que Lenis y ScrollTrigger funcionen juntos en Next.js?
 
@@ -299,7 +299,7 @@ El segundo es la transición en sí. `PageTransition` intercepta los clics en li
 
 La entrada de la home se crea en `paused` y arranca cuando la intro avisa que terminó, con un respaldo de 6 segundos por si la señal se pierde.
 
-[[DEMO: grabación de una transición de / a /works: el pincel cubre, cambia la ruta y se revela la página nueva desde arriba]]
+<figure><video src="/blog/gsap-scrolltrigger/page-transition.mp4" poster="/blog/gsap-scrolltrigger/page-transition.jpg" width="1280" height="800" autoplay muted loop playsinline preload="metadata"></video><figcaption>Una transición de / a /works: el pincel cubre la página, cambia la ruta y la página nueva se revela desde arriba.</figcaption></figure>
 
 ## ¿Cómo fijar secciones con pin que se midan bien en cualquier pantalla?
 
@@ -348,7 +348,7 @@ Qué evita cada parte:
 - **Medir con `offsetLeft` y no con `getBoundingClientRect()`**, porque la pista ya se está moviendo con la animación y los bounding rects incluyen ese transform.
 - **`refreshPriority`** es el que casi todos pasan por alto. ScrollTrigger calcula las posiciones en el orden en que se crearon los triggers, y en React un componente hijo puede crear los suyos en otro orden que el que tiene en la página. La sección de la cita, más abajo, usa `refreshPriority: 2` y el carrusel usa `1`, así los pins se miden de arriba hacia abajo y cada uno incluye el espacio de los anteriores ([documentación de ScrollTrigger](https://gsap.com/docs/v3/Plugins/ScrollTrigger/)).
 
-Refrescar también cuesta. El footer ajusta un nombre grande al ancho de su contenedor, lo que cambia el alto de la página, y solo llama a `ScrollTrigger.refresh()` si el tamaño de fuente cambió de verdad: refrescar todos los triggers es de lo más caro de la carga. [[TODO: métrica — tiempo de main thread de ScrollTrigger.refresh() en la home, medido con un trace de Performance]]
+Refrescar también cuesta. El footer ajusta un nombre grande al ancho de su contenedor, lo que cambia el alto de la página, y solo llama a `ScrollTrigger.refresh()` si el tamaño de fuente cambió de verdad: refrescar todos los triggers es de lo más caro de la carga.
 
 En el celular, las distancias basadas en `window.innerHeight` saltan con la barra de direcciones. Por eso los pins usan `largeViewportHeight()` (en `lib/motion.ts`), que mide `100lvh` y solo vuelve a medir cuando cambia el ancho.
 
