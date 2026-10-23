@@ -75,10 +75,9 @@ export default function ProcessBuild({
       const q = gsap.utils.selector(root);
       const n = steps.length;
       const counter = q("[data-counter]")[0] as HTMLElement | undefined;
-      const percent = q("[data-percent]")[0] as HTMLElement | undefined;
       const bar = q("[data-bar]")[0] as HTMLElement | undefined;
-      const texts = q("[data-text]") as HTMLElement[];
       const phases = q("[data-phase]") as HTMLElement[];
+      const rail = q("[data-rail]")[0] as HTMLElement | undefined;
 
       const tl = gsap.timeline({
         defaults: { ease: "none" },
@@ -92,23 +91,14 @@ export default function ProcessBuild({
           onUpdate: (self) => {
             const step = Math.min(n - 1, Math.floor(self.progress * n));
             if (counter) counter.textContent = `${two(step + 1)} / ${two(n)}`;
-            if (percent) percent.textContent = String(Math.round(self.progress * 100)).padStart(3, "0");
             phases.forEach((el, i) => (el.dataset.on = String(i === step)));
+            if (rail) rail.style.transform = `scaleY(${self.progress})`;
             if (bar) bar.style.transform = `scaleX(${self.progress})`;
           },
         },
       });
 
-      // The step's text swaps in place: out up, in from below.
-      gsap.set(texts.slice(1), { autoAlpha: 0, y: 28 });
-      texts.forEach((text, i) => {
-        if (i === 0) return;
-        tl.to(texts[i - 1], { autoAlpha: 0, y: -28, duration: 0.12, ease: "power2.in" }, i - 0.06)
-          .to(text, { autoAlpha: 1, y: 0, duration: 0.14, ease: "power2.out" }, i + 0.04);
-      });
 
-      // The screen starts tilted back, unbuilt, and settles flat as it's made.
-      gsap.set(q("[data-frame]"), { rotateX: 12, scale: 0.92, transformPerspective: 1400, transformOrigin: "50% 100%" });
       // Everything the screen will hold starts unbuilt.
       gsap.set(q("[data-guide-x]"), { scaleX: 0 });
       gsap.set(q("[data-guide-y]"), { scaleY: 0 });
@@ -167,9 +157,6 @@ export default function ProcessBuild({
           .to(q("[data-approve]"), { autoAlpha: 1, scale: 1, ease: "back.out(2)", ...span(0, 0.1) }, protoAt + 0.72);
       }
 
-      // The tilt eases out over the first steps; flat once the design is in.
-      tl.to(q("[data-frame]"), { rotateX: 0, scale: 1, ease: "power1.out", duration: Math.max(1, protoAt + 0.7) }, 0);
-
       const codeAt = at("code");
       if (codeAt >= 0) {
         tl.to(q("[data-approve]"), { autoAlpha: 0, ...span(0, 0.08) }, codeAt + 0.02)
@@ -222,15 +209,6 @@ export default function ProcessBuild({
         aria-hidden
         className="hidden h-[100svh] flex-col gap-5 pb-8 pt-24 group-data-[b=on]/b:flex md:gap-8 md:pt-28"
       >
-        {/* Which step, and how much of the whole has been built. */}
-        <div className={`${KICKER} flex items-center gap-4 text-[var(--muted)]`}>
-          <span data-counter className="text-[var(--black)] tabular-nums">
-            01 / {two(steps.length)}
-          </span>
-          <span className="relative h-px flex-1 overflow-hidden bg-[var(--color-line-2)]">
-            <span data-bar className="absolute inset-0 origin-left scale-x-0 bg-[var(--orange)]" />
-          </span>
-        </div>
 
         <div className="flex min-h-0 flex-1 flex-col gap-6 lg:grid lg:grid-cols-12 lg:items-center lg:gap-10">
           {/* The screen being built. */}
@@ -441,44 +419,50 @@ export default function ProcessBuild({
             )}
           </div>
 
-          {/* Left: how much is built, where in the process, and the step itself. */}
-          <div className="order-2 flex shrink-0 flex-col gap-8 lg:order-1 lg:col-span-5 lg:gap-10">
-            <div className="hidden items-end justify-between gap-6 lg:flex">
-              <p className="font-semibold leading-[0.8] tracking-title text-[var(--black)]/[0.12] tabular-nums text-[clamp(64px,7vw,112px)]">
-                <span data-percent>000</span>
-                <span className="text-[0.4em]">%</span>
-              </p>
-              <ol className={`${KICKER} flex flex-col gap-1.5 pb-1`}>
-                {steps.map((step, i) => (
-                  <li
-                    key={step.phase}
-                    data-phase
-                    data-on={i === 0}
-                    className="group/p flex items-center gap-2 text-[var(--muted)]/60 transition-colors duration-300 data-[on=true]:text-[var(--black)]"
-                  >
-                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--orange)] opacity-0 transition-opacity duration-300 group-data-[on=true]/p:opacity-100" />
-                    {two(i + 1)} {step.phase}
-                  </li>
-                ))}
-              </ol>
-            </div>
-          {/* The step's text, all in one place; the scroll swaps them. */}
-          <div className="grid">
-            {steps.map((step, i) => (
-              <div key={step.phase} data-text className="col-start-1 row-start-1 flex flex-col gap-2 md:gap-3">
-                {/* The index names the phase on wide screens. */}
-                <span className={`${KICKER} text-[var(--color-accent-ink)] lg:hidden`}>
-                  {two(i + 1)} · {step.phase}
-                </span>
-                {/* Sized here, not by text-4xl (a fluid 48–72px that carries no line height). */}
-                <h3 className="text-balance text-[clamp(26px,7vw,34px)] font-semibold leading-tighter tracking-title text-[var(--black)] lg:text-[clamp(30px,2.8vw,44px)]">
-                  {step.title}
-                </h3>
-                <p className="text-pretty text-sm leading-relaxed text-[var(--muted)] md:text-base">{step.text}</p>
-              </div>
-            ))}
+          {/* Left: every step in place; the current one opens. */}
+          <div className="order-2 flex min-h-0 shrink-0 flex-col gap-6 lg:order-1 lg:col-span-5 lg:gap-8">
+            <ol className="relative flex flex-col pl-6">
+              {/* The rail fills with the build; each step's dot sits on it. */}
+              <span aria-hidden className="absolute bottom-3 left-0 top-3 w-px bg-[var(--color-line-2)]">
+                <span data-rail className="absolute inset-0 origin-top scale-y-0 bg-[var(--orange)]" />
+              </span>
+              {steps.map((step, i) => (
+                <li key={step.phase} data-phase data-on={i === 0} className="group/p relative py-1.5 md:py-2">
+                  <span
+                    aria-hidden
+                    className="absolute -left-6 top-[1.05rem] h-2 w-2 -translate-x-1/2 rounded-full bg-[var(--color-line-2)] transition-colors duration-300 group-data-[on=true]/p:bg-[var(--orange)] md:top-[1.2rem]"
+                  />
+                  <div className="flex items-baseline gap-3">
+                    <span className={`${KICKER} w-5 shrink-0 text-[var(--muted)]/50 transition-colors duration-300 group-data-[on=true]/p:text-[var(--color-accent-ink)]`}>
+                      {two(i + 1)}
+                    </span>
+                    {/* Sized here, not by text-4xl (a fluid 48–72px that carries no line height). */}
+                    <h3 className="text-balance text-lg font-semibold leading-tighter tracking-title text-[var(--black)]/25 transition-colors duration-300 group-data-[on=true]/p:text-[var(--black)] md:text-xl lg:text-[clamp(20px,1.7vw,26px)]">
+                      {step.title}
+                    </h3>
+                  </div>
+                  {/* Opens for the current step only (grid rows 0fr → 1fr). */}
+                  <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out group-data-[on=true]/p:grid-rows-[1fr]">
+                    <div className="overflow-hidden pl-8">
+                      <p className="flex flex-col gap-1.5 pb-1 pt-2">
+                        <span className={`${KICKER} text-[var(--muted)]`}>{step.phase}</span>
+                        <span className="text-pretty text-sm leading-relaxed text-[var(--muted)] md:text-base">{step.text}</span>
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
-          </div>
+        </div>
+        {/* At the bottom: which step, and a bar that fills as the whole is built. */}
+        <div className={`${KICKER} flex items-center gap-4 text-[var(--muted)]`}>
+          <span data-counter className="text-[var(--black)] tabular-nums">
+            01 / {two(steps.length)}
+          </span>
+          <span className="relative h-1 flex-1 overflow-hidden rounded-full bg-black/[0.06]">
+            <span data-bar className="absolute inset-0 origin-left scale-x-0 rounded-full bg-[var(--orange)]" />
+          </span>
         </div>
       </div>
     </div>
