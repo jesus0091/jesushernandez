@@ -1,7 +1,7 @@
 ---
-title: "Is vibe coding bad? What shipping Ristario to production taught me"
+title: "Is vibe coding bad? A developer's take after shipping Ristario to production"
 slug: is-vibe-coding-bad
-description: "Vibe coding isn't bad. Skipping the decisions is. What AI got right, what I rewrote, and what I learned shipping Ristario to production."
+description: "A developer's take: vibe coding isn't bad, skipping the decisions is. Where AI failed on Ristario, what I rewrote, and how I use it now."
 date: 2026-10-22
 updated: 2026-10-22
 keywords:
@@ -16,11 +16,13 @@ relatedWork: ristario
 alternateSlug: vibe-coding-en-produccion
 ---
 
-# Is vibe coding bad? What shipping Ristario to production taught me
+# Is vibe coding bad? A developer's take after shipping Ristario to production
+
+I'm a developer and product designer. I use AI every day, as a tool inside my own engineering process, but I don't vibe code anything that goes to production. This post explains why.
 
 **Short answer: no. Vibe coding is bad when it replaces the decisions a product needs, and useful when it speeds up the work after those decisions are made.** The code is rarely what decides whether something survives production. The decisions around the code do: what pages exist, who reads them, on what device, what the data looks like, and what "done" means.
 
-I learned this shipping [Ristario](/works/ristario), a free QR menu for restaurants in Venezuela. Prices there change every day, in two currencies, so the product shows prices in bolívares and dollars at the BCV rate, takes orders through WhatsApp, and lets owners edit everything from a phone. I designed the brand, the UI system and every visual asset, then built it in Next.js and launched it. One person, no handoff, and not full time: I built it in the hours I had free.
+I learned this shipping [Ristario](/works/ristario), a free QR menu for restaurants in Venezuela. Prices there change every day, in two currencies, so the product shows prices in bolívares and dollars at the BCV rate, takes orders through WhatsApp, and lets owners edit everything from a phone. I designed the brand, the UI system and every visual asset, then wrote it in Next.js and launched it. One person, no handoff, and not full time: I built it in the hours I had free. AI wrote part of the code; the architecture, the data model and the final review were mine.
 
 Here are the facts before the argument:
 
@@ -30,7 +32,7 @@ Here are the facts before the argument:
 | City pages | 18, from Caracas and Maracaibo to Mérida and Los Teques |
 | Business-type pages | 12 (areperas, bakeries, food trucks, pizzerias, cafés and more) |
 | Lighthouse, live home page (October 2026) | 95 performance, 100 SEO |
-| AI tools, in order | Cursor, then ChatGPT, then Claude |
+| AI tools used as assistants | Cursor, ChatGPT and Claude |
 | Where AI failed most | UI design and the data layer |
 
 ## What do I mean by "vibe coding"?
@@ -54,11 +56,13 @@ On Ristario, the decisions that made the product work were not code decisions:
 
 An AI model can write the code for 41 pages quickly. It can't tell you that you need 41 pages and not 4, or why each one should exist. That part is product work, and it's the part I'd never hand off.
 
-## Which AI tools did I use, and did switching help?
+## Which AI tools do I use, and what don't I delegate?
 
-I started in Cursor, moved to ChatGPT, and finished with Claude. None of them was the "right" tool on its own; each one was good at the next problem I had.
+Over the project I worked with Cursor, ChatGPT and Claude. I treat them the way I treat any other dev tool: each one is good at a specific job, and none of them owns the project.
 
-What switching taught me is that **the context is yours, not the tool's.** Every time I changed tools, the new one knew nothing about the decisions the previous one had been working inside: the design system, the naming, how the data was shaped. If those decisions only live in old chat threads, every new session starts by guessing them again. The more of the plan I had written down, the less it mattered which model was reading it.
+What I delegate: boilerplate, repetitive components once the pattern exists, first drafts of queries, refactors I've already planned, and a second pair of eyes on code I wrote. What I don't delegate: the architecture, the data model, the design system, and the decision of whether a change is ready to ship.
+
+Using more than one tool also taught me that **the context is yours, not the tool's.** A new tool knows nothing about the decisions the code was written inside: the design system, the naming, how the data is shaped. If those decisions only live in old chat threads, every new session starts by guessing them again. The more of the plan I had written down, the less it mattered which model was reading it.
 
 ## Where did AI fail on Ristario?
 
@@ -114,13 +118,13 @@ If you have an app built with Lovable, v0, Bolt or Cursor that works in the demo
 
 **Give the AI the database schema, and review every change to it.** Most of the duplicated tables came from the model not seeing what already existed. Putting the current schema in front of it, and reading every migration before accepting it, would have caught them earlier.
 
-**Keep the project's context outside the tool.** Moving from Cursor to ChatGPT to Claude meant re-explaining the project each time. A short written brief of the decisions already made would have made each switch cheaper.
+**Keep the project's context outside the tool.** Working across Cursor, ChatGPT and Claude meant re-explaining the project more than once. A short written brief of the decisions already made would have saved that time.
 
 ## So, should you vibe code your next product?
 
-For a prototype, yes. It's the fastest way I know to find out whether an idea works on a screen. For production, use AI to write code inside decisions someone has already made: the structure, the design system, the data model, the checks. Keep the decisions with a person who answers for the result.
+For a prototype, yes. It's the fastest way I know to find out whether an idea works on a screen. For production, use AI to write code inside decisions someone has already made: the structure, the design system, the data model, the checks. Keep the decisions with a developer who answers for the result.
 
-That's how I work now. The full Ristario case study, with the brand, the screens and the stack, is [here](/works/ristario).
+If you already have an app built with AI that works in the demo but isn't ready for real users, that's the gap I work on: reviewing the code, fixing the data model, replacing the generic UI and taking it to production. [Here's how I work](/services). The full Ristario case study, with the brand, the screens and the stack, is [here](/works/ristario).
 
 ## FAQ
 
@@ -142,4 +146,4 @@ It doesn't have to be. Ristario's live home page scores 95 on Lighthouse perform
 
 ### Which AI tool is best for vibe coding?
 
-I used Cursor, ChatGPT and Claude on the same project, and the tool mattered less than the context I gave it. A written design system and an up-to-date database schema improve the output of any of them.
+I used Cursor, ChatGPT and Claude as assistants on the same project, and the tool mattered less than the context I gave it. A written design system and an up-to-date database schema improve the output of any of them.

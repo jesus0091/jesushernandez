@@ -1,7 +1,7 @@
 ---
-title: "¿Sirve el vibe coding para producción? Lo que aprendí con Ristario"
+title: "¿Sirve el vibe coding para producción? La mirada de un desarrollador después de lanzar Ristario"
 slug: vibe-coding-en-produccion
-description: "El vibe coding sirve para producción si las decisiones no las toma la IA. Qué hizo bien, qué reescribí y qué aprendí llevando Ristario a producción."
+description: "La mirada de un desarrollador: el vibe coding sirve si las decisiones no las toma la IA. Dónde falló en Ristario, qué reescribí y cómo la uso hoy."
 date: 2026-10-22
 updated: 2026-10-22
 keywords:
@@ -16,11 +16,13 @@ relatedWork: ristario
 alternateSlug: is-vibe-coding-bad
 ---
 
-# ¿Sirve el vibe coding para producción? Lo que aprendí con Ristario
+# ¿Sirve el vibe coding para producción? La mirada de un desarrollador después de lanzar Ristario
+
+Soy desarrollador y diseñador de producto. Uso IA todos los días, como una herramienta dentro de mi propio proceso de desarrollo, pero no hago vibe coding en nada que vaya a producción. Este post explica por qué.
 
 **Respuesta corta: sí, pero solo si las decisiones no las toma la IA.** El vibe coding acelera mucho el trabajo cuando ya está claro qué hay que construir. Cuando se usa para reemplazar esas decisiones, el problema no aparece en la demo: aparece en producción. Lo que define si un producto aguanta no suele ser el código, sino lo que se decidió antes: qué páginas existen, quién las lee, en qué dispositivo, cómo son los datos y qué significa "terminado".
 
-Lo aprendí llevando a producción [Ristario](/es/works/ristario), un menú QR gratis para restaurantes en Venezuela. Allá los precios cambian todos los días y en dos monedas, así que el producto muestra los precios en bolívares y en dólares a tasa BCV, recibe pedidos por WhatsApp y permite editar todo desde el celular. Diseñé la marca, el sistema de UI y todos los recursos visuales, después lo desarrollé en Next.js y lo lancé. Una sola persona, sin traspasos, y sin dedicación completa: lo construí en los ratos que tenía libres.
+Lo aprendí llevando a producción [Ristario](/es/works/ristario), un menú QR gratis para restaurantes en Venezuela. Allá los precios cambian todos los días y en dos monedas, así que el producto muestra los precios en bolívares y en dólares a tasa BCV, recibe pedidos por WhatsApp y permite editar todo desde el celular. Diseñé la marca, el sistema de UI y todos los recursos visuales, después lo programé en Next.js y lo lancé. Una sola persona, sin traspasos, y sin dedicación completa: lo construí en los ratos que tenía libres. La IA escribió parte del código; la arquitectura, el modelo de datos y la revisión final fueron míos.
 
 Primero los datos, después la opinión:
 
@@ -30,7 +32,7 @@ Primero los datos, después la opinión:
 | Páginas por ciudad | 18, de Caracas y Maracaibo a Mérida y Los Teques |
 | Páginas por tipo de negocio | 12 (areperas, panaderías, food trucks, pizzerías, cafés y más) |
 | Lighthouse en la home en vivo (octubre de 2026) | 95 en rendimiento, 100 en SEO |
-| Herramientas de IA, en orden | Cursor, después ChatGPT, después Claude |
+| Herramientas de IA usadas como asistentes | Cursor, ChatGPT y Claude |
 | Dónde más falló la IA | El diseño de la UI y la capa de datos |
 
 ## ¿Qué es exactamente el vibe coding?
@@ -54,11 +56,13 @@ En Ristario, las decisiones que hicieron funcionar el producto no fueron decisio
 
 Un modelo de IA puede escribir rápido el código de 41 páginas. Lo que no puede decirte es que necesitas 41 páginas y no 4, ni por qué tiene que existir cada una. Eso es trabajo de producto, y es la parte que nunca delegaría.
 
-## ¿Qué herramientas de IA usé y sirvió cambiar?
+## ¿Qué herramientas de IA uso y qué no les delego?
 
-Empecé con Cursor, pasé a ChatGPT y terminé con Claude. Ninguna fue "la correcta" por sí sola; cada una me sirvió para el problema que tenía en ese momento.
+A lo largo del proyecto trabajé con Cursor, ChatGPT y Claude. Las trato como a cualquier otra herramienta de desarrollo: cada una es buena para un trabajo concreto, y ninguna es dueña del proyecto.
 
-Lo que me enseñó cambiar de herramienta es que **el contexto es tuyo, no de la herramienta.** Cada vez que cambiaba, la nueva no sabía nada de las decisiones dentro de las que trabajaba la anterior: el sistema de diseño, los nombres, cómo estaban armados los datos. Si esas decisiones solo viven en conversaciones viejas, cada sesión nueva empieza adivinándolas otra vez. Cuanto más del plan tenía escrito, menos importaba qué modelo lo leía.
+Lo que delego: código repetitivo, componentes que repiten un patrón que ya existe, primeros borradores de consultas, refactors que ya planifiqué y una segunda revisión de código que escribí yo. Lo que no delego: la arquitectura, el modelo de datos, el sistema de diseño y la decisión de si un cambio está listo para salir.
+
+Trabajar con más de una herramienta también me enseñó que **el contexto es tuyo, no de la herramienta.** Una herramienta nueva no sabe nada de las decisiones dentro de las que se escribió el código: el sistema de diseño, los nombres, cómo están armados los datos. Si esas decisiones solo viven en conversaciones viejas, cada sesión nueva empieza adivinándolas otra vez. Cuanto más del plan tenía escrito, menos importaba qué modelo lo leía.
 
 ## ¿Dónde falló la IA en Ristario?
 
@@ -114,13 +118,13 @@ Si tienes una app hecha con Lovable, v0, Bolt o Cursor que funciona en la demo p
 
 **Darle a la IA el esquema de la base de datos y revisar cada cambio.** La mayoría de las tablas duplicadas salieron de que el modelo no veía lo que ya existía. Ponerle delante el esquema actual, y leer cada migración antes de aceptarla, las habría frenado antes.
 
-**Guardar el contexto del proyecto fuera de la herramienta.** Pasar de Cursor a ChatGPT y después a Claude me obligó a explicar el proyecto de nuevo cada vez. Un resumen corto, por escrito, de las decisiones ya tomadas habría hecho cada cambio mucho más barato.
+**Guardar el contexto del proyecto fuera de la herramienta.** Trabajar con Cursor, ChatGPT y Claude me obligó a explicar el proyecto más de una vez. Un resumen corto, por escrito, de las decisiones ya tomadas me habría ahorrado ese tiempo.
 
 ## Entonces, ¿conviene usar vibe coding en tu próximo producto?
 
-Para un prototipo, sí. Es la forma más rápida que conozco de saber si una idea funciona en pantalla. Para producción, usa la IA para escribir código dentro de decisiones que alguien ya tomó: la estructura, el sistema de diseño, el modelo de datos, los controles. Y que esas decisiones queden en manos de una persona que responda por el resultado.
+Para un prototipo, sí. Es la forma más rápida que conozco de saber si una idea funciona en pantalla. Para producción, usa la IA para escribir código dentro de decisiones que alguien ya tomó: la estructura, el sistema de diseño, el modelo de datos, los controles. Y que esas decisiones queden en manos de un desarrollador que responda por el resultado.
 
-Así trabajo hoy. El caso completo de Ristario, con la marca, las pantallas y el stack, está [aquí](/es/works/ristario).
+Si ya tienes una app hecha con IA que funciona en la demo pero no está lista para usuarios reales, ese es justo el hueco en el que trabajo: reviso el código, ordeno el modelo de datos, reemplazo la UI genérica y la llevo a producción. [Así trabajo](/es/services). El caso completo de Ristario, con la marca, las pantallas y el stack, está [aquí](/es/works/ristario).
 
 ## Preguntas frecuentes
 
@@ -142,4 +146,4 @@ No tiene por qué. La home en vivo de Ristario tiene 95 en rendimiento y 100 en 
 
 ### ¿Qué herramienta de IA es mejor para hacer vibe coding?
 
-Usé Cursor, ChatGPT y Claude en el mismo proyecto, y la herramienta importó menos que el contexto que le daba. Un sistema de diseño escrito y un esquema de base de datos actualizado mejoran el resultado de cualquiera de las tres.
+Usé Cursor, ChatGPT y Claude como asistentes en el mismo proyecto, y la herramienta importó menos que el contexto que le daba. Un sistema de diseño escrito y un esquema de base de datos actualizado mejoran el resultado de cualquiera de las tres.
