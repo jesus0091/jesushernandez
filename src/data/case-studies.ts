@@ -117,7 +117,7 @@ export const FUNDACION_PATARO: CaseStudy = {
         client: "A clickable prototype, revised and signed off",
         visual: {
           kind: "prototype",
-          desktop: { label: "Home / Desktop", image: img("hero") },
+          desktop: { label: "Home / Desktop", image: img("responsive-desktop") },
           phone: { label: "Home / Mobile", image: img("responsive-phone") },
           reviewer: "Client",
           comment: "Approved",
@@ -358,7 +358,7 @@ export const RISTARIO: CaseStudy = {
         client: "A clickable prototype, revised and signed off",
         visual: {
           kind: "prototype",
-          desktop: { label: "Home / Desktop", image: ristario("hero") },
+          desktop: { label: "Home / Desktop", image: ristario("responsive-desktop") },
           phone: { label: "Home / Mobile", image: ristario("responsive-phone") },
           reviewer: "Client",
           comment: "Approved",

@@ -20,17 +20,21 @@ const kindOf = (step: Step): ProcessVisual["kind"] | "demo" | null => step.visua
 const visualOf = <K extends ProcessVisual["kind"]>(steps: Step[], kind: K) =>
   steps.find((s) => s.visual?.kind === kind)?.visual as Extract<ProcessVisual, { kind: K }> | undefined;
 
-/** A step's facts, from its own visual: what went into it or came out of it. */
-function detailOf(step: Step): { label: string; items: string[] } | null {
-  const v = step.visual;
-  if (v?.kind === "notes") return { label: v.groups.map((g) => g.label).join(" · "), items: v.groups.flatMap((g) => g.notes) };
-  if (v?.kind === "sitemap")
-    return { label: "Pages", items: [v.root, ...v.pages.map((p) => (p.children ? `${p.label}: ${p.children.join(", ")}` : p.label))] };
-  if (v?.kind === "prototype") return { label: "Delivered", items: [v.desktop.label, v.phone.label, `${v.reviewer}: ${v.comment}`] };
-  if (v?.kind === "code") return { label: "Built", items: [v.file, v.status] };
-  if (v?.kind === "checks") return { label: v.label, items: v.checks };
-  if (step.demo) return { label: "Found by", items: [`“${step.demo.query}”`, step.demo.url] };
-  return null;
+/** Just enough syntax color for a few lines of TSX: strings, keywords and tags. */
+const TOKENS = /(`[^`]*`|"[^"]*"|'[^']*'|\b(?:export|default|function|return|const|import|from)\b|<\/?[A-Z][\w.]*)/g;
+function highlight(line: string): React.ReactNode {
+  if (!line) return " ";
+  return line.split(TOKENS).map((part, i) => {
+    if (!part) return null;
+    const color = /^[`"']/.test(part)
+      ? "text-[#a5d6ff]"
+      : /^<\/?[A-Z]/.test(part)
+        ? "text-[#7ee787]"
+        : /^(export|default|function|return|const|import|from)$/.test(part)
+          ? "text-[#ff7b72]"
+          : "";
+    return color ? <span key={i} className={color}>{part}</span> : part;
+  });
 }
 
 /**
@@ -74,6 +78,7 @@ export default function ProcessBuild({
       const percent = q("[data-percent]")[0] as HTMLElement | undefined;
       const bar = q("[data-bar]")[0] as HTMLElement | undefined;
       const texts = q("[data-text]") as HTMLElement[];
+      const phases = q("[data-phase]") as HTMLElement[];
 
       const tl = gsap.timeline({
         defaults: { ease: "none" },
@@ -87,7 +92,8 @@ export default function ProcessBuild({
           onUpdate: (self) => {
             const step = Math.min(n - 1, Math.floor(self.progress * n));
             if (counter) counter.textContent = `${two(step + 1)} / ${two(n)}`;
-            if (percent) percent.textContent = `${String(Math.round(self.progress * 100)).padStart(3, "0")}%`;
+            if (percent) percent.textContent = String(Math.round(self.progress * 100)).padStart(3, "0");
+            phases.forEach((el, i) => (el.dataset.on = String(i === step)));
             if (bar) bar.style.transform = `scaleX(${self.progress})`;
           },
         },
@@ -106,12 +112,12 @@ export default function ProcessBuild({
       // Everything the screen will hold starts unbuilt.
       gsap.set(q("[data-guide-x]"), { scaleX: 0 });
       gsap.set(q("[data-guide-y]"), { scaleY: 0 });
+      gsap.set(q("[data-dim]"), { autoAlpha: 0 });
       gsap.set(q("[data-note]"), { autoAlpha: 0, y: 14, scale: 0.9 });
       gsap.set(q("[data-wire]"), { autoAlpha: 0 });
       gsap.set(q("[data-wire-part]"), { scaleX: 0 });
       gsap.set(q("[data-wire-label]"), { autoAlpha: 0 });
       gsap.set(q("[data-shot]"), { clipPath: "inset(0% 0% 100% 0%)" });
-      gsap.set(q("[data-phone]"), { autoAlpha: 0, yPercent: 30 });
       gsap.set(q("[data-approve]"), { autoAlpha: 0, scale: 0.8 });
       gsap.set(q("[data-style]"), { autoAlpha: 0, scale: 0.85, y: 16 });
       gsap.set(q("[data-swatch]"), { scale: 0 });
@@ -124,6 +130,7 @@ export default function ProcessBuild({
       gsap.set(q("[data-check]"), { autoAlpha: 0.35 });
       gsap.set(q("[data-check-done]"), { autoAlpha: 0 });
       gsap.set(q("[data-url]"), { clipPath: "inset(0% 100% 0% 0%)" });
+      gsap.set(q("[data-url-dev]"), { autoAlpha: 1 });
       gsap.set(q("[data-live]"), { autoAlpha: 0, scale: 0.6 });
       gsap.set(q("[data-result]"), { autoAlpha: 0, yPercent: 40 });
 
@@ -132,8 +139,9 @@ export default function ProcessBuild({
 
       const notesAt = at("notes");
       if (notesAt >= 0) {
-        tl.to(q("[data-guide-x]"), { scaleX: 1, stagger: 0.05, ...span(0, 0.3) }, notesAt + 0.1)
-          .to(q("[data-guide-y]"), { scaleY: 1, stagger: 0.05, ...span(0, 0.3) }, notesAt + 0.2)
+        tl.to(q("[data-guide-y]"), { scaleY: 1, stagger: 0.02, ease: "power2.out", ...span(0, 0.2) }, notesAt + 0.08)
+          .to(q("[data-dim]"), { autoAlpha: 1, ...span(0, 0.12) }, notesAt + 0.1)
+          .to(q("[data-guide-x]"), { scaleX: 1, stagger: 0.05, ...span(0, 0.2) }, notesAt + 0.25)
           .to(q("[data-note]"), { autoAlpha: 1, y: 0, scale: 1, stagger: 0.05, ease: "back.out(2)", ...span(0, 0.12) }, notesAt + 0.35);
       }
 
@@ -149,13 +157,14 @@ export default function ProcessBuild({
 
       const protoAt = at("prototype");
       if (protoAt >= 0) {
-        tl.to(q("[data-style]"), { autoAlpha: 1, scale: 1, y: 0, ease: "back.out(1.6)", ...span(0, 0.14) }, protoAt + 0.04)
-          .to(q("[data-swatch]"), { scale: 1, stagger: 0.03, ease: "back.out(3)", ...span(0, 0.05) }, protoAt + 0.12)
-          .to(q("[data-shot]"), { clipPath: "inset(0% 0% 0% 0%)", ease: "power1.inOut", ...span(0, 0.45) }, protoAt + 0.1)
-          .fromTo(q("[data-shot]"), { scale: 1.08 }, { scale: 1, ease: "power2.out", ...span(0, 0.6) }, protoAt + 0.1)
-          .to(q("[data-guide-x], [data-guide-y]"), { autoAlpha: 0, ...span(0, 0.2) }, protoAt + 0.3)
-          .to(q("[data-phone]"), { autoAlpha: 1, yPercent: 0, ease: "power3.out", ...span(0, 0.3) }, protoAt + 0.45)
-          .to(q("[data-approve]"), { autoAlpha: 1, scale: 1, ease: "back.out(2)", ...span(0, 0.12) }, protoAt + 0.72);
+        // One thing at a time: the style is chosen, then the design it makes appears.
+        tl.to(q("[data-style]"), { autoAlpha: 1, scale: 1, y: 0, ease: "back.out(1.6)", ...span(0, 0.12) }, protoAt + 0.04)
+          .to(q("[data-swatch]"), { scale: 1, stagger: 0.03, ease: "back.out(3)", ...span(0, 0.05) }, protoAt + 0.1)
+          .to(q("[data-style]"), { autoAlpha: 0, scale: 0.92, ease: "power2.in", ...span(0, 0.1) }, protoAt + 0.3)
+          .to(q("[data-shot]"), { clipPath: "inset(0% 0% 0% 0%)", ease: "power1.inOut", ...span(0, 0.35) }, protoAt + 0.32)
+          .fromTo(q("[data-shot]"), { scale: 1.08 }, { scale: 1, ease: "power2.out", ...span(0, 0.45) }, protoAt + 0.32)
+          .to(q("[data-guide-x], [data-guide-y], [data-dim]"), { autoAlpha: 0, ...span(0, 0.2) }, protoAt + 0.3)
+          .to(q("[data-approve]"), { autoAlpha: 1, scale: 1, ease: "back.out(2)", ...span(0, 0.1) }, protoAt + 0.72);
       }
 
       // The tilt eases out over the first steps; flat once the design is in.
@@ -163,7 +172,7 @@ export default function ProcessBuild({
 
       const codeAt = at("code");
       if (codeAt >= 0) {
-        tl.to(q("[data-approve], [data-style]"), { autoAlpha: 0, ...span(0, 0.08) }, codeAt + 0.02)
+        tl.to(q("[data-approve]"), { autoAlpha: 0, ...span(0, 0.08) }, codeAt + 0.02)
           .to(q("[data-code]"), { xPercent: 0, autoAlpha: 1, ease: "power3.out", ...span(0, 0.22) }, codeAt + 0.08)
           .to(q("[data-code-line]"), { clipPath: "inset(0% 0% 0% 0%)", stagger: 0.06, ...span(0, 0.06) }, codeAt + 0.3)
           .to(q("[data-code-status]"), { autoAlpha: 1, ...span(0, 0.08) }, codeAt + 0.85);
@@ -183,6 +192,7 @@ export default function ProcessBuild({
       const demoAt = at("demo");
       if (demoAt >= 0) {
         tl.to(q("[data-checks]"), { autoAlpha: 0, y: -12, ...span(0, 0.12) }, demoAt + 0.02)
+          .to(q("[data-url-dev]"), { autoAlpha: 0, ...span(0, 0.06) }, demoAt + 0.1)
           .to(q("[data-url]"), { clipPath: "inset(0% 0% 0% 0%)", ease: "steps(18)", ...span(0, 0.3) }, demoAt + 0.12)
           .to(q("[data-load]"), { scaleX: 1, ease: "power1.inOut", ...span(0, 0.12) }, demoAt + 0.38)
           .to(q("[data-load]"), { autoAlpha: 0, ...span(0, 0.05) }, demoAt + 0.5)
@@ -220,22 +230,49 @@ export default function ProcessBuild({
           <span className="relative h-px flex-1 overflow-hidden bg-[var(--color-line-2)]">
             <span data-bar className="absolute inset-0 origin-left scale-x-0 bg-[var(--orange)]" />
           </span>
-          <span data-percent className="tabular-nums">000%</span>
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col gap-6 lg:grid lg:grid-cols-12 lg:items-center lg:gap-10">
           {/* The screen being built. */}
-          <div data-frame className="relative order-1 mx-auto aspect-[4/3] max-h-full w-full min-h-0 max-w-full lg:order-2 lg:col-span-7 lg:aspect-[16/10]">
-            <div className="absolute inset-0 flex flex-col overflow-hidden rounded-card border border-black/[0.08] bg-white shadow-[0_24px_60px_-30px_rgb(0_0_0/0.35)]">
+          {/* A stage in the project's own colors (CaseTheme.stage); the screen rises out of its bottom edge. */}
+          <div
+            data-frame
+            className="relative order-1 mx-auto aspect-[4/3] max-h-full w-full min-h-0 max-w-full overflow-hidden rounded-card bg-[linear-gradient(135deg,var(--cs-stage-from),var(--cs-stage-to))] lg:order-2 lg:col-span-7 lg:aspect-[16/10]"
+          >
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0 opacity-60 mix-blend-overlay"
+              style={{ backgroundImage: "var(--grain-image)", backgroundSize: "var(--grain-size) var(--grain-size)" }}
+            />
+            {/* The screen's size, measured above it like a spec. */}
+            <span
+              data-dim
+              aria-hidden
+              className="absolute inset-x-[6%] top-[2.5%] flex items-center gap-2 font-mono text-[9px] text-[var(--color-accent-ink)] md:text-[10px]"
+            >
+              <span className="h-2 w-px bg-current" />
+              <span className="h-px flex-1 bg-current opacity-50" />
+              1440 × 900
+              <span className="h-px flex-1 bg-current opacity-50" />
+              <span className="h-2 w-px bg-current" />
+            </span>
+            <div className="absolute inset-x-[6%] bottom-0 top-[8%] flex flex-col overflow-hidden rounded-t-xl bg-white shadow-[0_30px_80px_-24px_rgb(0_0_0/0.35)] ring-1 ring-black/[0.06]">
               {/* Browser bar: the address types itself in at launch. */}
               <div className="flex shrink-0 items-center gap-3 border-b border-black/[0.06] px-3 py-2 md:px-4 md:py-2.5">
                 <span className="flex gap-1.5" aria-hidden>
-                  <span className="h-2.5 w-2.5 rounded-full bg-black/10" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-black/10" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-black/10" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]/80" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]/80" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]/80" />
                 </span>
-                <span className="relative flex h-6 min-w-0 flex-1 items-center overflow-hidden rounded-full bg-black/[0.04] px-3 font-mono text-[11px] text-[var(--black)]">
-                  <span data-url className="truncate">{demo?.url ?? ""}</span>
+                {/* While it's being built it runs locally; at launch the real address types over it. */}
+                <span className="relative mx-auto flex h-6 w-full max-w-[60%] min-w-0 items-center justify-center gap-1.5 overflow-hidden rounded-md bg-black/[0.04] px-3 font-mono text-[10px] text-[var(--black)] md:text-[11px]">
+                  <svg aria-hidden viewBox="0 0 16 16" className="h-2.5 w-2.5 shrink-0 fill-current opacity-40">
+                    <path d="M4 7V5a4 4 0 1 1 8 0v2h1v8H3V7h1Zm2 0h4V5a2 2 0 1 0-4 0v2Z" />
+                  </svg>
+                  <span className="grid min-w-0">
+                    <span data-url-dev className="col-start-1 row-start-1 truncate text-black/45">localhost:3000</span>
+                    <span data-url className="col-start-1 row-start-1 truncate">{demo?.url ?? ""}</span>
+                  </span>
                   <span data-load className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-[var(--orange)]" />
                 </span>
                 {demo && (
@@ -250,12 +287,14 @@ export default function ProcessBuild({
               </div>
 
               <div className="relative min-h-0 flex-1">
-                {/* Guides: where things will go. */}
+                {/* The grid: twelve columns and two guides, where everything will line up. */}
+                <div className="absolute inset-y-0 inset-x-[5%] grid grid-cols-12 gap-[1.6%]" aria-hidden>
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <span key={i} data-guide-y className="origin-top bg-[var(--orange)]/[0.08]" />
+                  ))}
+                </div>
                 {[22, 64].map((top) => (
                   <span key={top} data-guide-x className="absolute inset-x-0 h-px origin-left bg-[var(--orange)]/40" style={{ top: `${top}%` }} />
-                ))}
-                {[8, 50, 92].map((left) => (
-                  <span key={left} data-guide-y className="absolute inset-y-0 w-px origin-top bg-[var(--orange)]/40" style={{ left: `${left}%` }} />
                 ))}
 
                 {/* Discovery: what the brief is made of. */}
@@ -310,16 +349,13 @@ export default function ProcessBuild({
               </div>
             </div>
 
-            {/* Outside the screen's clip, so they can overlap its edges. */}
+            {/* Outside the screen's clip, so they can overlap its edges. The captures already
+                show the phone, so no phone of its own here. */}
             {proto && (
               <>
-                <div data-phone className="absolute -bottom-3 right-[4%] w-[18%] overflow-hidden rounded-[14%/7%] border-[3px] border-[var(--color-ink-1)] bg-white shadow-xl md:w-[15%]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={proto.phone.image} alt="" decoding="async" className="aspect-[9/19] w-full object-cover object-top" />
-                </div>
                 <span
                   data-approve
-                  className="absolute bottom-[22%] right-[21%] flex items-center gap-2 rounded-full bg-[var(--color-ink-1)] px-3 py-1.5 text-[11px] font-medium text-white shadow-lg md:right-[20%] md:text-xs"
+                  className="absolute bottom-[6%] right-[4%] flex items-center gap-2 rounded-full bg-[var(--color-ink-1)] px-3 py-1.5 text-[11px] font-medium text-white shadow-lg md:text-xs"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                   {proto.reviewer} · {proto.comment}
@@ -327,21 +363,19 @@ export default function ProcessBuild({
                 {/* The design's system: its colors and type, as they're chosen. */}
                 <div
                   data-style
-                  className="absolute left-[-3%] top-[10%] flex w-[38%] flex-col gap-2.5 rounded-xl bg-white p-3 shadow-2xl ring-1 ring-black/5 md:w-[30%] md:p-4"
+                  className="absolute left-[6%] top-[22%] flex flex-col gap-2 rounded-xl bg-white p-3 shadow-2xl ring-1 ring-black/5 md:gap-2.5 md:p-4"
                 >
-                  <span className={`${KICKER} text-[var(--muted)]`}>Colors</span>
                   <span className="flex flex-wrap gap-1.5">
                     {identity.palette.slice(0, 6).map((c) => (
                       <span key={c.hex} data-swatch title={c.name} className="h-5 w-5 rounded-full ring-1 ring-black/10 md:h-6 md:w-6" style={{ background: c.hex }} />
                     ))}
                   </span>
-                  <span className={`${KICKER} text-[var(--muted)]`}>Type</span>
-                  {identity.fonts.slice(0, 2).map((f) => (
-                    <span key={`${f.family}-${f.role}`} className="flex items-baseline justify-between gap-2">
-                      <span className="text-lg font-semibold leading-none text-[var(--black)] md:text-2xl">Aa</span>
-                      <span className="truncate text-[10px] text-[var(--muted)] md:text-xs">{f.family} · {f.role}</span>
+                  {identity.fonts[0] && (
+                    <span className="flex items-baseline gap-2">
+                      <span className="text-xl font-semibold leading-none text-[var(--black)] md:text-3xl">Aa</span>
+                      <span className="text-[10px] text-[var(--muted)] md:text-xs">{identity.fonts[0].family}</span>
                     </span>
-                  ))}
+                  )}
                 </div>
               </>
             )}
@@ -349,13 +383,21 @@ export default function ProcessBuild({
             {code && (
               <div
                 data-code
-                className="absolute bottom-[6%] left-[-2%] w-[64%] overflow-hidden rounded-xl bg-[#0f1117] font-mono text-[9px] leading-relaxed text-white/85 shadow-2xl md:text-[11px]"
+                className="absolute bottom-[7%] left-[4%] w-[62%] overflow-hidden rounded-xl bg-[#0f1117] font-mono text-[9px] leading-relaxed text-[#c9d1d9] shadow-[0_30px_60px_-20px_rgb(0_0_0/0.6)] ring-1 ring-white/10 md:text-[11px]"
               >
-                <div className="border-b border-white/10 px-3 py-1.5 text-white/50">{code.file}</div>
-                <div className="flex flex-col px-3 py-2">
+                <div className="flex items-center gap-3 border-b border-white/10 px-3 py-2">
+                  <span className="flex gap-1" aria-hidden>
+                    <span className="h-2 w-2 rounded-full bg-white/15" />
+                    <span className="h-2 w-2 rounded-full bg-white/15" />
+                    <span className="h-2 w-2 rounded-full bg-white/15" />
+                  </span>
+                  <span className="truncate rounded bg-white/[0.06] px-2 py-0.5 text-white/60">{code.file.split("/").pop()}</span>
+                </div>
+                <div className="flex flex-col px-3 py-2.5">
                   {code.lines.map((line, i) => (
-                    <span key={i} data-code-line className="block whitespace-pre">
-                      {line || " "}
+                    <span key={i} data-code-line className="flex gap-3 whitespace-pre">
+                      <span className="w-3 shrink-0 text-right text-white/20">{i + 1}</span>
+                      <span>{highlight(line)}</span>
                     </span>
                   ))}
                   <span aria-hidden className="mt-0.5 h-3 w-1.5 animate-pulse bg-white/70" />
@@ -369,7 +411,7 @@ export default function ProcessBuild({
             {checks && (
               <div
                 data-checks
-                className="absolute right-[3%] top-[14%] w-[44%] rounded-xl bg-white/95 p-3 text-[10px] shadow-xl ring-1 ring-black/5 md:w-[34%] md:p-4 md:text-xs"
+                className="absolute right-[3%] top-[16%] w-[46%] rounded-xl bg-white p-3 text-[10px] shadow-[0_24px_50px_-20px_rgb(0_0_0/0.35)] ring-1 ring-black/[0.06] md:w-[36%] md:p-4 md:text-xs"
               >
                 <p className={`${KICKER} mb-2 text-[var(--muted)]`}>{checks.label}</p>
                 <ul className="grid grid-cols-2 gap-x-3 gap-y-1.5">
@@ -387,7 +429,7 @@ export default function ProcessBuild({
             {demo && (
               <div
                 data-result
-                className="absolute bottom-[5%] left-[4%] w-[66%] rounded-xl bg-white p-3 shadow-2xl ring-1 ring-black/5 md:w-[52%] md:p-4"
+                className="absolute bottom-[6%] left-[4%] w-[68%] rounded-xl bg-white p-3 shadow-[0_30px_60px_-20px_rgb(0_0_0/0.4)] ring-1 ring-black/[0.06] md:w-[54%] md:p-4"
               >
                 <p className="truncate text-[10px] text-[var(--muted)] md:text-xs">
                   <span className="font-mono">{demo.query}</span>
@@ -399,11 +441,33 @@ export default function ProcessBuild({
             )}
           </div>
 
+          {/* Left: how much is built, where in the process, and the step itself. */}
+          <div className="order-2 flex shrink-0 flex-col gap-8 lg:order-1 lg:col-span-5 lg:gap-10">
+            <div className="hidden items-end justify-between gap-6 lg:flex">
+              <p className="font-semibold leading-[0.8] tracking-title text-[var(--black)]/[0.12] tabular-nums text-[clamp(64px,7vw,112px)]">
+                <span data-percent>000</span>
+                <span className="text-[0.4em]">%</span>
+              </p>
+              <ol className={`${KICKER} flex flex-col gap-1.5 pb-1`}>
+                {steps.map((step, i) => (
+                  <li
+                    key={step.phase}
+                    data-phase
+                    data-on={i === 0}
+                    className="group/p flex items-center gap-2 text-[var(--muted)]/60 transition-colors duration-300 data-[on=true]:text-[var(--black)]"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--orange)] opacity-0 transition-opacity duration-300 group-data-[on=true]/p:opacity-100" />
+                    {two(i + 1)} {step.phase}
+                  </li>
+                ))}
+              </ol>
+            </div>
           {/* The step's text, all in one place; the scroll swaps them. */}
-          <div className="order-2 grid shrink-0 lg:order-1 lg:col-span-5">
+          <div className="grid">
             {steps.map((step, i) => (
               <div key={step.phase} data-text className="col-start-1 row-start-1 flex flex-col gap-2 md:gap-3">
-                <span className={`${KICKER} text-[var(--color-accent-ink)]`}>
+                {/* The index names the phase on wide screens. */}
+                <span className={`${KICKER} text-[var(--color-accent-ink)] lg:hidden`}>
                   {two(i + 1)} · {step.phase}
                 </span>
                 {/* Sized here, not by text-4xl (a fluid 48–72px that carries no line height). */}
@@ -411,25 +475,9 @@ export default function ProcessBuild({
                   {step.title}
                 </h3>
                 <p className="text-pretty text-sm leading-relaxed text-[var(--muted)] md:text-base">{step.text}</p>
-                {detailOf(step) && (
-                  // Facts of the step; there's no room for them under a phone's screen.
-                  <div className="hidden flex-col gap-2 md:flex">
-                    <span className={`${KICKER} text-[var(--muted)]`}>{detailOf(step)!.label}</span>
-                    <span className="flex flex-wrap gap-1.5">
-                      {detailOf(step)!.items.map((item) => (
-                        <span key={item} className="rounded-full border border-black/10 px-2.5 py-1 text-xs text-[var(--black)]">
-                          {item}
-                        </span>
-                      ))}
-                    </span>
-                  </div>
-                )}
-                <p className="mt-1 flex flex-col gap-0.5 rounded-control bg-white/70 px-4 py-3">
-                  <span className="text-xs text-[var(--muted)]">The client gets</span>
-                  <span className="text-sm font-semibold text-[var(--black)]">{step.client}</span>
-                </p>
               </div>
             ))}
+          </div>
           </div>
         </div>
       </div>
