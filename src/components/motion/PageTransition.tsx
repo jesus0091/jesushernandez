@@ -15,7 +15,7 @@ import { transition as es } from "../../../messages/es.json";
 const FAILSAFE_MS = 5000;
 // The destination's name stays up at least this long, so it can be read
 // even when the page is ready at once.
-const MIN_LABEL_MS = 400;
+const MIN_LABEL_MS = 250;
 // Same alphabet as the skills tags' decode.
 const CHARS = "abcdefghijklmnopqrstuvwxyz<>/{}#_";
 
@@ -54,7 +54,7 @@ export default function PageTransition() {
     getLenis()?.start();
     const gsap = setupGsap();
     gsap.to(labelRef.current, { autoAlpha: 0, y: -8, duration: 0.2, ease: "power2.in" });
-    await playEased(brushOut(wrap), 0.65, "sine.inOut");
+    await playEased(brushOut(wrap), 0.55, "sine.inOut");
     wrap.style.visibility = "hidden";
     covering.current = false;
   };
@@ -78,8 +78,11 @@ export default function PageTransition() {
       e.preventDefault();
       covering.current = true;
       getLenis()?.stop();
+      const href = url.pathname + url.search + url.hash;
+      // The page loads while the brush covers the screen, not after.
+      router.prefetch(href);
       wrap.style.visibility = "visible";
-      await playEased(brushIn(wrap), 0.55, "power2.inOut");
+      await playEased(brushIn(wrap), 0.45, "power2.inOut");
       // On the black: where you're going, decoding like the skills tags.
       const label = labelRef.current;
       if (label) {
@@ -91,10 +94,10 @@ export default function PageTransition() {
         gsap.fromTo(
           label,
           { scrambleText: { text: name.replace(/\S/g, "_"), chars: CHARS } },
-          { scrambleText: { text: name, chars: CHARS, speed: 0.8 }, duration: 0.35, ease: "none" }
+          { scrambleText: { text: name, chars: CHARS, speed: 0.8 }, duration: 0.25, ease: "none" }
         );
       }
-      router.push(url.pathname + url.search + url.hash, { scroll: false });
+      router.push(href, { scroll: false });
       failsafe.current = window.setTimeout(reveal, FAILSAFE_MS);
     };
     document.addEventListener("click", onClick, true);
