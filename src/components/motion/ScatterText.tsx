@@ -18,21 +18,45 @@ type ScatterTextProps = {
    * trigger; the parent drives it with `.progress()`. Updated on re-split.
    */
   tweenRef?: React.RefObject<gsap.core.Animation | null>;
+  /** Where the parent's timeline has the animation, for when it's built mid-ride. */
+  progressRef?: React.RefObject<number>;
 };
 
 /**
  * Text whose letters start scattered (offset, rotated, scaled, blurred,
  * invisible) and fade in one by one as they reassemble (scrubbed).
  */
-export default function ScatterText({ children, className = "", style, scrollTrigger, tweenRef }: ScatterTextProps) {
+export default function ScatterText({ children, className = "", style, scrollTrigger, tweenRef, progressRef }: ScatterTextProps) {
   const rootRef = useRef<HTMLSpanElement | null>(null);
   // Read once on mount; the split and its trigger are built a single time.
   const scrollTriggerRef = useRef(scrollTrigger);
   const externalRef = useRef(tweenRef);
+  const externalProgress = useRef(progressRef);
 
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root || prefersReducedMotion()) return;
+
+    // Setting up every letter reads its styles one by one (about a thousand
+    // reads for a sentence), so it's built a screen before it's reached
+    // instead of on load.
+    let revert: (() => void) | undefined;
+    const near = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        near.disconnect();
+        revert = scatter(root);
+      },
+      { rootMargin: "100% 0px" },
+    );
+    near.observe(root);
+    return () => {
+      near.disconnect();
+      revert?.();
+    };
+  }, []);
+
+  function scatter(root: HTMLElement) {
     const gsap = setupGsap();
 
     const split = SplitText.create(root, {
@@ -52,7 +76,7 @@ export default function ScatterText({ children, className = "", style, scrollTri
         const blur = !isTouchScreen();
 
         const driven = externalRef.current;
-        const prevProgress = driven?.current?.progress() ?? 0;
+        const prevProgress = driven?.current?.progress() ?? externalProgress.current?.current ?? 0;
         const tl = gsap.timeline(
           driven
             ? { paused: true }
@@ -89,7 +113,7 @@ export default function ScatterText({ children, className = "", style, scrollTri
     });
 
     return () => split.revert();
-  }, []);
+  }
 
   return (
     <>

@@ -42,6 +42,7 @@ export default function WSMAQuote() {
   const tunnelRef = useRef<SVGSVGElement | null>(null);
   // The phrase's scatter animation, driven by this section's pinned timeline.
   const scatterRef = useRef<gsap.core.Animation | null>(null);
+  const scatterProgress = useRef(0);
 
   useLayoutEffect(() => {
     const pinEl = pinRef.current;
@@ -115,7 +116,14 @@ export default function WSMAQuote() {
         .fromTo(
           scatter,
           { p: 0 },
-          { p: 1, duration: HANDOFF.scatter, onUpdate: () => void scatterRef.current?.progress(scatter.p) },
+          {
+            p: 1,
+            duration: HANDOFF.scatter,
+            onUpdate: () => {
+              scatterProgress.current = scatter.p;
+              scatterRef.current?.progress(scatter.p);
+            },
+          },
           HANDOFF_COVERED
         )
         .fromTo(
@@ -284,6 +292,7 @@ export default function WSMAQuote() {
               className="text-[var(--color-bg)]"
               style={{ fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.0125em" }}
               tweenRef={scatterRef}
+              progressRef={scatterProgress}
             >
               {t("line")}<span className={t("accentOnNewLine") === "true" ? "block text-[var(--color-accent)]" : "max-md:block text-[var(--color-accent)]"}>{t("accent")}</span>
             </ScatterText>
