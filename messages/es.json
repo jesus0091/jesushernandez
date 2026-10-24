@@ -1,23 +1,23 @@
 {
   "meta": {
-    "siteTitle": "Jesús Hernández | Product Engineer y diseñador UX/UI en Buenos Aires",
+    "siteTitle": "Jesús Hernández | Diseñador y desarrollador web front-end",
     "titleTemplate": "%s | Jesús Hernández",
-    "description": "Product Engineer & Designer en Buenos Aires, Argentina. Diseño y construyo productos digitales de punta a punta, desde el primer boceto hasta producción.",
+    "description": "Product Engineer y diseñador de producto en Buenos Aires. Diseño web, UX/UI y desarrollo front-end con React y Next.js, del primer boceto a producción.",
     "works": {
-      "title": "Proyectos",
-      "description": "Trabajos seleccionados de Jesús Hernández: sitios y productos diseñados y construidos de punta a punta, desde la investigación hasta el lanzamiento."
+      "title": "Proyectos de diseño y desarrollo web",
+      "description": "Proyectos de diseño web y desarrollo front-end de Jesús Hernández: sitios y productos diseñados en Figma y construidos con Next.js, de la investigación al lanzamiento."
     },
     "lab": {
       "title": "Lab",
       "description": "Un taller abierto: experimentos con IA, animación y todo lo demás que estoy probando."
     },
     "blog": {
-      "title": "Blog",
-      "description": "Textos de Jesús Hernández sobre producto, diseño e ingeniería."
+      "title": "Blog: front-end, diseño de producto e IA",
+      "description": "Notas sobre desarrollo front-end, diseño de producto e IA en producción, por Jesús Hernández, Product Engineer en Buenos Aires."
     },
     "about": {
-      "title": "Sobre mí",
-      "description": "Jesús Hernández es Product Engineer & Designer en Buenos Aires, Argentina, con más de 5 años diseñando y construyendo productos web y móviles de punta a punta, incluidas funciones con IA."
+      "title": "Sobre mí: diseñador y desarrollador web",
+      "description": "Jesús Hernández es Product Engineer, diseñador de producto y desarrollador front-end en Buenos Aires, con más de 5 años diseñando y construyendo productos web y móviles."
     },
     "services": {
       "title": "Diseñador y desarrollador web freelance",
@@ -25,7 +25,7 @@
     }
   },
   "og": {
-    "alt": "Jesús Hernández | Product Engineer & Designer",
+    "alt": "Jesús Hernández | Diseñador y desarrollador web front-end",
     "portfolio": "PORTFOLIO",
     "location": "En Argentina"
   },
@@ -75,7 +75,7 @@
   },
   "home": {
     "greeting": "Me llamo Jesús Hernández 👋",
-    "srTitle": "Jesús Hernández — Product Engineer & Designer, Buenos Aires",
+    "srTitle": "Jesús Hernández — Product Engineer, diseñador de producto y desarrollador web front-end en Buenos Aires",
     "location": "En Argentina",
     "linkedin": "Perfil de LinkedIn",
     "github": "Perfil de GitHub",
@@ -206,7 +206,7 @@
   "aboutPage": {
     "label": "Sobre mí",
     "title": "Jesús Hernández",
-    "role": "Product Engineer & Designer, Buenos Aires",
+    "role": "Product Engineer, diseñador de producto y desarrollador front-end en Buenos Aires",
     "lead": "Diseño y construyo productos digitales de punta a punta, desde el primer boceto hasta producción. Hace más de 5 años trabajo como una sola persona entre producto, UX/UI y código, para que el producto que sale sea el que se diseñó.",
     "factsTitle": "En resumen",
     "facts": [
@@ -338,6 +338,7 @@
   "blog": {
     "label": "Blog",
     "title": "Notas desde producción",
+    "titleTopic": ": desarrollo front-end, diseño de producto e IA",
     "lead": "Qué funciona, qué se rompe y cuánto cuesta llevar un producto del diseño a producción. Escrito desde proyectos reales, no desde tutoriales.",
     "empty": "Los primeros posts están en camino.",
     "minutes": "{minutes} min de lectura",

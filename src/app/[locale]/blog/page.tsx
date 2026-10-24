@@ -40,6 +40,7 @@ export default async function BlogPage({ params }: Props) {
           <SectionLabel animate="none">{t("label")}</SectionLabel>
           <h1 className="font-semibold tracking-title text-[var(--black)] text-[clamp(40px,6.5vw,96px)] leading-[1.02] text-balance">
             {t("title")}
+            <span className="sr-only">{t("titleTopic")}</span>
           </h1>
           <p className="max-w-2xl text-base md:text-lg text-[var(--muted)]">{t("lead")}</p>
         </header>

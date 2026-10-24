@@ -1,23 +1,23 @@
 {
   "meta": {
-    "siteTitle": "Jesús Hernández | Product Engineer & Designer",
+    "siteTitle": "Jesús Hernández | Product Designer & Front-End Developer",
     "titleTemplate": "%s | Jesús Hernández",
-    "description": "Product Engineer & Designer based in Buenos Aires, Argentina. I design and build digital products end to end, from the first sketch to production.",
+    "description": "Product Engineer and Product Designer in Buenos Aires. Web design, UX/UI and front-end development with React and Next.js, from first sketch to production.",
     "works": {
-      "title": "Works",
-      "description": "Selected work by Jesús Hernández: websites and products designed and built end to end, from research to launch."
+      "title": "Web Design & Development Projects",
+      "description": "Web design and front-end development projects by Jesús Hernández: sites and products designed in Figma and built with Next.js, from research to launch."
     },
     "lab": {
       "title": "Lab",
       "description": "An open workshop: experiments with AI, animation and whatever else I'm trying out."
     },
     "blog": {
-      "title": "Blog",
-      "description": "Writing by Jesús Hernández on product, design and engineering."
+      "title": "Blog: Front-End, Product Design & AI",
+      "description": "Notes on front-end development, product design and AI in production, by Jesús Hernández, Product Engineer in Buenos Aires."
     },
     "about": {
-      "title": "About",
-      "description": "Jesús Hernández is a Product Engineer & Designer in Buenos Aires, Argentina, with 5+ years designing and building web and mobile products end to end, including AI features."
+      "title": "About: Product Engineer & Front-End Developer",
+      "description": "Jesús Hernández is a Product Engineer, product designer and front-end developer in Buenos Aires with 5+ years designing and building web and mobile products end to end."
     },
     "services": {
       "title": "Freelance Product Designer & Web Developer",
@@ -25,7 +25,7 @@
     }
   },
   "og": {
-    "alt": "Jesús Hernández | Product Engineer & Designer",
+    "alt": "Jesús Hernández | Product Designer & Front-End Developer",
     "portfolio": "PORTFOLIO",
     "location": "Based in Argentina"
   },
@@ -75,7 +75,7 @@
   },
   "home": {
     "greeting": "My name is Jesús Hernández 👋",
-    "srTitle": "Jesús Hernández — Product Engineer & Designer, Buenos Aires",
+    "srTitle": "Jesús Hernández — Product Engineer, Product Designer and Front-End Web Developer in Buenos Aires",
     "location": "Based in Argentina",
     "linkedin": "LinkedIn profile",
     "github": "GitHub profile",
@@ -206,7 +206,7 @@
   "aboutPage": {
     "label": "About",
     "title": "Jesús Hernández",
-    "role": "Product Engineer & Designer, Buenos Aires",
+    "role": "Product Engineer, Product Designer & Front-End Developer, Buenos Aires",
     "lead": "I design and build digital products end to end, from the first sketch to production. For more than 5 years I've worked as one person across product, UX/UI and code, so the product that ships is the one that was designed.",
     "factsTitle": "Quick facts",
     "facts": [
@@ -338,6 +338,7 @@
   "blog": {
     "label": "Blog",
     "title": "Notes from production",
+    "titleTopic": ": front-end development, product design and AI",
     "lead": "What works, what breaks and what it costs when you take a product from design to production. Written from real projects, not tutorials.",
     "empty": "The first posts are on their way.",
     "minutes": "{minutes} min read",

@@ -97,7 +97,8 @@ export default async function LocaleLayout({
     "@id": PERSON_ID,
     name: "Jesús Hernández",
     url: `${SITE}/`,
-    jobTitle: "Product Engineer & Designer",
+    // Every role he's searched for under, not just the headline one.
+    jobTitle: ["Product Engineer", "Product Designer", "Front-End Developer", "Web Developer", "Web Designer"],
     description: t("description"),
     image: `${SITE}/images/about_me.webp`,
     address: {
@@ -109,6 +110,9 @@ export default async function LocaleLayout({
     knowsAbout: [
       "Product Engineering",
       "Product Design",
+      "Web Design",
+      "Web Development",
+      "Front-End Development",
       "UX/UI Design",
       "Design Systems",
       "Web Animation",

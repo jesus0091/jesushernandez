@@ -66,10 +66,14 @@ export default async function AboutPage({ params }: Props) {
         <header className="grid gap-10 md:grid-cols-[1.3fr_1fr] md:items-end md:gap-16">
           <div className="flex flex-col gap-4">
             <SectionLabel animate="none">{t("label")}</SectionLabel>
-            <h1 className="font-semibold tracking-title text-[var(--black)] text-[clamp(44px,8vw,112px)] leading-[1.02]">
-              {t("title")}
+            {/* The role is part of the title (it says what the page is about), set on its own line. */}
+            <h1 className="flex flex-col gap-4 text-[var(--black)]">
+              <span className="font-semibold tracking-title text-[clamp(44px,8vw,112px)] leading-[1.02]">
+                {t("title")}
+              </span>
+              <span className="sr-only">, </span>
+              <span className="text-xl md:text-2xl font-medium">{t("role")}</span>
             </h1>
-            <p className="text-xl md:text-2xl font-medium text-[var(--black)]">{t("role")}</p>
             <p className="max-w-xl text-base md:text-lg text-[var(--muted)]">{t("lead")}</p>
           </div>
           <div className="relative aspect-[16/10] w-full overflow-hidden rounded-card md:aspect-[4/5] md:max-w-md md:justify-self-end">

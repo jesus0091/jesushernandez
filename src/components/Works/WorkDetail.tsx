@@ -81,7 +81,8 @@ export default function WorkDetail({ work }: { work: Work }) {
               >
                 {(work.titleLines ?? [work.title]).map((line, i) => (
                   <Fragment key={line}>
-                    {i > 0 && <br />}
+                    {/* The space keeps the lines apart as text (search snippets, screen readers). */}
+                    {i > 0 && <>{" "}<br /></>}
                     {line}
                   </Fragment>
                 ))}

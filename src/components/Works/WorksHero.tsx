@@ -28,6 +28,7 @@ export default function WorksHero() {
           className="font-semibold tracking-title text-[var(--color-bg)] text-[clamp(44px,8vw,128px)] leading-[1.02]"
         >
           Selected Projects
+          <span className="sr-only"> in web design, product design and front-end development</span>
         </SectionHeading>
         <p className="max-w-md text-sm md:text-lg font-medium text-[var(--color-bg)]/60">
           Real projects where design meets code, craft meets delivery.
