@@ -20,8 +20,8 @@
       "description": "Jesús Hernández es Product Engineer & Designer en Buenos Aires, Argentina, con más de 5 años diseñando y construyendo productos web y móviles de punta a punta, incluidas funciones con IA."
     },
     "services": {
-      "title": "Servicios",
-      "description": "Diseño y desarrollo de productos digitales de la idea a producción: MVPs, UX/UI y design systems, apps con Next.js y React Native, funciones con IA y apps hechas con IA llevadas a producción."
+      "title": "Diseñador y desarrollador web freelance",
+      "description": "Diseñador y desarrollador web freelance en Buenos Aires: diseño UX/UI, desarrollo web con Next.js y MVPs, de la idea a producción."
     }
   },
   "og": {
@@ -262,7 +262,7 @@
   },
   "services": {
     "label": "Servicios",
-    "title": "Productos digitales, de la idea a producción",
+    "title": "Diseñador y desarrollador web, de la idea a producción",
     "lead": "Una sola persona para producto, diseño y código. Trabajo con fundadores y equipos que necesitan diseñar y construir un producto de punta a punta, o llevar uno existente más lejos.",
     "listTitle": "Qué puedo hacer por ti",
     "list": [
@@ -271,7 +271,7 @@
         "body": "De la idea a un producto en producción: alcance, flujos, interfaz, desarrollo y lanzamiento."
       },
       {
-        "title": "Diseño de producto y UX/UI",
+        "title": "Diseño web, de producto y UX/UI",
         "body": "Investigación, flujos de usuario, interfaces y design systems en Figma, listos para construir."
       },
       {

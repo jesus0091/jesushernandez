@@ -20,8 +20,8 @@
       "description": "Jesús Hernández is a Product Engineer & Designer in Buenos Aires, Argentina, with 5+ years designing and building web and mobile products end to end, including AI features."
     },
     "services": {
-      "title": "Services",
-      "description": "Product design and development from idea to production: MVPs, UX/UI and design systems, Next.js and React Native apps, AI features, and taking AI-built apps to production."
+      "title": "Freelance Product Designer & Web Developer",
+      "description": "Freelance product designer and web developer in Buenos Aires: UX/UI design, Next.js web development and MVPs, from idea to production."
     }
   },
   "og": {
@@ -262,7 +262,7 @@
   },
   "services": {
     "label": "Services",
-    "title": "Digital products, from idea to production",
+    "title": "Product designer & web developer, from idea to production",
     "lead": "One person for product, design and code. I work with founders and teams who need a product designed and built end to end, or an existing one taken further.",
     "listTitle": "What I can do for you",
     "list": [
@@ -271,7 +271,7 @@
         "body": "From the idea to a product in production: scope, flows, interface, development and launch."
       },
       {
-        "title": "Product & UX/UI design",
+        "title": "Web, product & UX/UI design",
         "body": "Research, user flows, interfaces and design systems in Figma, ready to build."
       },
       {

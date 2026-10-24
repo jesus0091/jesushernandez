@@ -31,7 +31,7 @@ const latest = (dates: string[], fallback: string) => dates.sort().at(-1) ?? fal
 export const PAGES: Record<string, Page> = {
   "/": { paths: BOTH("/"), index: true, updated: "2026-10-20" },
   "/about": { paths: { en: "/about", es: esPath("/about") }, index: true, updated: "2026-10-20" },
-  "/services": { paths: { en: "/services", es: esPath("/services") }, index: true, updated: "2026-10-20" },
+  "/services": { paths: { en: "/services", es: esPath("/services") }, index: true, updated: "2026-10-24" },
   "/works": { paths: { en: "/works" }, index: true, updated: "2026-10-16" },
   // Indexed once it lists its first published post.
   "/blog": {

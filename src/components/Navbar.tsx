@@ -12,12 +12,14 @@ import { useLocale, useTranslations } from "next-intl";
 import { contactHref } from "@/lib/contact";
 import type { Locale } from "@/i18n/routing";
 import LocaleSwitch from "@/components/LocaleSwitch";
+import { pathInLocale } from "@/i18n/slugs";
 import gsap from "gsap";
 
 // Lab is hidden until it has its first entries (the page still exists, out of
 // the index); bring it back by moving it into the list.
 const links = [
   { href: "/works", key: "works", sectionId: undefined },
+  { href: "/services", key: "services", sectionId: undefined },
   { href: "/blog", key: "blog", sectionId: undefined },
 ] as const;
 // const hidden = [{ href: "/lab", key: "lab", sectionId: undefined }];
@@ -73,6 +75,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const t = useTranslations("nav");
   const locale = useLocale() as Locale;
+  // Spanish pages have Spanish URLs (/servicios), so the links skip the redirect.
+  const navLinks = links.map((link) => ({ ...link, href: pathInLocale(link.href, "en", locale) }));
 
   // A link to the page you're already on does nothing in Next: take it to
   // the top instead.
@@ -251,7 +255,7 @@ export default function Navbar() {
             </span>
 
             <ul className="flex items-center gap-1">
-              {links.map((link) => {
+              {navLinks.map((link) => {
                 const selected = activeSection === link.sectionId;
                 return (
                   <li key={link.href}>
@@ -416,7 +420,7 @@ export default function Navbar() {
       >
         <nav>
           <ul className="flex flex-col gap-1 mb-12">
-            {links.map((link, i) => (
+            {navLinks.map((link, i) => (
               <li key={link.href} className="menu-item overflow-hidden">
                 <Link
                   href={link.href}
