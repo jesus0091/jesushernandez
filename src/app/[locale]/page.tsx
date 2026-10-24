@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
@@ -33,10 +34,20 @@ export default async function LandingPage({
       <Navbar />
       <main id="main-content">
         <HomePage />
-        <AboutText />
-        <Skills />
-        <WSMAQuote />
-        <LatestsProjects />
+        {/* Each boundary hydrates on its own, so the sections below the hero
+            don't add to one long task on load. */}
+        <Suspense>
+          <AboutText />
+        </Suspense>
+        <Suspense>
+          <Skills />
+        </Suspense>
+        <Suspense>
+          <WSMAQuote />
+        </Suspense>
+        <Suspense>
+          <LatestsProjects />
+        </Suspense>
       </main>
       <Footer />
     </>

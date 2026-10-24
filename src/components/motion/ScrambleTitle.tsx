@@ -50,14 +50,12 @@ function scramble(el: HTMLElement, from: string, to: string, duration: number) {
 
 export default function ScrambleTitle({ lead, words, hold = 2.8, className = "" }: ScrambleTitleProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const leadRef = useRef<HTMLSpanElement | null>(null);
   const wordRef = useRef<HTMLSpanElement | null>(null);
 
   useLayoutEffect(() => {
     const root = rootRef.current;
-    const leadEl = leadRef.current;
     const wordEl = wordRef.current;
-    if (!root || !leadEl || !wordEl || prefersReducedMotion()) return;
+    if (!root || !wordEl || prefersReducedMotion()) return;
     setupGsap();
 
     let i = 0;
@@ -77,16 +75,11 @@ export default function ScrambleTitle({ lead, words, hold = 2.8, className = "" 
 
     const ctx = gsap.context(() => {}, root);
 
-    // The decode waits for the intro to reveal the page, so it isn't spent
-    // behind it. Until then the title sits there whole, under the intro: the
-    // page's main text is painted (and counted) as soon as it loads.
+    // The title is whole from the first paint (the intro's brush reveals it in
+    // place); the words only start taking turns once the page is revealed.
     const stopWaiting = onIntroReveal(() =>
       ctx.add(() => {
-        leadEl.textContent = "";
-        wordEl.textContent = "";
-        scramble(leadEl, "", lead, 0.9).delay(0.1);
-        scramble(wordEl, "", words[0], 1).delay(0.3);
-        wait = gsap.delayedCall(1.3 + hold, next);
+        wait = gsap.delayedCall(hold, next);
       })
     );
 
@@ -96,10 +89,9 @@ export default function ScrambleTitle({ lead, words, hold = 2.8, className = "" 
       wait?.kill();
       swap?.kill();
       ctx.revert();
-      leadEl.textContent = lead;
       wordEl.textContent = words[0];
     };
-  }, [lead, words, hold]);
+  }, [words, hold]);
 
   return (
     // -ml: the bold P's side bearing pushes its stem right of the text above;
@@ -109,7 +101,7 @@ export default function ScrambleTitle({ lead, words, hold = 2.8, className = "" 
       aria-hidden
       className={`-ml-[0.04em] flex items-baseline whitespace-nowrap leading-[1.05] tracking-[-0.02em] ${TITLE_SIZE} ${className}`}
     >
-      <span ref={leadRef} className="font-black tracking-[-0.035em]">
+      <span className="font-black tracking-[-0.035em]">
         {lead}
       </span>
       <span ref={wordRef} className="ml-[0.22em] font-light">

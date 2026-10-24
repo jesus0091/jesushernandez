@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
   experimental: {
     // Unmatched URLs render src/app/global-not-found.tsx with the right <html lang>.
     globalNotFound: true,
+    // The CSS is small (~18 KiB): inlined in the HTML it no longer blocks the first paint.
+    inlineCss: true,
   },
   images: {
     formats: ["image/avif", "image/webp"],
