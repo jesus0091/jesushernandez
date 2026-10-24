@@ -29,7 +29,6 @@ import {
   Play as PPlay,
   Question as PQuestion,
   RocketLaunch as PRocketLaunch,
-  Sparkle as PSparkle,
   SpeakerHigh as PSpeakerHigh,
   SpeakerSlash as PSpeakerSlash,
   TreeStructure as PTreeStructure,
@@ -72,7 +71,6 @@ export const Palette = duotone(PPalette);
 export const PenNib = duotone(PPenNib);
 export const Question = duotone(PQuestion);
 export const RocketLaunch = duotone(PRocketLaunch);
-export const Sparkle = duotone(PSparkle);
 export const SpeakerHigh = duotone(PSpeakerHigh);
 export const SpeakerSlash = duotone(PSpeakerSlash);
 export const TreeStructure = duotone(PTreeStructure);

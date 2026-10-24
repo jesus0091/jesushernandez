@@ -152,7 +152,7 @@ export type SoundName = keyof typeof SOUNDS;
 const MASTER_VOLUME = 0.6;
 
 // Loudness-matched to the reference sounds at their playback volume.
-export const VOLUME: Record<SoundName, number> = {
+const VOLUME: Record<SoundName, number> = {
   ctaHover: 0.033,
   navHover: 0.019,
   buttonClick: 0.028,
