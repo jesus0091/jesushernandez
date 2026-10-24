@@ -11,6 +11,7 @@ export const LOCALIZED_SLUGS: { en: string; es: string }[] = [
   // Spanish URL. src/lib/blog.test.ts checks this list against content/blog.
   { en: "/blog/is-vibe-coding-bad", es: "/blog/vibe-coding-en-produccion" },
   { en: "/blog/gsap-scrolltrigger-nextjs-app-router", es: "/blog/gsap-scrolltrigger-nextjs" },
+  { en: "/blog/how-much-does-a-website-cost", es: "/blog/cuanto-cuesta-una-pagina-web-en-argentina" },
 ];
 
 /** Spanish path for an English one (unchanged when it isn't translated). */
