@@ -12,7 +12,7 @@ export const TUNNEL_STOPS =
 // The still card's light (the ride draws its own, in ShaderTunnel).
 const BACKGROUND = `radial-gradient(circle at 50% 50%, ${TUNNEL_STOPS})`;
 // Where that light rests on the card, as a share of its width and height: low and to the right.
-const GLOW_REST = { x: 0.88, y: 1.05 };
+const GLOW_REST = { x: 0.82, y: 0.78 };
 
 /**
  * CTA card that, once centered, grows to fill the screen and then flies the
@@ -83,15 +83,18 @@ export default function CtaTunnel({
               never shows a seam; it rests in the lower right corner. */}
           <div
             aria-hidden
-            className="absolute aspect-square w-[max(70%,460px)] -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-80"
+            className="absolute aspect-square w-[max(85%,560px)] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
             style={{ left: `${GLOW_REST.x * 100}%`, top: `${GLOW_REST.y * 100}%` }}
           >
             {/* Own element for the pointer offset: GSAP would overwrite the centering. */}
-            <div
-              ref={cardGlowRef}
-              className="h-full w-full will-change-transform"
-              style={{ background: BACKGROUND.replace("circle at", "circle closest-side at") }}
-            />
+            <div ref={cardGlowRef} className="relative h-full w-full will-change-transform">
+              <div className="absolute inset-0" style={{ background: BACKGROUND.replace("circle at", "circle closest-side at") }} />
+              {/* The flare: a hot core with a soft bloom, so the light reads as a source, not a stain. */}
+              <div
+                className="absolute left-1/2 top-1/2 size-[18%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl"
+                style={{ background: "radial-gradient(circle, rgba(255,214,170,0.95), rgba(255,122,26,0.6) 45%, transparent 70%)" }}
+              />
+            </div>
           </div>
           <div
             aria-hidden

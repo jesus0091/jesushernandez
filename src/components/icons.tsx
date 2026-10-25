@@ -25,7 +25,16 @@ import {
   MagnifyingGlass as PMagnifyingGlass,
   Palette as PPalette,
   PenNib as PPenNib,
+  Check as PCheck,
+  Database as PDatabase,
+  CreditCard as PCreditCard,
+  Sparkle as PSparkle,
+  DeviceMobile as PDeviceMobile,
+  ArrowsClockwise as PArrowsClockwise,
+  Bell as PBell,
+  Storefront as PStorefront,
   Pause as PPause,
+  Plus as PPlus,
   Play as PPlay,
   Question as PQuestion,
   RocketLaunch as PRocketLaunch,
@@ -61,6 +70,15 @@ export const Envelope = duotone(PEnvelope);
 export const FlowArrow = duotone(PFlowArrow);
 export const Pause = duotone(PPause);
 export const Play = duotone(PPlay);
+export const Plus = duotone(PPlus);
+export const Check = duotone(PCheck);
+export const Database = duotone(PDatabase);
+export const CreditCard = duotone(PCreditCard);
+export const Sparkle = duotone(PSparkle);
+export const DeviceMobile = duotone(PDeviceMobile);
+export const ArrowsClockwise = duotone(PArrowsClockwise);
+export const Bell = duotone(PBell);
+export const Storefront = duotone(PStorefront);
 export const Gauge = duotone(PGauge);
 export const GithubLogo = duotone(PGithubLogo);
 export const House = duotone(PHouse);

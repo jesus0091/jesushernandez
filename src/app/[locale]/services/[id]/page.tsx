@@ -2,16 +2,39 @@ import { ButtonInner, buttonClass } from "@/components/PillButton";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowLeft } from "@/components/icons";
+import type { ComponentType } from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowsClockwise,
+  Bell,
+  Check,
+  Code,
+  CreditCard,
+  Database,
+  DeviceMobile,
+  Devices,
+  Gauge,
+  type IconProps,
+  MagnifyingGlass,
+  PenNib,
+  RocketLaunch,
+  Sparkle,
+  Storefront,
+} from "@/components/icons";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
 import Navbar from "@/components/Navbar";
 import SectionHeading from "@/components/motion/SectionHeading";
-import ServiceRow, { type ServiceCopy, type ServiceLabels } from "@/components/Services/ServiceRow";
-import ServiceArtwork from "@/components/Services/ServiceArtwork";
-import { SERVICES, isServiceId } from "@/data/services";
+import type { ServiceCopy, ServiceLabels } from "@/components/Services/ServiceRow";
+import ServiceArtwork, { SERVICE_THEME, ServiceGrain } from "@/components/Services/ServiceArtwork";
+import ScrubWords from "@/components/motion/ScrubWords";
+import FaqAccordion from "@/components/Services/FaqAccordion";
+import ServiceHeroArtwork from "@/components/Services/ServiceHeroArtwork";
+import { SERVICES, isServiceId, type ServiceId } from "@/data/services";
 import { Link } from "@/i18n/navigation";
 import { pageFor } from "@/i18n/pages";
+import { pathInLocale } from "@/i18n/slugs";
 import type { Locale } from "@/i18n/routing";
 import { PERSON_ID, absoluteUrl, alternatesFor, robotsFor, shareFor } from "@/i18n/seo";
 import { contactHref } from "@/lib/contact";
@@ -42,10 +65,19 @@ export function generateStaticParams() {
   return SERVICES.map((id) => ({ id }));
 }
 
-const HEADING = "text-2xl sm:text-3xl md:text-4xl leading-tighter font-semibold tracking-title text-[var(--black)]";
-const META = "font-mono text-xs uppercase tracking-[0.08em] text-[var(--gray)]";
-// A section: its heading on the left third, the content on the rest.
-const SECTION = "mt-20 grid gap-6 md:mt-28 md:grid-cols-12 md:gap-10";
+const HEADING = "text-[28px] md:text-[40px] leading-tighter font-semibold tracking-title text-balance text-[var(--black)]";
+// One icon per included item, in the order of the copy (services.items.<id>.includes).
+const INCLUDE_ICONS: Record<ServiceId, ComponentType<IconProps>[]> = {
+  "web-development": [PenNib, Code, Storefront, Gauge, MagnifyingGlass, RocketLaunch],
+  "web-apps": [PenNib, Code, Database, CreditCard, Sparkle, RocketLaunch],
+  "mobile-apps": [DeviceMobile, Code, ArrowsClockwise, Bell, Devices, Storefront],
+};
+// The icons' tint, per service.
+const CHECK_TINT: Record<ServiceId, string> = {
+  "web-development": "bg-[#f3e2d4] text-[#a03f00]",
+  "web-apps": "bg-[#ece0e9] text-[#7a3f68]",
+  "mobile-apps": "bg-[#e1e6f4] text-[#2b3f8f]",
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, id } = await params;
@@ -73,7 +105,6 @@ export default async function ServicePage({ params }: Props) {
   const labels = t.raw("ui") as Labels;
   const listPath = pageFor("/services").paths[locale] ?? "/services";
   const url = absoluteUrl(pageFor(`/services/${id}`).paths[locale]!, locale);
-  const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
     <>
@@ -102,106 +133,121 @@ export default async function ServicePage({ params }: Props) {
         }}
       />
       <Navbar />
-      <main id="main-content" className="mx-auto w-full max-w-[1280px] px-6 pt-32 pb-24 md:px-8 md:pt-40">
-        <Link
-          href={listPath}
-          className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.08em] text-[var(--muted)] transition-colors hover:text-[var(--black)]"
-        >
-          <ArrowLeft size={14} />
-          {labels.back}
-        </Link>
-
-        <header className="mt-10 grid gap-10 border-b border-[var(--color-line-1)] pb-12 md:grid-cols-12 md:items-center md:pb-16">
-          <div className="flex flex-col gap-4 md:col-span-7">
-            <h1 className="font-semibold tracking-title text-[var(--black)] text-[clamp(44px,7vw,104px)] leading-[0.98] text-balance">
-              {s.title}
-            </h1>
-            <p className="text-xl md:text-3xl text-[var(--muted)]">{s.tagline}</p>
+      <main id="main-content" className="mx-auto w-full max-w-[1280px] px-6 pt-28 pb-24 md:px-8">
+        {/* One screen, like the works and services heroes: the service's colour and
+            sketch on top, the name low on the left, the line, price and CTA on the right. */}
+        <header className="flex min-h-[calc(100svh-7rem)] flex-col gap-10 border-b border-[var(--color-line-1)] pb-10 md:min-h-[calc(100svh-7rem)]">
+          <div className="relative flex min-h-[280px] flex-1">
+            <ServiceHeroArtwork id={id} className="w-full flex-1" />
+            <Link
+              href={listPath}
+              className={buttonClass({ size: "sm", shine: false, className: "absolute top-5 left-5 bg-white/70 backdrop-blur-sm hover:bg-white md:top-6 md:left-6" })}
+            >
+              <ButtonInner icon={ArrowLeft} iconSide="start" size="sm">
+                {labels.back}
+              </ButtonInner>
+            </Link>
           </div>
-          <ServiceArtwork id={id} play="load" className="w-full max-w-[460px] md:col-span-5 md:justify-self-end" />
 
-          <dl className="grid grid-cols-2 gap-6 md:col-span-7 md:max-w-lg">
-            <div className="flex flex-col gap-1">
-              <dt className={META}>{labels.price}</dt>
-              <dd className="text-lg md:text-xl text-[var(--black)]">{labels.priceValue}</dd>
+          <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between md:gap-10">
+            <h1 className="whitespace-nowrap font-semibold tracking-[-0.045em] text-[var(--black)] text-[clamp(52px,9.5vw,148px)] leading-[0.85]">
+              {/* The short name on screen; the keyword title stays in the h1 for search and screen readers. */}
+              {s.short}
+              <span className="sr-only"> · {s.title}</span>
+            </h1>
+            <div className="flex shrink-0 flex-col items-start gap-5 md:items-end md:text-right">
+              <p className="text-lg md:text-xl font-medium text-[var(--muted)] md:whitespace-nowrap">{s.tagline}</p>
+              <a href={contactHref(locale)} data-sfx="cta" className={buttonClass()}>
+                <ButtonInner>{t("cta")}</ButtonInner>
+              </a>
             </div>
-          </dl>
-          <a
-            href={contactHref(locale)}
-            data-sfx="cta"
-            className={buttonClass({ className: "md:col-span-5 md:justify-self-end" })}
-          >
-            <ButtonInner>{t("cta")}</ButtonInner>
-          </a>
+          </div>
         </header>
 
-        <div className="mt-16 flex max-w-3xl flex-col gap-6 md:mt-24 md:ml-[calc(100%/3)]">
+        {/* The intro in the middle of the page, reading itself as it scrolls by. */}
+        <div className="mx-auto mt-20 flex max-w-2xl flex-col gap-6 md:mt-32">
           {s.intro.map((p) => (
-            <p key={p} className="text-lg md:text-2xl leading-snug text-[var(--black)]">
+            <ScrubWords key={p} className="text-lg md:text-xl leading-relaxed font-medium tracking-title text-[var(--black)]">
               {p}
-            </p>
+            </ScrubWords>
           ))}
         </div>
 
-        <section className={SECTION}>
-          <SectionHeading className={`${HEADING} md:col-span-4`}>{labels.includesTitle}</SectionHeading>
-          <ol className="flex flex-col border-t border-[var(--color-line-1)] md:col-span-8">
-            {s.includes.map((item, i) => (
-              <li key={item} className="flex gap-6 border-b border-[var(--color-line-1)] py-5">
-                <span className="pt-1 font-mono text-xs text-[var(--color-accent-ink)]">{pad(i + 1)}</span>
-                <span className="text-base md:text-lg text-[var(--black)]">{item}</span>
-              </li>
-            ))}
-          </ol>
+        {/* What's included: a tile per item, its icon on the service's tint carrying most of the reading. */}
+        <section className="mt-20 md:mt-28">
+          <SectionHeading className={HEADING}>{labels.includesTitle}</SectionHeading>
+          <ul className="mt-8 grid gap-4 sm:grid-cols-2 md:mt-10 lg:grid-cols-3 lg:gap-5">
+            {s.includes.map((item, i) => {
+              const Icon = INCLUDE_ICONS[id][i] ?? Check;
+              return (
+                <li key={item} className="flex items-start gap-5 rounded-3xl bg-[var(--color-bg-elevated)] p-6 md:p-7">
+                  <span className={`flex size-12 shrink-0 items-center justify-center rounded-2xl ${CHECK_TINT[id]}`}>
+                    <Icon size={24} aria-hidden />
+                  </span>
+                  <span className="pt-0.5 text-base leading-snug text-pretty text-[var(--black)]">{item}</span>
+                </li>
+              );
+            })}
+          </ul>
         </section>
 
-        <section className={SECTION}>
-          <SectionHeading className={`${HEADING} md:col-span-4`}>{labels.fitTitle}</SectionHeading>
-          <ul className="flex flex-col border-t border-[var(--color-line-1)] md:col-span-8">
+        {/* A good fit if…: the heading opens the sentence, each card finishes it, on the service's colour. */}
+        <section className="mt-20 md:mt-28">
+          <SectionHeading className={HEADING}>{labels.fitTitle}…</SectionHeading>
+          <ul className="mt-8 grid gap-4 md:mt-10 md:grid-cols-3 md:gap-5">
             {s.fit.map((item) => (
-              <li key={item} className="flex gap-4 border-b border-[var(--color-line-1)] py-5 text-base md:text-lg text-[var(--black)]">
-                <span aria-hidden="true" className="mt-2.5 size-2 shrink-0 rounded-full bg-[var(--color-accent)]" />
-                {item}
+              <li
+                key={item}
+                className={`relative isolate flex min-h-[180px] flex-col justify-between gap-8 overflow-hidden rounded-3xl p-6 md:min-h-[200px] md:p-7 ${SERVICE_THEME[id]}`}
+              >
+                <ServiceGrain />
+                <span className="flex size-9 items-center justify-center rounded-full bg-white/70 text-[var(--black)]">
+                  <Check size={16} weight="bold" aria-hidden />
+                </span>
+                <p className="text-[17px] md:text-[19px] font-medium leading-snug tracking-title text-balance text-[var(--black)]">{item}</p>
               </li>
             ))}
           </ul>
         </section>
 
-        <section className={SECTION}>
-          <SectionHeading className={`${HEADING} md:col-span-4`}>{labels.faqTitle}</SectionHeading>
-          <dl className="flex flex-col border-t border-[var(--color-line-1)] md:col-span-8">
-            {s.faq.map((f) => (
-              <div key={f.q} className="flex flex-col gap-2 border-b border-[var(--color-line-1)] py-5">
-                <dt className="text-lg font-semibold text-[var(--black)]">{f.q}</dt>
-                <dd className="text-base text-[var(--muted)]">{f.a}</dd>
-              </div>
-            ))}
-          </dl>
+        {/* Questions centred in a narrower column, as an accordion. */}
+        <section className="mx-auto mt-20 max-w-2xl md:mt-28">
+          <SectionHeading className={`${HEADING} text-center`}>
+            {labels.faqTitle}
+          </SectionHeading>
+          <div className="mt-8 flex flex-col items-center md:mt-10">
+            <FaqAccordion items={s.faq} />
+            <a href={contactHref(locale)} data-sfx="cta" className={buttonClass({ className: "mt-10" })}>
+              <ButtonInner>{t("cta")}</ButtonInner>
+            </a>
+          </div>
         </section>
-
-        <div className="mt-12 md:ml-[calc(100%/3)] md:pl-0">
-          <a
-            href={contactHref(locale)}
-            data-sfx="cta"
-            className={buttonClass()}
-          >
-            <ButtonInner>{t("cta")}</ButtonInner>
-          </a>
-        </div>
 
         <section className="mt-24 md:mt-36">
           <SectionHeading className={HEADING}>{labels.moreTitle}</SectionHeading>
-          <ul className="mt-8 border-b border-[var(--color-line-1)]">
+          {/* The other two services side by side, as cards like the home page's. */}
+          <ul className="mt-8 grid gap-4 sm:grid-cols-2 md:gap-5">
             {SERVICES.filter((other) => other !== id).map((other) => (
-              <ServiceRow
-                key={other}
-                id={other}
-               
-                locale={locale}
-                copy={items[other]}
-                labels={labels}
-                as="h3"
-              />
+              <li key={other}>
+                <Link
+                  href={pathInLocale(`/services/${other}`, "en", locale)}
+                  aria-label={`${items[other].title}. ${labels.view}`}
+                  className="group flex h-full flex-col gap-5"
+                >
+                  <ServiceArtwork id={other} className="w-full" />
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex flex-col gap-1">
+                      <h3 className="text-2xl md:text-3xl font-semibold leading-tight tracking-title text-[var(--black)] transition-colors duration-300 group-hover:text-[var(--color-accent-ink)]">
+                        {items[other].short}
+                      </h3>
+                      <p className="text-base text-[var(--muted)]">{items[other].tagline}</p>
+                    </div>
+                    <span className="flex size-11 shrink-0 items-center justify-center rounded-full border border-[var(--color-line-2)] text-[var(--black)] transition-colors duration-300 group-hover:border-[var(--black)] group-hover:bg-[var(--black)] group-hover:text-white">
+                      <ArrowRight size={18} aria-hidden className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                    </span>
+                  </div>
+                </Link>
+              </li>
             ))}
           </ul>
         </section>

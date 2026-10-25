@@ -310,8 +310,8 @@
         "a": "Sí. La mayoría de los clientes quiere las dos cosas, pero también tomo proyectos solo de diseño o solo de desarrollo."
       },
       {
-        "q": "¿Puedes hacerte cargo de una app hecha con herramientas de IA?",
-        "a": "Sí. Reviso el código, corrijo lo frágil y la preparo para producción: datos, autenticación, rendimiento y despliegue."
+        "q": "¿Con qué stack trabajas?",
+        "a": "Diseño y construyo con las mismas herramientas: Next.js, React y TypeScript para la web, React Native para móvil, Supabase para datos y autenticación, y Vercel para desplegar."
       },
       {
         "q": "¿Cómo empezamos?",
@@ -336,18 +336,18 @@
         "title": "Diseño y desarrollo de sitios web",
         "short": "Sitios web",
         "tagline": "Sitios que cargan rápido y posicionan.",
-        "body": "Sitios corporativos y landing pages, diseñados en Figma y construidos en Next.js: rápidos, accesibles y fáciles de editar.",
+        "body": "Sitios corporativos y landing pages, diseñados y construidos por la misma persona en Next.js: rápidos, accesibles y listos para crecer.",
         "duration": "3 a 6 semanas",
         "metaTitle": "Diseñador web y desarrollador web: sitios con Next.js",
-        "metaDescription": "Diseñador web y desarrollador web freelance: sitios y landing pages diseñados en Figma y construidos con Next.js y React, rápidos, listos para SEO y fáciles de editar.",
+        "metaDescription": "Diseñador web y desarrollador web freelance: sitios y landing pages diseñados y construidos de punta a punta con Next.js y React, rápidos y listos para SEO, de landing pages a tiendas online.",
         "intro": [
-          "Diseño y construyo sitios web y landing pages: desde la estructura y el diseño visual en Figma hasta el código en Next.js, React y TypeScript. Una sola persona para las dos cosas, así lo que apruebas en el diseño es lo que sale publicado.",
-          "El objetivo es un sitio que explique lo que haces, cargue rápido, aparezca en los buscadores, funcione para todos y que tu equipo pueda actualizar sin llamar a un desarrollador. Ves el avance cada semana en un enlace que puedes abrir, no en un informe."
+          "Como product designer y product engineer, diseño y construyo yo mismo sitios web y landing pages, de punta a punta. Diseño directamente en el navegador, en Next.js, React y TypeScript, así lo que apruebas es el sitio real, no una imagen de él.",
+          "El objetivo es un sitio que explique lo que haces, cargue rápido, aparezca en los buscadores y funcione para todos. Ves el avance cada semana en un enlace que puedes abrir, no en un informe."
         ],
         "includes": [
-          "Estructura, contenido y diseño visual en Figma, para escritorio y móvil",
+          "Estructura, contenido y diseño visual, hechos directamente en código para escritorio y móvil",
           "Desarrollo en Next.js, React y TypeScript",
-          "Un gestor de contenidos cuando tu equipo necesita editar el sitio",
+          "En sitios más grandes, como una tienda online o un blog, un gestor de contenidos que tu equipo puede editar",
           "Rendimiento y Core Web Vitals revisados antes del lanzamiento",
           "SEO técnico: metadatos, sitemap, datos estructurados y varios idiomas",
           "Accesibilidad según WCAG AA, y despliegue con una vista previa de cada cambio"
@@ -360,7 +360,7 @@
         "faq": [
           {
             "q": "¿Lo diseñas o solo lo construyes?",
-            "a": "Las dos cosas, por defecto. Si ya tienes un diseño o un equipo de marca, construyo a partir de su Figma; si solo necesitas el diseño, también puedo hacer solo eso."
+            "a": "Las dos cosas: el diseño y el código son míos, y diseño directamente en el código. Si ya tienes un diseño o un equipo de marca, construyo a partir de lo que me den."
           },
           {
             "q": "¿Por qué Next.js?",
@@ -368,7 +368,7 @@
           },
           {
             "q": "¿Voy a poder editar el contenido yo?",
-            "a": "Si lo necesitas, sí. Conecto un gestor de contenidos para que tu equipo cambie textos, imágenes y publicaciones sin tocar el código."
+            "a": "En sitios más grandes, como una tienda online o un sitio con blog, sí: conecto un gestor de contenidos para que tu equipo cambie productos, textos y publicaciones sin tocar el código. Un sitio simple no suele necesitarlo."
           }
         ]
       },
@@ -376,35 +376,35 @@
         "title": "Diseño y desarrollo de aplicaciones web",
         "short": "Apps web",
         "tagline": "Productos que la gente usa cada día.",
-        "body": "Productos SaaS, dashboards y herramientas internas, diseñados y construidos de punta a punta, con IA donde suma.",
+        "body": "Productos SaaS, dashboards y herramientas internas, diseñados y construidos de punta a punta con Next.js y Supabase.",
         "duration": "4 a 12 semanas",
-        "metaTitle": "Diseñador de producto y desarrollador de aplicaciones web: SaaS e IA",
-        "metaDescription": "Diseñador de producto y desarrollador de aplicaciones web freelance: SaaS, dashboards y herramientas internas con Next.js, React y TypeScript, más funciones de IA y prototipos hechos con IA llevados a producción.",
+        "metaTitle": "Diseñador de producto y desarrollador de aplicaciones web: Next.js y Supabase",
+        "metaDescription": "Product designer y product engineer freelance: SaaS, dashboards y herramientas internas diseñados y construidos de punta a punta con Next.js, Supabase y TypeScript, con IA donde suma.",
         "intro": [
-          "Una aplicación web es más que páginas: tiene usuarios, cuentas, datos que cambian y un estado para cada caso. Diseño y construyo productos SaaS, dashboards, portales de clientes y herramientas internas, desde los flujos en Figma hasta el código en Next.js, React y TypeScript, con el backend que necesitan detrás.",
-          "Cuando ayuda, sumo IA que hace un trabajo real en el producto: búsqueda sobre tus datos, resúmenes, asistentes o automatizaciones, con límites y controles. Y si ya tienes una app hecha con Lovable, v0, Bolt o Cursor, la reviso, corrijo lo riesgoso y la dejo lista para producción."
+          "Una aplicación web es más que páginas: tiene usuarios, cuentas, datos que cambian y un estado para cada caso. Como product designer y product engineer, diseño y construyo productos SaaS, dashboards, portales de clientes y herramientas internas de punta a punta, diseñando los flujos directamente en el producto mientras lo construyo.",
+          "Lo escribo yo en Next.js, React y TypeScript, con Supabase para la base de datos, la autenticación y el almacenamiento, desplegado en Vercel. Cuando ayuda, sumo IA que hace un trabajo real en el producto: búsqueda sobre tus datos, resúmenes, asistentes o automatizaciones, con límites y controles."
         ],
         "includes": [
           "Investigación, flujos de usuario y diseño de interfaz, con un design system",
-          "Autenticación, roles y permisos",
-          "Base de datos y API con Supabase, Postgres o tu stack actual",
+          "Desarrollo en Next.js, React y TypeScript",
+          "Base de datos, autenticación, roles y almacenamiento con Supabase y Postgres",
           "Pagos y suscripciones con Stripe cuando el producto cobra",
           "Funciones y agentes de IA con Claude u OpenAI, con límites de uso y controles de calidad",
-          "Revisión y refuerzo de apps hechas con herramientas de IA antes de lanzarlas"
+          "Despliegue en Vercel con una vista previa de cada cambio, y tests en los caminos críticos"
         ],
         "fit": [
           "Tienes una idea de SaaS o de producto y necesitas una primera versión en producción",
           "Tu equipo trabaja con planillas y necesita una herramienta interna",
-          "Hiciste un prototipo con una herramienta de IA y necesitas que aguante usuarios reales"
+          "Tu aplicación web creció desordenada y necesita avanzar"
         ],
         "faq": [
           {
             "q": "¿Cuánto tarda una primera versión?",
-            "a": "Una primera versión enfocada suele llevar de 6 a 12 semanas; llevar a producción un prototipo hecho con IA, de 2 a 4. Decidimos juntos qué entra y qué espera."
+            "a": "Una primera versión enfocada suele llevar de 6 a 12 semanas. Decidimos juntos qué entra y qué espera, para lanzar con lo que los usuarios necesitan primero."
           },
           {
-            "q": "¿Puedes hacerte cargo de una app hecha con Lovable, v0 o Bolt?",
-            "a": "Sí. Empiezo con una revisión del código y una lista escrita de lo que está en riesgo, y lo corrijo sin reescribir lo que ya funciona. Casi siempre son reglas de acceso, datos y despliegue."
+            "q": "¿Por qué Next.js y Supabase?",
+            "a": "Juntos cubren un producto completo con pocas piezas: páginas que cargan rápido, una base de datos Postgres con autenticación y reglas de acceso, y almacenamiento, en servicios que escalan contigo. Si ya tienes un backend o una API, construyo sobre eso."
           },
           {
             "q": "¿Dónde tiene sentido la IA en mi producto?",
@@ -423,9 +423,9 @@
         "body": "Apps para iOS y Android con React Native y Expo, desde las primeras pantallas hasta la App Store y Google Play.",
         "duration": "6 a 12 semanas",
         "metaTitle": "Diseñador y desarrollador de apps móviles: iOS y Android",
-        "metaDescription": "Diseñador y desarrollador de apps móviles freelance: apps para iOS y Android diseñadas en Figma y construidas con React Native y Expo, desde las primeras pantallas hasta la App Store y Google Play.",
+        "metaDescription": "Diseñador y desarrollador de apps móviles freelance: apps para iOS y Android diseñadas y construidas de punta a punta con React Native y Expo, desde las primeras pantallas hasta la App Store y Google Play.",
         "intro": [
-          "Diseño y construyo apps móviles para iOS y Android: las pantallas en Figma, siguiendo las convenciones de cada plataforma, y el código en React Native y Expo. Un solo código, dos tiendas, y una app que se siente propia en cada teléfono.",
+          "Diseño y construyo apps móviles para iOS y Android de punta a punta, como product designer y product engineer a la vez. Diseño las pantallas directamente en React Native y Expo, siguiendo las convenciones de cada plataforma: un solo código, dos tiendas, y una app que se siente propia en cada teléfono.",
           "Si también tienes una aplicación web, la app puede compartir con ella el backend, los tipos y parte de la lógica, así un cambio no se hace dos veces. La publicación en la App Store y Google Play es parte del proyecto."
         ],
         "includes": [

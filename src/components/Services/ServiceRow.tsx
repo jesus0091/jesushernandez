@@ -32,7 +32,7 @@ export default function ServiceRow({ id, locale, copy, labels, as: Heading = "h2
 
         <div className="flex flex-col gap-3 md:col-span-6">
           <Heading className="text-[clamp(28px,3vw,44px)] font-semibold leading-[1] tracking-title text-balance text-[var(--black)] transition-colors duration-300 group-hover:text-[var(--color-accent-ink)]">
-            {copy.title}
+            {copy.short}
           </Heading>
           <p className="text-lg text-balance text-[var(--muted)]">{copy.tagline}</p>
           <p className="mt-2 max-w-md text-base text-[var(--muted)]">{copy.body}</p>

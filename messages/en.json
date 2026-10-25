@@ -310,8 +310,8 @@
         "a": "Yes. Most clients want both, but I also take design-only or development-only projects."
       },
       {
-        "q": "Can you take over an app built with AI tools?",
-        "a": "Yes. I review the code, fix what's fragile and prepare it for production: data, authentication, performance and deployment."
+        "q": "Which stack do you use?",
+        "a": "I design and build in the same tools: Next.js, React and TypeScript for the web, React Native for mobile, Supabase for data and authentication, and Vercel to deploy."
       },
       {
         "q": "How do we start?",
@@ -336,18 +336,18 @@
         "title": "Website design & development",
         "short": "Websites",
         "tagline": "Websites that load fast and rank.",
-        "body": "Marketing sites and landing pages, designed in Figma and built in Next.js: fast, accessible and easy to edit.",
+        "body": "Marketing sites and landing pages, designed and built by the same person in Next.js: fast, accessible and ready to grow.",
         "duration": "3 to 6 weeks",
         "metaTitle": "Web Designer and Web Developer: Websites in Next.js",
-        "metaDescription": "Freelance web designer and web developer: websites and landing pages designed in Figma and built with Next.js and React, fast, SEO-ready and easy to edit.",
+        "metaDescription": "Freelance web designer and web developer: websites and landing pages designed and built end to end with Next.js and React, fast and SEO-ready, from landing pages to online shops.",
         "intro": [
-          "I design and build websites and landing pages: from the structure and the visual design in Figma to the code in Next.js, React and TypeScript. One person for both, so what you approve in the design is what goes live.",
-          "The goal is a site that explains what you do, loads fast, ranks in search, works for everyone and that your team can update without calling a developer. You see progress every week in a link you can open, not in a report."
+          "As a product designer and product engineer, I design and build websites and landing pages myself, end to end. I design straight in the browser, in Next.js, React and TypeScript, so what you approve is the real site, not a picture of it.",
+          "The goal is a site that explains what you do, loads fast, ranks in search and works for everyone. You see progress every week in a link you can open, not in a report."
         ],
         "includes": [
-          "Structure, content and visual design in Figma, for desktop and mobile",
+          "Structure, content and visual design, done directly in code for desktop and mobile",
           "Development in Next.js, React and TypeScript",
-          "A content management system when your team needs to edit the site",
+          "For larger sites, like an online shop or a blog, a content manager your team can edit",
           "Performance and Core Web Vitals checked before launch",
           "Technical SEO: metadata, sitemap, structured data and multiple languages",
           "Accessibility to WCAG AA, and deploy with a preview for every change"
@@ -360,7 +360,7 @@
         "faq": [
           {
             "q": "Do you design it or only build it?",
-            "a": "Both, by default. If you already have a design or a brand team, I build from their Figma; if you only need the design, I can do just that."
+            "a": "Both: the design and the code are mine, and I design straight in the code. If you already have a design or a brand team, I build from what they give me."
           },
           {
             "q": "Why Next.js?",
@@ -368,7 +368,7 @@
           },
           {
             "q": "Will I be able to edit the content myself?",
-            "a": "If you need to, yes. I connect a content management system so your team can change texts, images and posts without touching the code."
+            "a": "On larger sites, like an online shop or a site with a blog, yes: I connect a content manager so your team can change products, texts and posts without touching the code. A simple site doesn't usually need one."
           }
         ]
       },
@@ -376,35 +376,35 @@
         "title": "Web app design & development",
         "short": "Web apps",
         "tagline": "Products people log in to every day.",
-        "body": "SaaS products, dashboards and internal tools, designed and built end to end, with AI where it helps.",
+        "body": "SaaS products, dashboards and internal tools, designed and built end to end in Next.js and Supabase.",
         "duration": "4 to 12 weeks",
-        "metaTitle": "Product Designer and Web App Developer: SaaS, Dashboards, AI",
-        "metaDescription": "Freelance product designer and web app developer: SaaS products, dashboards and internal tools built with Next.js, React and TypeScript, plus AI features and AI prototypes taken to production.",
+        "metaTitle": "Product Designer and Web App Developer: Next.js and Supabase",
+        "metaDescription": "Freelance product designer and product engineer: SaaS products, dashboards and internal tools designed and built end to end with Next.js, Supabase and TypeScript, with AI where it helps.",
         "intro": [
-          "A web app is more than pages: it has users, accounts, data that changes and a state for every case. I design and build SaaS products, dashboards, client portals and internal tools, from the user flows in Figma to the code in Next.js, React and TypeScript, with the backend they need behind them.",
-          "When it helps, I add AI that does a real job in the product: search over your data, summaries, assistants or automations, built with limits and checks. And if you already have an app made with Lovable, v0, Bolt or Cursor, I review it, fix what's risky and get it ready for production."
+          "A web app is more than pages: it has users, accounts, data that changes and a state for every case. As a product designer and product engineer, I design and build SaaS products, dashboards, client portals and internal tools end to end, designing the flows straight in the product as I build it.",
+          "I write it myself in Next.js, React and TypeScript, with Supabase for the database, authentication and storage, deployed on Vercel. When it helps, I add AI that does a real job in the product: search over your data, summaries, assistants or automations, built with limits and checks."
         ],
         "includes": [
           "Research, user flows and interface design, with a design system",
-          "Authentication, roles and permissions",
-          "Database and API with Supabase, Postgres or your current stack",
+          "Development in Next.js, React and TypeScript",
+          "Database, authentication, roles and storage with Supabase and Postgres",
           "Payments and subscriptions with Stripe when the product charges",
           "AI features and agents with Claude or OpenAI, with usage limits and quality checks",
-          "Review and hardening of apps built with AI tools before launch"
+          "Deploy on Vercel with a preview for every change, and tests on the critical paths"
         ],
         "fit": [
           "You have a SaaS or product idea and need a first version in production",
           "Your team runs on spreadsheets and needs an internal tool",
-          "You built a prototype with an AI tool and need it to hold up with real users"
+          "Your web app has grown messy and needs to move forward"
         ],
         "faq": [
           {
             "q": "How long does a first version take?",
-            "a": "A focused first version usually takes 6 to 12 weeks; taking an AI-built prototype to production, 2 to 4. We decide together what goes in and what waits."
+            "a": "A focused first version usually takes 6 to 12 weeks. We decide together what goes in and what waits, so it launches with what users need first."
           },
           {
-            "q": "Can you take over an app built with Lovable, v0 or Bolt?",
-            "a": "Yes. I start with a code review and a written list of what's at risk, then fix it without rewriting what already works. Most of the time it's access rules, data and deploy."
+            "q": "Why Next.js and Supabase?",
+            "a": "Together they cover a whole product with few moving parts: pages that load fast, a Postgres database with authentication and access rules, and storage, all on services that scale with you. If you already have a backend or an API, I build on top of it."
           },
           {
             "q": "Where does AI make sense in my product?",
@@ -423,9 +423,9 @@
         "body": "iOS and Android apps with React Native and Expo, from the first screens to the App Store and Google Play.",
         "duration": "6 to 12 weeks",
         "metaTitle": "Mobile App Designer and Developer: iOS and Android",
-        "metaDescription": "Freelance mobile app designer and developer: iOS and Android apps designed in Figma and built with React Native and Expo, from the first screens to the App Store and Google Play.",
+        "metaDescription": "Freelance mobile app designer and developer: iOS and Android apps designed and built end to end with React Native and Expo, from the first screens to the App Store and Google Play.",
         "intro": [
-          "I design and build mobile apps for iOS and Android: the screens in Figma, following each platform's conventions, and the code in React Native and Expo. One codebase, two stores, and an app that feels at home on each phone.",
+          "I design and build mobile apps for iOS and Android end to end, as product designer and product engineer at once. I design the screens straight in React Native and Expo, following each platform's conventions: one codebase, two stores, and an app that feels at home on each phone.",
           "If you also have a web app, the mobile app can share the backend, the types and part of the logic with it, so a change doesn't have to be made twice. Publishing on the App Store and Google Play is part of the project."
         ],
         "includes": [
