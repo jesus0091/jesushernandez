@@ -257,6 +257,81 @@ html.lenis body {
   }
 }
 
+/* ---------------- Service sketches (src/components/Services/ServiceSketch.tsx) ---------------- */
+.sk-guide {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1;
+  opacity: 0.35;
+}
+.sk-line {
+  fill: none;
+  stroke: var(--color-ink-1);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sk-accent {
+  fill: var(--color-accent);
+}
+.sk-on-accent {
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+/* ---------------- Button shine (PillButton, shine: true) ---------------- */
+/* Every 15s an orange glint runs along the border, and across the label. */
+@keyframes btn-border-shine {
+  0%, 77%   { background-position: 200% 0; opacity: 0; }
+  80%       { background-position: 200% 0; opacity: 1; }
+  91%       { background-position: -100% 0; opacity: 1; }
+  94%, 100% { background-position: -100% 0; opacity: 0; }
+}
+@keyframes btn-text-sweep {
+  0%, 77%   { background-position: 100% 0; }
+  91%       { background-position: 0% 0; }
+  94%, 100% { background-position: 100% 0; }
+}
+.btn-shine::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 9999px;
+  padding: 1.5px;
+  background: linear-gradient(90deg, transparent 0%, transparent 35%, #ff6600 48%, #ffaa00 55%, transparent 68%, transparent 100%);
+  background-size: 300% 100%;
+  background-position: 200% 0;
+  opacity: 0;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn-shine::before {
+    animation: btn-border-shine 15s ease-in-out infinite;
+  }
+  .btn-shine .btn-label {
+    background: linear-gradient(90deg, currentColor 0%, currentColor 40%, #ff6600 48%, #ffaa00 52%, currentColor 60%, currentColor 100%);
+    background-size: 400% 100%;
+    background-repeat: no-repeat;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: btn-text-sweep 15s ease-in-out infinite;
+  }
+  .btn-shine:hover::before {
+    animation: none;
+  }
+  .btn-shine:hover .btn-label {
+    -webkit-text-fill-color: currentColor;
+    background: none;
+    animation: none;
+  }
+}
+
 /* ---------------- Film grain (over the whole page) ---------------- */
 :root {
   /* Shared by body::after and the local overlay-blend grain layers. */

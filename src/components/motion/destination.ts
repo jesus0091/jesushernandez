@@ -1,11 +1,14 @@
 import { getWorkById } from "@/data/works";
 import { stripLocale } from "@/i18n/paths";
+import { pathInLocale } from "@/i18n/slugs";
 
 const PAGE_KEYS: Record<string, string> = {
   "/": "pages.home",
   "/works": "pages.works",
   "/lab": "pages.lab",
   "/blog": "pages.blog",
+  "/about": "pages.about",
+  "/services": "pages.services",
 };
 
 /**
@@ -14,7 +17,8 @@ const PAGE_KEYS: Record<string, string> = {
  * tested without GSAP or React.
  */
 export function destinationName(pathname: string, t: (key: string) => string): string {
-  const { path } = stripLocale(pathname);
+  const { locale, path: localizedPath } = stripLocale(pathname);
+  const path = pathInLocale(localizedPath, locale, "en");
   if (PAGE_KEYS[path]) return t(PAGE_KEYS[path]);
   const [, section, id] = path.split("/");
   if (section === "works" && id) return getWorkById(id)?.productName ?? id;

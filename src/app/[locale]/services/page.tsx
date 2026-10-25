@@ -1,14 +1,16 @@
+import { ButtonInner, buttonClass } from "@/components/PillButton";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowRight } from "@/components/icons";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
 import Navbar from "@/components/Navbar";
-import SectionLabel from "@/components/SectionLabel";
 import SectionHeading from "@/components/motion/SectionHeading";
+import ServiceRow, { type ServiceCopy, type ServiceLabels } from "@/components/Services/ServiceRow";
+import ServicesHero from "@/components/Services/ServicesHero";
+import { SERVICES, type ServiceId } from "@/data/services";
 import { pageFor } from "@/i18n/pages";
 import type { Locale } from "@/i18n/routing";
-import { PERSON_ID, absoluteUrl, alternatesFor, robotsFor, shareFor } from "@/i18n/seo";
+import { absoluteUrl, alternatesFor, robotsFor, shareFor } from "@/i18n/seo";
 import { contactHref } from "@/lib/contact";
 
 type Props = { params: Promise<{ locale: Locale }> };
@@ -37,7 +39,8 @@ export default async function ServicesPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "services" });
   const page = pageFor(PAGE);
-  const list = t.raw("list") as Item[];
+  const items = t.raw("items") as Record<string, ServiceCopy>;
+  const labels = t.raw("ui") as ServiceLabels;
   const forWhom = t.raw("for") as string[];
   const process = t.raw("process") as Item[];
   const faq = t.raw("faq") as Qa[];
@@ -45,51 +48,36 @@ export default async function ServicesPage({ params }: Props) {
 
   return (
     <>
-      {/* Each service offered by the person entity; the FAQ stays visible text only. */}
+      {/* The services as a list of their pages; each page describes its own Service. */}
       <JsonLd
         data={{
           "@context": "https://schema.org",
-          "@graph": list.map((s, i) => ({
-            "@type": "Service",
-            "@id": `${url}#service-${i + 1}`,
-            name: s.title,
-            description: s.body,
-            provider: { "@id": PERSON_ID },
-            areaServed: ["United States", "Latin America"],
-            availableLanguage: ["es", "en"],
-            url,
+          "@type": "ItemList",
+          "@id": `${url}#services`,
+          itemListElement: SERVICES.map((id, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            name: items[id].title,
+            url: absoluteUrl(pageFor(`/services/${id}`).paths[locale]!, locale),
           })),
         }}
       />
       <Navbar />
-      <main id="main-content" className="mx-auto w-full max-w-[1280px] px-6 pt-32 pb-24 md:px-8 md:pt-40">
-        <header className="flex max-w-4xl flex-col gap-4">
-          <SectionLabel animate="none">{t("label")}</SectionLabel>
-          <h1 className="font-semibold tracking-title text-[var(--black)] text-[clamp(40px,6.5vw,96px)] leading-[1.02] text-balance">
-            {t("title")}
-          </h1>
-          <p className="max-w-2xl text-base md:text-lg text-[var(--muted)]">{t("lead")}</p>
-          <a
-            href={contactHref(locale)}
-            data-sfx="cta"
-            className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-[var(--black)] px-6 py-3 text-base font-medium text-white transition hover:bg-zinc-800"
-          >
-            {t("cta")}
-            <ArrowRight size={16} />
-          </a>
-        </header>
+      <main id="main-content" className="mx-auto w-full max-w-[1280px] px-6 pb-24 md:px-8">
+        <ServicesHero
+          label={t("label")}
+          title={t("title")}
+          lead={t("lead")}
+          cta={t("cta")}
+          ctaHref={contactHref(locale)}
+          titles={Object.fromEntries(SERVICES.map((id) => [id, items[id].title])) as Record<ServiceId, string>}
+        />
 
-        <section className="mt-20 md:mt-28">
-          <SectionHeading className={HEADING}>{t("listTitle")}</SectionHeading>
-          <ul className="mt-8 grid gap-8 md:grid-cols-2 md:gap-x-16 md:gap-y-10">
-            {list.map((s) => (
-              <li key={s.title} className="flex flex-col gap-2 border-t border-black/10 pt-5">
-                <h3 className="text-lg md:text-xl font-semibold text-[var(--black)]">{s.title}</h3>
-                <p className="text-base text-[var(--muted)]">{s.body}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <ul className="border-b border-[var(--color-line-1)]">
+          {SERVICES.map((id, i) => (
+            <ServiceRow key={id} id={id} index={i} locale={locale} copy={items[id]} labels={labels} />
+          ))}
+        </ul>
 
         <section className="mt-20 md:mt-28">
           <SectionHeading className={HEADING}>{t("forTitle")}</SectionHeading>
@@ -135,10 +123,9 @@ export default async function ServicesPage({ params }: Props) {
           <a
             href={contactHref(locale)}
             data-sfx="cta"
-            className="mt-12 inline-flex items-center gap-2 rounded-full bg-[var(--black)] px-6 py-3 text-base font-medium text-white transition hover:bg-zinc-800"
+            className={buttonClass({ className: "mt-12" })}
           >
-            {t("cta")}
-            <ArrowRight size={16} />
+            <ButtonInner>{t("cta")}</ButtonInner>
           </a>
         </section>
       </main>

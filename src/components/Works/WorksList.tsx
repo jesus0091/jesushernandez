@@ -7,15 +7,9 @@ import { ArrowUpRight } from "@/components/icons";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { WORKS } from "@/data/works";
-import CoverMosaic from "./CoverMosaic";
-
-// Bento on large screens (4 columns): the newest project takes a 3×2 tile
-// (close to the covers' own proportions, so it barely crops), two small tiles
-// stack beside it and four more close the grid. Below that, 1–2 plain columns.
-const BENTO = ["lg:col-span-3 lg:row-span-2", "", "", "", "", "", "md:col-span-2 lg:col-span-1"];
 
 export default function WorksList() {
-  const gridRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLUListElement>(null);
 
   useLayoutEffect(() => {
     const grid = gridRef.current;
@@ -26,15 +20,15 @@ export default function WorksList() {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray<HTMLElement>(".work-card");
+      const rows = gsap.utils.toArray<HTMLElement>(".work-card");
       const zoom = (batch: Element[]) => batch.map((card) => card.querySelector("[data-zoom]"));
 
-      gsap.set(cards, { autoAlpha: 0, y: 28 });
-      gsap.set(zoom(cards), { scale: 1.14 });
+      gsap.set(rows, { autoAlpha: 0, y: 28 });
+      gsap.set(zoom(rows), { scale: 1.14 });
 
-      // Each row reveals as it enters, not the whole grid at once: the card
+      // Each row reveals as it enters, not the whole list at once: the row
       // rises a little while its cover settles back from a slight zoom.
-      ScrollTrigger.batch(cards, {
+      ScrollTrigger.batch(rows, {
         start: "top 88%",
         once: true,
         onEnter: (batch) => {
@@ -49,69 +43,58 @@ export default function WorksList() {
 
   return (
     <section aria-labelledby="works-list-heading" className="w-full pt-16 pb-24 md:pt-24 md:pb-32">
-      {/* Names the list for assistive tech, so the cards' h3 sit under an h2. */}
+      {/* Names the list for assistive tech, so the rows' h3 sit under an h2. */}
       <h2 id="works-list-heading" className="sr-only">
         All projects
       </h2>
-      <div
-        ref={gridRef}
-        className="mx-auto max-w-[1280px] px-6 md:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:auto-rows-[280px] gap-6"
-      >
-        {WORKS.map((work, i) => {
-          const big = i === 0;
-          return (
+      <ul ref={gridRef} className="mx-auto max-w-[1280px] px-6 md:px-8 border-b border-[var(--color-line-2)]">
+        {WORKS.map((work) => (
+          <li key={work.id} className="work-card border-t border-[var(--color-line-2)]">
+            {/* One row per project: index, a large cover, then category, name and
+                role, and the arrow. Below md the cover goes full width above the text. */}
             <Link
-              key={work.id}
               href={`/works/${work.id}`}
-              className={`work-card group relative flex flex-col overflow-hidden rounded-card bg-white/70 backdrop-blur-sm pointer-coarse:backdrop-blur-none border border-white/50 transition-[background-color,box-shadow,translate] duration-300 hover:bg-white/90 hover:-translate-y-1 hover:shadow-lg ${BENTO[i] ?? ""}`}
+              className="group grid grid-cols-1 gap-5 py-8 md:grid-cols-[2.5rem_minmax(0,440px)_1fr_auto] md:items-center md:gap-10 md:py-10"
             >
-              {/* Covers are exported at 1600×707; bento cells crop them to fit. */}
-              <div className="relative aspect-[1600/707] w-full bg-zinc-100 overflow-hidden lg:aspect-auto lg:min-h-0 lg:flex-1">
+              <span className="hidden md:block self-start font-mono text-sm text-[var(--color-ink-4)] transition-colors duration-300 group-hover:text-[var(--color-accent)]">
+                {work.index}
+              </span>
+
+              {/* Covers are exported at 1600×707. */}
+              <div className="relative aspect-[1600/707] w-full overflow-hidden rounded-2xl bg-zinc-100">
                 <div data-zoom className="absolute inset-0">
-                  {work.mosaic ? (
-                    <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-105">
-                      <CoverMosaic tiles={work.mosaic} />
-                    </div>
-                  ) : (
-                    <Image
-                      src={work.cover}
-                      alt={work.title}
-                      fill
-                      sizes={big ? "(min-width: 1024px) 920px, 100vw" : "(min-width: 1024px) 300px, (min-width: 768px) 50vw, 100vw"}
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  )}
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute top-4 left-4 right-4 flex items-center gap-2">
-                  <span className="truncate rounded-full bg-white/80 backdrop-blur-md pointer-coarse:backdrop-blur-none px-3 py-1 text-xs font-semibold text-[var(--black)]">
-                    {work.category}
-                  </span>
+                  {/* The plain cover, even for projects with a mosaic: the mosaic reads as
+                      noise at this size and repeats the wall above. */}
+                  <Image
+                    src={work.cover}
+                    alt={work.title}
+                    fill
+                    sizes="(min-width: 768px) 440px, 100vw"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                  />
                 </div>
               </div>
 
-              <div className="flex items-center justify-between gap-4 px-5 py-4">
-                <div className="min-w-0">
-                  <h3
-                    className={`font-bold text-[var(--black)] tracking-title leading-tight ${
-                      big ? "text-xl md:text-2xl lg:text-3xl" : "text-xl md:text-2xl lg:text-lg"
-                    }`}
-                  >
-                    {work.productName}
-                  </h3>
-                  <p className="mt-1 truncate text-sm text-[var(--muted)]">{work.role}</p>
-                </div>
-                <span
-                  aria-hidden
-                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--black)] text-white opacity-0 translate-y-2 transition-[opacity,translate] duration-300 group-hover:opacity-100 group-hover:translate-y-0"
-                >
-                  <ArrowUpRight size={18} />
+              <div className="min-w-0">
+                <span className="font-mono text-xs uppercase tracking-[0.08em] text-[var(--color-ink-4)]">
+                  {work.category}
                 </span>
+                <h3 className="mt-3 text-[1.75rem] md:text-3xl font-semibold text-[var(--black)] tracking-title leading-[1.1] transition-transform duration-500 ease-out md:group-hover:translate-x-2">
+                  {work.productName}
+                </h3>
+                <p className="mt-2 text-base md:text-lg text-[var(--muted)]">{work.role}</p>
               </div>
+
+              <span
+                aria-hidden
+                className="hidden md:inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--color-line-2)] text-[var(--black)] transition-[background-color,border-color,color,rotate] duration-300 group-hover:rotate-45 group-hover:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] group-hover:text-white"
+              >
+                <ArrowUpRight size={20} />
+              </span>
             </Link>
-          );
-        })}
-      </div>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

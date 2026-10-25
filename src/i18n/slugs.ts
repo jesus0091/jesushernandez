@@ -7,6 +7,11 @@
 export const LOCALIZED_SLUGS: { en: string; es: string }[] = [
   { en: "/about", es: "/sobre-mi" },
   { en: "/services", es: "/servicios" },
+  // One page per service (src/data/services.ts).
+  { en: "/services/product-design", es: "/servicios/diseno-de-producto-ux-ui" },
+  { en: "/services/web-development", es: "/servicios/desarrollo-web" },
+  { en: "/services/ai-features", es: "/servicios/funciones-de-ia" },
+  { en: "/services/ai-prototype-to-production", es: "/servicios/prototipo-ia-a-produccion" },
   // Blog posts: the English slug is the route, each post's alternateSlug its
   // Spanish URL. src/lib/blog.test.ts checks this list against content/blog.
   { en: "/blog/is-vibe-coding-bad", es: "/blog/vibe-coding-en-produccion" },

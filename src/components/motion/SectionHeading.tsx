@@ -1,5 +1,7 @@
 "use client";
 
+import { useNearViewport } from "@/components/motion/useNearViewport";
+
 import { prefersReducedMotion, setupGsap } from "@/lib/motion";
 import { useLayoutEffect, useRef } from "react";
 
@@ -16,7 +18,10 @@ type SectionHeadingProps = {
 export default function SectionHeading({ children, as: Tag = "h2", className = "" }: SectionHeadingProps) {
   const rootRef = useRef<HTMLHeadingElement | null>(null);
 
+  const near = useNearViewport(rootRef);
+
   useLayoutEffect(() => {
+    if (!near) return;
     const root = rootRef.current;
     if (!root || prefersReducedMotion()) return;
     const gsap = setupGsap();
@@ -48,7 +53,7 @@ export default function SectionHeading({ children, as: Tag = "h2", className = "
     });
 
     return () => split.revert();
-  }, []);
+  }, [near]);
 
   return (
     <Tag ref={rootRef} className={className}>

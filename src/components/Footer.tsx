@@ -17,6 +17,7 @@ import type { Locale } from "@/i18n/routing";
 
 import CtaTunnel, { TUNNEL_STOPS } from "./motion/CtaTunnel";
 import Image from "next/image";
+import { ButtonInner, buttonClass } from "@/components/PillButton";
 import { Link } from "@/i18n/navigation";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -454,11 +455,10 @@ export default function Footer({
               href={contactEmail === CONTACT_EMAIL ? contactHref(locale) : `mailto:${contactEmail}`}
               data-cta
               data-sfx="cta"
-              className="relative inline-flex items-center rounded-full gap-2 border border-white/20 bg-[#050b3a]/60 px-6 py-3 text-base cursor-pointer font-medium text-white hover:bg-white/10 transition active:scale-[0.96]"
+              className={buttonClass({ tone: "dark", className: "relative bg-[#050b3a]/60" })}
               aria-label={t("emailAria")}
             >
-              <Envelope size={18} />
-              {t("talk")}
+              <ButtonInner icon={Envelope} tone="dark">{t("talk")}</ButtonInner>
             </Link>
           </div>
           {isCard && (

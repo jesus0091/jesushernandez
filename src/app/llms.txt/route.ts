@@ -1,3 +1,4 @@
+import { SERVICES } from "@/data/services";
 import { WORKS } from "@/data/works";
 import { PAGES } from "@/i18n/pages";
 import { absoluteUrl } from "@/i18n/seo";
@@ -17,7 +18,7 @@ const link = (title: string, path: string, locale: "en" | "es", note?: string) =
 const es_ = (key: string) => PAGES[key].paths.es ?? key;
 
 export function GET() {
-  const services = en.services.list.map((s) => `- **${s.title}**: ${s.body}`);
+  const services = SERVICES.map((id) => link(en.services.items[id].title, `/services/${id}`, "en", en.services.items[id].body));
   const works = WORKS.filter((w) => PAGES[`/works/${w.id}`]?.index).map((w) =>
     link(`${w.productName}: ${w.title}`, `/works/${w.id}`, "en", w.description),
   );

@@ -8,8 +8,6 @@ import { BrushSvg, brushIn, brushOut, playEased } from "./Brush";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { destinationName } from "./destination";
 import { stripLocale } from "@/i18n/paths";
-import { transition as en } from "../../../messages/en.json";
-import { transition as es } from "../../../messages/es.json";
 
 // If the new page never arrives (a failed navigation), uncover anyway.
 const FAILSAFE_MS = 5000;
@@ -19,11 +17,7 @@ const MIN_LABEL_MS = 250;
 // Same alphabet as the skills tags' decode.
 const CHARS = "abcdefghijklmnopqrstuvwxyz<>/{}#_";
 
-// The name is shown in the destination's language, which may not be the
-// current one (the language switch), so it reads the messages directly.
-const PAGES = { en: en.pages, es: es.pages };
-const pageName = (locale: "en" | "es") => (key: string) =>
-  PAGES[locale][key.replace("pages.", "") as keyof typeof en.pages];
+type PageNames = Record<"en" | "es", Record<string, string>>;
 
 /**
  * Page-to-page transition, with the site's brush and no signature: an
@@ -31,7 +25,7 @@ const pageName = (locale: "en" | "es") => (key: string) =>
  * underneath it, and the brush lifts off to reveal the new page. The
  * signature stays for the first load only (IntroOverlay).
  */
-export default function PageTransition() {
+export default function PageTransition({ pageNames }: { pageNames: PageNames }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -48,13 +42,37 @@ export default function PageTransition() {
     failsafe.current = null;
     const wait = MIN_LABEL_MS - (performance.now() - labelAt.current);
     if (wait > 0) await new Promise((r) => setTimeout(r, wait));
-    // The new page starts at the top, under the brush.
-    window.scrollTo(0, 0);
-    getLenis()?.scrollTo(0, { immediate: true, force: true });
-    getLenis()?.start();
+    // Honor cross-page anchors once the destination has rendered.
+    let target: HTMLElement | null = null;
+    try {
+      target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    } catch {
+      // A malformed fragment must not leave the page covered.
+    }
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.start();
+      // The previous route's dimensions and scroll position are stale.
+      lenis.resize();
+      lenis.scrollTo(target ?? 0, { immediate: true, force: true });
+    } else if (target) {
+      target.scrollIntoView({ behavior: "instant" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
     const gsap = setupGsap();
     gsap.to(labelRef.current, { autoAlpha: 0, y: -8, duration: 0.2, ease: "power2.in" });
     await playEased(brushOut(wrap), 0.55, "sine.inOut");
+    // ScrollTrigger can change the document height while the new route's
+    // effects settle. Align anchors again after the reveal has finished.
+    if (target) {
+      if (lenis) {
+        lenis.resize();
+        lenis.scrollTo(target, { immediate: true, force: true });
+      } else {
+        target.scrollIntoView({ behavior: "instant" });
+      }
+    }
     wrap.style.visibility = "hidden";
     covering.current = false;
   };
@@ -88,7 +106,7 @@ export default function PageTransition() {
       if (label) {
         const gsap = setupGsap();
         gsap.registerPlugin(ScrambleTextPlugin);
-        const name = destinationName(url.pathname, pageName(stripLocale(url.pathname).locale));
+        const name = destinationName(url.pathname, (key) => pageNames[stripLocale(url.pathname).locale][key.replace("pages.", "")] ?? "");
         labelAt.current = performance.now();
         gsap.set(label, { autoAlpha: 1, y: 0 });
         gsap.fromTo(
@@ -101,7 +119,11 @@ export default function PageTransition() {
       failsafe.current = window.setTimeout(reveal, FAILSAFE_MS);
     };
     document.addEventListener("click", onClick, true);
-    return () => document.removeEventListener("click", onClick, true);
+    return () => {
+      document.removeEventListener("click", onClick, true);
+      if (failsafe.current) window.clearTimeout(failsafe.current);
+      getLenis()?.start();
+    };
     // reveal and router are stable for this component's life.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

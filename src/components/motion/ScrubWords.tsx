@@ -1,5 +1,7 @@
 "use client";
 
+import { useNearViewport } from "@/components/motion/useNearViewport";
+
 import { prefersReducedMotion, setupGsap } from "@/lib/motion";
 import { useLayoutEffect, useRef } from "react";
 
@@ -19,7 +21,10 @@ type ScrubWordsProps = {
 export default function ScrubWords({ children, className = "" }: ScrubWordsProps) {
   const rootRef = useRef<HTMLParagraphElement | null>(null);
 
+  const near = useNearViewport(rootRef);
+
   useLayoutEffect(() => {
+    if (!near) return;
     const root = rootRef.current;
     if (!root || prefersReducedMotion()) return;
     const gsap = setupGsap();
@@ -58,7 +63,7 @@ export default function ScrubWords({ children, className = "" }: ScrubWordsProps
       faint?.kill();
       split.revert();
     };
-  }, []);
+  }, [near]);
 
   return (
     <p ref={rootRef} className={className}>

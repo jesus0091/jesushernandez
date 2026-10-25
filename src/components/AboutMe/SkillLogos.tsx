@@ -1,4 +1,4 @@
-import { SKILL_LOGOS } from "./skillLogoPaths";
+import { SKILL_LOGO_NAMES } from "./skillLogoNames";
 
 /**
  * Greyed-out brand marks drifting right to left under the skills. Two
@@ -9,14 +9,14 @@ import { SKILL_LOGOS } from "./skillLogoPaths";
 export default function SkillLogos() {
   const set = (
     <ul className="flex shrink-0 items-center gap-12 pr-12 md:gap-16 md:pr-16">
-      {SKILL_LOGOS.map((l) => (
-        <li key={l.name} className="shrink-0">
+      {SKILL_LOGO_NAMES.map((name, index) => (
+        <li key={name} className="shrink-0">
           <svg
             viewBox="0 0 24 24"
             className="size-7 fill-current text-[var(--color-ink-4)] opacity-60 transition-opacity duration-300 hover:opacity-100 md:size-8"
           >
-            <title>{l.name}</title>
-            <path d={l.path} />
+            <title>{name}</title>
+            <use href={`/images/skill-logos.svg#skill-${index}`} />
           </svg>
         </li>
       ))}

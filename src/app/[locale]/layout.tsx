@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import en from "../../../messages/en.json";
+import es from "../../../messages/es.json";
 
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
@@ -17,8 +19,6 @@ import { PERSON_ID, SITE, absoluteUrl, shareFor } from "@/i18n/seo";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
-  // Optical sizing: large titles get the display cut, the closest to SF Pro Display.
-  axes: ["opsz"],
   display: "swap",
   preload: true,
 });
@@ -88,6 +88,7 @@ export default async function LocaleLayout({
   // Opt in to static rendering for this locale.
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "meta" });
+  const nav = await getTranslations({ locale, namespace: "nav" });
 
   // One person entity with a stable @id: the site, and later every article,
   // points at it instead of describing the author again.
@@ -150,7 +151,7 @@ export default async function LocaleLayout({
     >
       <body className="antialiased w-full">
         <a href="#main-content" className="skip-link">
-          Skip to content
+          {nav("skipToContent")}
         </a>
 
         <script
@@ -162,11 +163,16 @@ export default async function LocaleLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
 
-        <NextIntlClientProvider>
+        {/* Server-only page copy stays out of the hydration payload. Keep the
+            namespaces used by client components, including the error boundary. */}
+        <NextIntlClientProvider messages={Object.fromEntries(
+          ["nav", "footer", "tunnel", "home", "wsma", "skills", "projects", "about", "error"]
+            .map((namespace) => [namespace, (locale === "es" ? es : en)[namespace as keyof typeof en]]),
+        )}>
           <SmoothScroll />
           <UiSounds />
           <IntroOverlay />
-          <PageTransition />
+          <PageTransition pageNames={{ en: en.transition.pages, es: es.transition.pages }} />
 
           {children}
         </NextIntlClientProvider>

@@ -1,3 +1,5 @@
+import { preload } from "react-dom";
+
 const ROWS = 6;
 // A tile's width with its gap, in cqh (h-[30cqh] at 1600/707, plus mr-[2cqh]).
 const TILE_W = (30 * 1600) / 707 + 2;
@@ -20,12 +22,24 @@ export default function CoverMosaic({
   tiles,
   animated = false,
   sizes = "280px",
+  prioritySrc,
 }: {
   tiles: string[];
+  /** One above-the-fold tile to prioritize without raising every image. */
+  prioritySrc?: string;
   animated?: boolean;
   /** Rendered tile width, for the image srcset (tiles are far smaller than their files). */
   sizes?: string;
 }) {
+  if (prioritySrc) {
+    preload(optimized(prioritySrc, 640), {
+      as: "image",
+      imageSrcSet: srcSetFor(prioritySrc),
+      imageSizes: sizes,
+      fetchPriority: "high",
+    });
+  }
+
   // Neighbouring rows never share an image (see WorksWall).
   const pools = [tiles.filter((_, i) => i % 2 === 0), tiles.filter((_, i) => i % 2 === 1)];
 
@@ -35,9 +49,9 @@ export default function CoverMosaic({
         {Array.from({ length: ROWS }, (_, r) => {
           const pool = pools[r % 2];
           const start = Math.floor(r / 2) * (r % 2 ? 1 : 2);
-          // Each set is the pool twice. The loop shifts by one set, so it needs
-          // only as many identical sets as keep the row covered (a still wall: one).
-          const perSet = pool.length * 2;
+          // A single pool already repeats seamlessly. Duplicate only enough
+          // to cover the viewport after the animation shifts by one set.
+          const perSet = pool.length * (animated ? 1 : 2);
           const sets = animated ? 1 + Math.ceil(ROW_SPAN / (perSet * TILE_W)) : 1;
           return (
             // Each row starts a little further in, so the tiles don't stack in columns.
@@ -45,7 +59,7 @@ export default function CoverMosaic({
               <div
                 className={`flex w-max ${animated ? "works-wall-row" : ""}`}
                 data-reverse={animated && r % 2 ? "" : undefined}
-                style={animated ? ({ "--wall-sets": sets } as React.CSSProperties) : undefined}
+                style={animated ? ({ "--wall-sets": sets, animationDuration: r % 2 ? "33s" : "44s" } as React.CSSProperties) : undefined}
               >
                 {Array.from({ length: sets * perSet }, (_, i) => {
                   const src = pool[(i + start) % pool.length];
@@ -59,6 +73,7 @@ export default function CoverMosaic({
                       alt=""
                       // The moving wall is on screen as it loads; still covers sit lower.
                       loading={animated ? "eager" : "lazy"}
+                      fetchPriority={src === prioritySrc ? "high" : "auto"}
                       decoding="async"
                       draggable={false}
                       className="mr-[2cqh] aspect-[1600/707] h-[30cqh] flex-none rounded-[2cqh] object-cover select-none"

@@ -30,6 +30,7 @@
     "location": "Based in Argentina"
   },
   "nav": {
+    "skipToContent": "Skip to content",
     "home": "Home",
     "works": "Works",
     "lab": "Lab",
@@ -67,6 +68,8 @@
   },
   "transition": {
     "pages": {
+      "about": "About",
+      "services": "Services",
       "home": "Home",
       "works": "Works",
       "lab": "Lab",
@@ -262,31 +265,8 @@
   },
   "services": {
     "label": "Services",
-    "title": "Product designer & web developer, from idea to production",
+    "title": "Product designer & web developer",
     "lead": "One person for product, design and code. I work with founders and teams who need a product designed and built end to end, or an existing one taken further.",
-    "listTitle": "What I can do for you",
-    "list": [
-      {
-        "title": "MVPs, end to end",
-        "body": "From the idea to a product in production: scope, flows, interface, development and launch."
-      },
-      {
-        "title": "Web, product & UX/UI design",
-        "body": "Research, user flows, interfaces and design systems in Figma, ready to build."
-      },
-      {
-        "title": "Web and mobile development",
-        "body": "Next.js and React for the web, React Native for mobile, TypeScript throughout."
-      },
-      {
-        "title": "AI features and agents",
-        "body": "Assistants, automations and AI features built into your product, with the guardrails production needs."
-      },
-      {
-        "title": "From AI prototype to production",
-        "body": "An app built with Lovable, v0, Bolt or Cursor that works in a demo but not yet in production: I review it, fix it and get it ready to ship."
-      }
-    ],
     "forTitle": "Who I work with",
     "for": [
       "Founders and startups in the US and Latin America",
@@ -333,7 +313,177 @@
         "a": "Write to me with a few lines about your project. I'll reply to set up a 30-minute call."
       }
     ],
-    "cta": "Tell me about your project"
+    "cta": "Tell me about your project",
+    "ui": {
+      "number": "Service",
+      "price": "Price",
+      "priceValue": "Quoted per project",
+      "duration": "Duration",
+      "view": "See the service",
+      "back": "All services",
+      "includesTitle": "What's included",
+      "fitTitle": "A good fit if",
+      "faqTitle": "Questions about this service",
+      "moreTitle": "Other services"
+    },
+    "items": {
+      "product-design": {
+        "title": "Web, product & UX/UI design",
+        "tagline": "Screens that are ready to build.",
+        "body": "Research, user flows, interfaces and design systems in Figma, ready to build.",
+        "duration": "3 to 6 weeks",
+        "metaTitle": "Product Designer and Web Designer: UX/UI Design",
+        "metaDescription": "Freelance product designer and web designer: research, user flows, UX/UI interfaces and design systems in Figma, designed by someone who also builds them.",
+        "intro": [
+          "Good design solves a problem for the person using it before it looks good. I start with that person: what they're trying to do, where they get stuck, and what the business needs from them.",
+          "Because I also write the code, every screen I design is one I know how to build. The Figma file comes with components, states and responsive versions, so development doesn't start with guesses."
+        ],
+        "includes": [
+          "Interviews or a review of the data you already have",
+          "User flows and information architecture",
+          "Wireframes to agree on structure before visuals",
+          "High-fidelity interface design for desktop and mobile",
+          "A design system with components, tokens and states",
+          "A clickable prototype to test with users"
+        ],
+        "fit": [
+          "You're launching a website, a web app or a mobile app and need it designed",
+          "Your product works but people get lost or drop off",
+          "Your team has developers and needs a product designer"
+        ],
+        "faq": [
+          {
+            "q": "Do you design websites or products?",
+            "a": "Both. Marketing websites, web apps and mobile apps. The process changes with the project: a website leans on content and brand, a product on flows and states."
+          },
+          {
+            "q": "What do I get at the end?",
+            "a": "An organized Figma file with every screen, its components and states, and a clickable prototype. If I'm not the one building it, I walk your developers through it."
+          },
+          {
+            "q": "Can you work with my existing brand?",
+            "a": "Yes. I work inside your brand guidelines, and if they're missing pieces for digital, such as colors for states or a type scale, I propose them."
+          }
+        ]
+      },
+      "web-development": {
+        "title": "Web and mobile development",
+        "tagline": "Code that loads fast and lasts.",
+        "body": "Next.js and React for the web, React Native for mobile, TypeScript throughout.",
+        "duration": "4 to 10 weeks",
+        "metaTitle": "Web Developer for Next.js, React and React Native",
+        "metaDescription": "Freelance web developer building fast websites and apps with Next.js, React and TypeScript, plus React Native for mobile. Designed and built by one person.",
+        "intro": [
+          "I build websites and apps with Next.js, React and TypeScript, and mobile apps with React Native. The goal is code that loads fast, ranks in search, works for everyone and that another developer can read a year from now.",
+          "I can start from a design of mine, from your team's Figma, or from an existing codebase that needs to move forward. Either way you see progress every week in a link you can open, not in a report."
+        ],
+        "includes": [
+          "Development in Next.js and TypeScript, or React Native for mobile",
+          "A content management system when your team needs to edit the site",
+          "Performance and Core Web Vitals checked before launch",
+          "Technical SEO: metadata, sitemap, structured data and multiple languages",
+          "Accessibility to WCAG AA",
+          "Deploy on Vercel or your infrastructure, with previews for every change"
+        ],
+        "fit": [
+          "You have a design and need a web developer to build it well",
+          "Your current site is slow, hard to edit or doesn't show up in search",
+          "You need a web and a mobile app that share code"
+        ],
+        "faq": [
+          {
+            "q": "Why Next.js?",
+            "a": "It renders pages on the server, so they load fast and search engines read them in full, and it scales from a five-page site to a full product without changing tools."
+          },
+          {
+            "q": "Can you work on an existing codebase?",
+            "a": "Yes. I start with a review to understand how it's built and what's fragile, then we agree on what to change first."
+          },
+          {
+            "q": "Will I be able to edit the content myself?",
+            "a": "If you need to, yes. I connect a content management system so your team can change texts, images and posts without touching the code."
+          }
+        ]
+      },
+      "ai-features": {
+        "title": "AI features and agents",
+        "tagline": "AI that does a job in your product.",
+        "body": "Assistants, automations and AI features built into your product, with the guardrails production needs.",
+        "duration": "2 to 6 weeks",
+        "metaTitle": "AI Features and Agents Built Into Your Product",
+        "metaDescription": "AI features, assistants and agents designed and built into your web product: search, summaries, automations and chat, with the guardrails production needs.",
+        "intro": [
+          "A model answering in a demo is easy. Making it useful inside a product is the hard part: knowing when it should answer, what data it can see, what it does when it's wrong and how much each answer costs.",
+          "I design the feature around the task the person is trying to finish, connect it to your data, and build it with limits, logs and fallbacks so it behaves the same on the thousandth request as on the first."
+        ],
+        "includes": [
+          "Finding the tasks where AI saves time, and the ones where it doesn't",
+          "Design of the experience: inputs, answers, loading and error states",
+          "Integration with Claude, OpenAI or other models through their APIs",
+          "Search and answers over your own content and data",
+          "Agents and automations that act on your tools",
+          "Usage limits, cost tracking and quality checks"
+        ],
+        "fit": [
+          "You want to add AI to your product but aren't sure where it helps",
+          "Your team repeats a task that could be automated",
+          "You built a prototype with a model and need it to be reliable"
+        ],
+        "faq": [
+          {
+            "q": "Which models do you work with?",
+            "a": "The one that fits the task. Usually Claude or OpenAI's models, chosen for quality, speed and cost, and built so it can be swapped later."
+          },
+          {
+            "q": "Is my data used to train the model?",
+            "a": "Not with the business APIs I use: they don't train on your data by default. I also send each request only the data it needs."
+          },
+          {
+            "q": "How do you know the answers are good?",
+            "a": "We write a set of real examples with the answers we expect and run them on every change, so a new prompt or model can't quietly make things worse."
+          }
+        ]
+      },
+      "ai-prototype-to-production": {
+        "title": "From AI prototype to production",
+        "tagline": "From working in the demo to working for everyone.",
+        "body": "An app built with Lovable, v0, Bolt or Cursor that works in a demo but not yet in production: I review it, fix it and get it ready to ship.",
+        "duration": "2 to 4 weeks",
+        "metaTitle": "From AI Prototype to Production: Lovable, v0, Bolt",
+        "metaDescription": "Your app built with Lovable, v0, Bolt or Cursor works in the demo. I review the code, fix security, data and performance, and get it ready to launch.",
+        "intro": [
+          "AI tools make it possible to have a working app in a weekend. What they don't do is check that the database is protected, that a user can't see another's data, or that the app holds up with a hundred people at once.",
+          "I start with a code review and a written list of what's at risk, ordered by how much it matters. Then I fix it, keep what already works and leave you with an app you can launch and keep building on."
+        ],
+        "includes": [
+          "A code review with a written report of the risks",
+          "Security: authentication, permissions and data access rules",
+          "Database structure and migrations",
+          "Performance and loading times",
+          "Error tracking and a proper production deploy",
+          "Cleanup so another developer, or the AI, can keep building on it"
+        ],
+        "fit": [
+          "You built an app with Lovable, v0, Bolt, Replit or Cursor and want to launch it",
+          "Your prototype already has users and you're worried about breaking it",
+          "Every change the AI makes breaks something else"
+        ],
+        "faq": [
+          {
+            "q": "Do you rewrite the app from scratch?",
+            "a": "Almost never. Most of what the tool generated is usable. I fix what's risky and restructure only what's blocking you."
+          },
+          {
+            "q": "Can I keep using the AI tool after?",
+            "a": "Yes. I leave the code organized and documented so the tool, or a developer, can keep building without undoing the fixes."
+          },
+          {
+            "q": "What if it's built on Supabase or Firebase?",
+            "a": "That's the most common case. I review the access rules, which are usually what's missing, and keep the same platform."
+          }
+        ]
+      }
+    }
   },
   "blog": {
     "label": "Blog",

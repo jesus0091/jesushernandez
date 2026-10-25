@@ -100,7 +100,7 @@ export default function HomePage() {
           {/* The same moving wall as a project page, dealt from every project. */}
           <div className="relative mt-6 h-[38svh] min-h-60 w-full overflow-hidden rounded-card bg-zinc-200"
           >
-            <CoverMosaic tiles={HERO_MOSAIC} animated sizes="(min-width: 768px) 280px, 210px" />
+            <CoverMosaic tiles={HERO_MOSAIC} animated prioritySrc="/images/wall/color/Banner-10.webp" sizes="(min-width: 768px) 280px, 210px" />
           </div>
         </div>
       </section>

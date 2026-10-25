@@ -16,6 +16,7 @@
     "lint:fix": "eslint --fix",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
+    "test:routes": "node scripts/check-routes.mjs",
     "clean": "rm -rf .next out coverage"
   },
   "dependencies": {

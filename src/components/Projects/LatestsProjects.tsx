@@ -1,6 +1,7 @@
 "use client";
 
-import { BehanceLogo, BookOpenText, FlowArrow, GithubLogo, ArrowRight, PenNib, Question } from "@/components/icons";
+import { ButtonInner, buttonClass } from "@/components/PillButton";
+import { BehanceLogo, BookOpenText, FlowArrow, GithubLogo, PenNib, Question } from "@/components/icons";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useTranslations } from "next-intl";
@@ -309,7 +310,7 @@ export default function LatestProjects() {
     >
       {/* Header inside container */}
       <div className="mx-auto max-w-[1280px] w-full px-6 md:px-8">
-        <div ref={headerRef} className="flex items-end justify-between gap-4 mb-3">
+        <div ref={headerRef} className="flex items-end justify-between gap-4">
           <div className="flex flex-col gap-2">
             {/* Anchor to measure left offset for full-bleed carousel */}
             <div ref={anchorRef} className="absolute" aria-hidden />
@@ -327,14 +328,11 @@ export default function LatestProjects() {
             </p>
           </div>
 
-          <Link
-            href="/works"
-            data-sfx="cta"
-            className="hidden md:inline-flex items-center gap-2 shrink-0 rounded-full px-6 py-3 bg-[var(--black)] text-white font-medium text-base transition hover:bg-zinc-800"
-          >
-            {t("viewAll")}
-            <ArrowRight size={16} />
-          </Link>
+          <div className="hidden shrink-0 md:block">
+            <Link href="/works" data-sfx="cta" className={buttonClass()}>
+              <ButtonInner>{t("viewAll")}</ButtonInner>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -350,9 +348,9 @@ export default function LatestProjects() {
             pinned viewport, so it stays while the cards scroll by. */}
         <p
           data-caption
-          className={`mx-auto max-w-[1280px] w-full md:px-8 mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.08em] text-[var(--color-ink-4)] ${scrollDriven ? "px-6" : ""}`}
+          className={`mx-auto max-w-[1280px] w-full md:px-8 mt-1 mb-6 md:mb-8 flex items-center gap-2.5 font-sans text-lg md:text-xl leading-none font-medium tracking-[-0.01em] text-[var(--color-ink-3)] ${scrollDriven ? "px-6" : ""}`}
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" aria-hidden />
+          <span className="h-2 w-2 rounded-full bg-[var(--color-accent)]" aria-hidden />
           {t("caption", { count: LATEST.length })}
         </p>
 
@@ -420,10 +418,9 @@ export default function LatestProjects() {
               data-sfx="cta"
               data-end-cta
               style={{ visibility: "hidden", opacity: 0 }}
-              className="inline-flex items-center gap-2 shrink-0 rounded-full px-6 py-3 bg-[var(--black)] text-white font-medium text-base transition hover:bg-zinc-800"
+              className={buttonClass({ className: "shrink-0" })}
             >
-              {t("viewAll")}
-              <ArrowRight size={16} />
+              <ButtonInner>{t("viewAll")}</ButtonInner>
             </Link>
           </div>
         )}
@@ -439,10 +436,9 @@ export default function LatestProjects() {
           <div className="flex items-center gap-3 shrink-0">
             <Link
               href="/works"
-              className="md:hidden inline-flex items-center gap-2 rounded-full px-5 py-2.5 bg-[var(--black)] text-white font-medium text-sm transition hover:bg-zinc-800"
+              className={buttonClass({ size: "sm", className: "md:hidden" })}
             >
-              {t("viewAll")}
-              <ArrowRight size={16} />
+              <ButtonInner size="sm">{t("viewAll")}</ButtonInner>
             </Link>
           </div>
         </div>

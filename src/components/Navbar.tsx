@@ -246,8 +246,7 @@ export default function Navbar() {
             <span
               aria-hidden
               className={[
-                // -mr: the link's own padding already spaces the first link from it.
-                "-mr-3 lg:-mr-4 text-lg font-light transition-colors duration-300",
+                "text-lg font-light transition-colors duration-300",
                 light ? "text-white/50" : "text-[var(--color-ink-4)]",
               ].join(" ")}
             >

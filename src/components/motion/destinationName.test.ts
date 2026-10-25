@@ -15,5 +15,9 @@ describe("destinationName", () => {
     expect(destinationName("/lab", t)).toBe("T:pages.lab");
     expect(destinationName("/es/works", t)).toBe("T:pages.works");
     expect(destinationName("/es/blog", t)).toBe("T:pages.blog");
+    expect(destinationName("/about", t)).toBe("T:pages.about");
+    expect(destinationName("/es/sobre-mi", t)).toBe("T:pages.about");
+    expect(destinationName("/services", t)).toBe("T:pages.services");
+    expect(destinationName("/es/servicios", t)).toBe("T:pages.services");
   });
 });

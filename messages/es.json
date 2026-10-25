@@ -30,6 +30,7 @@
     "location": "En Argentina"
   },
   "nav": {
+    "skipToContent": "Saltar al contenido",
     "home": "Inicio",
     "works": "Proyectos",
     "lab": "Lab",
@@ -67,6 +68,8 @@
   },
   "transition": {
     "pages": {
+      "about": "Sobre mí",
+      "services": "Servicios",
       "home": "Inicio",
       "works": "Proyectos",
       "lab": "Lab",
@@ -262,31 +265,8 @@
   },
   "services": {
     "label": "Servicios",
-    "title": "Diseñador y desarrollador web, de la idea a producción",
+    "title": "Diseñador y desarrollador web",
     "lead": "Una sola persona para producto, diseño y código. Trabajo con fundadores y equipos que necesitan diseñar y construir un producto de punta a punta, o llevar uno existente más lejos.",
-    "listTitle": "Qué puedo hacer por ti",
-    "list": [
-      {
-        "title": "MVPs de punta a punta",
-        "body": "De la idea a un producto en producción: alcance, flujos, interfaz, desarrollo y lanzamiento."
-      },
-      {
-        "title": "Diseño web, de producto y UX/UI",
-        "body": "Investigación, flujos de usuario, interfaces y design systems en Figma, listos para construir."
-      },
-      {
-        "title": "Desarrollo web y móvil",
-        "body": "Next.js y React para la web, React Native para móvil, TypeScript en todo."
-      },
-      {
-        "title": "Funciones y agentes de IA",
-        "body": "Asistentes, automatizaciones y funciones de IA integradas en tu producto, con los controles que necesita producción."
-      },
-      {
-        "title": "Del prototipo con IA a producción",
-        "body": "Una app hecha con Lovable, v0, Bolt o Cursor que funciona en la demo pero todavía no en producción: la reviso, la corrijo y la dejo lista para lanzar."
-      }
-    ],
     "forTitle": "Con quién trabajo",
     "for": [
       "Fundadores y startups en Estados Unidos y Latinoamérica",
@@ -333,7 +313,177 @@
         "a": "Escríbeme con unas líneas sobre tu proyecto. Te respondo para coordinar una llamada de 30 minutos."
       }
     ],
-    "cta": "Cuéntame tu proyecto"
+    "cta": "Cuéntame tu proyecto",
+    "ui": {
+      "number": "Servicio",
+      "price": "Precio",
+      "priceValue": "A cotizar por proyecto",
+      "duration": "Duración",
+      "view": "Ver el servicio",
+      "back": "Todos los servicios",
+      "includesTitle": "Qué incluye",
+      "fitTitle": "Te sirve si",
+      "faqTitle": "Preguntas sobre este servicio",
+      "moreTitle": "Otros servicios"
+    },
+    "items": {
+      "product-design": {
+        "title": "Diseño web, de producto y UX/UI",
+        "tagline": "Pantallas listas para construir.",
+        "body": "Investigación, flujos de usuario, interfaces y design systems en Figma, listos para construir.",
+        "duration": "3 a 6 semanas",
+        "metaTitle": "Diseñador de producto y diseñador web: diseño UX/UI",
+        "metaDescription": "Diseñador de producto y diseñador web freelance: investigación, flujos de usuario, interfaces UX/UI y design systems en Figma, hechos por alguien que también los construye.",
+        "intro": [
+          "Un buen diseño resuelve un problema de quien lo usa antes de verse bien. Empiezo por esa persona: qué intenta hacer, dónde se traba y qué necesita el negocio de ella.",
+          "Como también escribo el código, cada pantalla que diseño es una que sé cómo construir. El archivo de Figma llega con componentes, estados y versiones responsive, así el desarrollo no empieza adivinando."
+        ],
+        "includes": [
+          "Entrevistas o una revisión de los datos que ya tienes",
+          "Flujos de usuario y arquitectura de información",
+          "Wireframes para acordar la estructura antes de lo visual",
+          "Diseño de interfaz en alta fidelidad para escritorio y móvil",
+          "Un design system con componentes, tokens y estados",
+          "Un prototipo navegable para probar con usuarios"
+        ],
+        "fit": [
+          "Vas a lanzar una web, una app web o una app móvil y necesitas diseñarla",
+          "Tu producto funciona pero la gente se pierde o abandona",
+          "Tu equipo tiene desarrolladores y le falta un diseñador de producto"
+        ],
+        "faq": [
+          {
+            "q": "¿Diseñas sitios web o productos?",
+            "a": "Las dos cosas. Sitios web, apps web y apps móviles. El proceso cambia con el proyecto: una web se apoya en el contenido y la marca, un producto en los flujos y los estados."
+          },
+          {
+            "q": "¿Qué recibo al final?",
+            "a": "Un archivo de Figma ordenado con cada pantalla, sus componentes y estados, y un prototipo navegable. Si no lo construyo yo, se lo explico a tus desarrolladores."
+          },
+          {
+            "q": "¿Puedes trabajar con mi marca actual?",
+            "a": "Sí. Trabajo dentro de tu manual de marca, y si le faltan piezas para lo digital, como colores para los estados o una escala tipográfica, las propongo."
+          }
+        ]
+      },
+      "web-development": {
+        "title": "Desarrollo web y móvil",
+        "tagline": "Código que carga rápido y dura.",
+        "body": "Next.js y React para la web, React Native para móvil, TypeScript en todo.",
+        "duration": "4 a 10 semanas",
+        "metaTitle": "Desarrollador web con Next.js, React y React Native",
+        "metaDescription": "Desarrollador web freelance: sitios y apps rápidos con Next.js, React y TypeScript, y React Native para móvil. Diseñados y construidos por una sola persona.",
+        "intro": [
+          "Construyo sitios y apps con Next.js, React y TypeScript, y apps móviles con React Native. El objetivo es un código que cargue rápido, aparezca en los buscadores, funcione para todos y que otro desarrollador pueda leer dentro de un año.",
+          "Puedo partir de un diseño mío, del Figma de tu equipo o de un código existente que necesita avanzar. En cualquier caso ves el avance cada semana en un enlace que puedes abrir, no en un informe."
+        ],
+        "includes": [
+          "Desarrollo en Next.js y TypeScript, o React Native para móvil",
+          "Un gestor de contenidos cuando tu equipo necesita editar el sitio",
+          "Rendimiento y Core Web Vitals revisados antes del lanzamiento",
+          "SEO técnico: metadatos, sitemap, datos estructurados y varios idiomas",
+          "Accesibilidad según WCAG AA",
+          "Despliegue en Vercel o en tu infraestructura, con una vista previa de cada cambio"
+        ],
+        "fit": [
+          "Tienes un diseño y necesitas un desarrollador web que lo construya bien",
+          "Tu sitio actual es lento, difícil de editar o no aparece en Google",
+          "Necesitas una web y una app móvil que compartan código"
+        ],
+        "faq": [
+          {
+            "q": "¿Por qué Next.js?",
+            "a": "Genera las páginas en el servidor, así cargan rápido y los buscadores las leen completas, y escala de un sitio de cinco páginas a un producto completo sin cambiar de herramienta."
+          },
+          {
+            "q": "¿Puedes trabajar sobre un código existente?",
+            "a": "Sí. Empiezo con una revisión para entender cómo está hecho y qué es frágil, y después acordamos qué cambiar primero."
+          },
+          {
+            "q": "¿Voy a poder editar el contenido yo?",
+            "a": "Si lo necesitas, sí. Conecto un gestor de contenidos para que tu equipo cambie textos, imágenes y publicaciones sin tocar el código."
+          }
+        ]
+      },
+      "ai-features": {
+        "title": "Funciones y agentes de IA",
+        "tagline": "IA que hace un trabajo dentro de tu producto.",
+        "body": "Asistentes, automatizaciones y funciones de IA integradas en tu producto, con los controles que necesita producción.",
+        "duration": "2 a 6 semanas",
+        "metaTitle": "Funciones y agentes de IA integrados en tu producto",
+        "metaDescription": "Funciones, asistentes y agentes de IA diseñados e integrados en tu producto web: búsqueda, resúmenes, automatizaciones y chat, con los controles que necesita producción.",
+        "intro": [
+          "Que un modelo responda en una demo es fácil. Lo difícil es que sea útil dentro de un producto: saber cuándo debe responder, qué datos puede ver, qué hace cuando se equivoca y cuánto cuesta cada respuesta.",
+          "Diseño la función alrededor de la tarea que la persona quiere terminar, la conecto con tus datos y la construyo con límites, registros y alternativas para que se comporte igual en la solicitud número mil que en la primera."
+        ],
+        "includes": [
+          "Encontrar las tareas donde la IA ahorra tiempo, y las que no",
+          "Diseño de la experiencia: entradas, respuestas y estados de carga y error",
+          "Integración con Claude, OpenAI u otros modelos por sus APIs",
+          "Búsqueda y respuestas sobre tu propio contenido y tus datos",
+          "Agentes y automatizaciones que actúan sobre tus herramientas",
+          "Límites de uso, control de costos y revisiones de calidad"
+        ],
+        "fit": [
+          "Quieres sumar IA a tu producto pero no sabes dónde ayuda",
+          "Tu equipo repite una tarea que se podría automatizar",
+          "Hiciste un prototipo con un modelo y necesitas que sea confiable"
+        ],
+        "faq": [
+          {
+            "q": "¿Con qué modelos trabajas?",
+            "a": "Con el que mejor se ajusta a la tarea. Normalmente Claude o los modelos de OpenAI, elegidos por calidad, velocidad y costo, y construido para poder cambiarlo después."
+          },
+          {
+            "q": "¿Se usan mis datos para entrenar el modelo?",
+            "a": "No con las APIs para empresas que uso: por defecto no entrenan con tus datos. Además, cada solicitud lleva solo los datos que necesita."
+          },
+          {
+            "q": "¿Cómo sabes que las respuestas son buenas?",
+            "a": "Escribimos un conjunto de ejemplos reales con las respuestas que esperamos y lo corremos en cada cambio, así un prompt o un modelo nuevo no puede empeorar las cosas sin que lo notemos."
+          }
+        ]
+      },
+      "ai-prototype-to-production": {
+        "title": "Del prototipo con IA a producción",
+        "tagline": "De funcionar en la demo a funcionar para todos.",
+        "body": "Una app hecha con Lovable, v0, Bolt o Cursor que funciona en la demo pero todavía no en producción: la reviso, la corrijo y la dejo lista para lanzar.",
+        "duration": "2 a 4 semanas",
+        "metaTitle": "Del prototipo con IA a producción: Lovable, v0, Bolt",
+        "metaDescription": "Tu app hecha con Lovable, v0, Bolt o Cursor funciona en la demo. Reviso el código, corrijo seguridad, datos y rendimiento, y la dejo lista para lanzar.",
+        "intro": [
+          "Las herramientas de IA permiten tener una app funcionando en un fin de semana. Lo que no hacen es revisar que la base de datos esté protegida, que un usuario no pueda ver los datos de otro o que la app aguante a cien personas a la vez.",
+          "Empiezo con una revisión del código y una lista por escrito de lo que está en riesgo, ordenada por lo que más importa. Después lo corrijo, conservo lo que ya funciona y te dejo una app que puedes lanzar y seguir construyendo."
+        ],
+        "includes": [
+          "Una revisión del código con un informe por escrito de los riesgos",
+          "Seguridad: autenticación, permisos y reglas de acceso a los datos",
+          "Estructura de la base de datos y migraciones",
+          "Rendimiento y tiempos de carga",
+          "Seguimiento de errores y un despliegue en producción como corresponde",
+          "Orden en el código para que otro desarrollador, o la IA, pueda seguir construyendo"
+        ],
+        "fit": [
+          "Hiciste una app con Lovable, v0, Bolt, Replit o Cursor y quieres lanzarla",
+          "Tu prototipo ya tiene usuarios y te preocupa romperlo",
+          "Cada cambio que hace la IA rompe otra cosa"
+        ],
+        "faq": [
+          {
+            "q": "¿Reescribes la app desde cero?",
+            "a": "Casi nunca. La mayor parte de lo que generó la herramienta sirve. Corrijo lo riesgoso y reestructuro solo lo que te está frenando."
+          },
+          {
+            "q": "¿Puedo seguir usando la herramienta de IA después?",
+            "a": "Sí. Dejo el código ordenado y documentado para que la herramienta, o un desarrollador, siga construyendo sin deshacer las correcciones."
+          },
+          {
+            "q": "¿Y si está hecha sobre Supabase o Firebase?",
+            "a": "Es el caso más común. Reviso las reglas de acceso, que suelen ser lo que falta, y mantengo la misma plataforma."
+          }
+        ]
+      }
+    }
   },
   "blog": {
     "label": "Blog",

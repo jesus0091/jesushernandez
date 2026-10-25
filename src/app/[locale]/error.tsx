@@ -1,5 +1,6 @@
 "use client";
 
+import { ButtonInner, buttonClass } from "@/components/PillButton";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Warning, ArrowClockwise, House } from "@/components/icons";
@@ -62,17 +63,15 @@ export default function Error({
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button
             onClick={reset}
-            className="group flex items-center gap-2 px-6 py-3 bg-[var(--black)] text-[var(--white)] rounded-full font-semibold transition-all hover:scale-105 hover:shadow-lg active:scale-95"
+            className={buttonClass()}
           >
-            <ArrowClockwise size={20} className="group-hover:rotate-180 transition-transform duration-500" />
-            {t("tryAgain")}
+            <ButtonInner icon={ArrowClockwise}>{t("tryAgain")}</ButtonInner>
           </button>
           <Link
             href="/"
-            className="group flex items-center gap-2 px-6 py-3 border-2 border-[var(--black)] text-[var(--black)] rounded-full font-semibold transition-all hover:scale-105 hover:shadow-lg active:scale-95"
+            className={buttonClass()}
           >
-            <House size={20} />
-            {t("home")}
+            <ButtonInner icon={House}>{t("home")}</ButtonInner>
           </Link>
         </div>
 

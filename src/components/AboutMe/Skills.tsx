@@ -1,5 +1,7 @@
 "use client";
 
+import { useNearViewport } from "@/components/motion/useNearViewport";
+
 import { isTouchScreen, prefersReducedMotion, setupGsap } from "@/lib/motion";
 import { useLayoutEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
@@ -53,7 +55,10 @@ export default function Skills() {
   const t = useTranslations("skills");
   const rootRef = useRef<HTMLElement | null>(null);
 
+  const near = useNearViewport(rootRef);
+
   useLayoutEffect(() => {
+    if (!near) return;
     const root = rootRef.current;
     if (!root || prefersReducedMotion()) return;
     const gsap = setupGsap();
@@ -114,7 +119,7 @@ export default function Skills() {
       cleanups.forEach((f) => f());
       ctx.revert();
     };
-  }, []);
+  }, [near]);
 
   return (
     <section id="skills" ref={rootRef} className="relative pt-20 md:pt-28">

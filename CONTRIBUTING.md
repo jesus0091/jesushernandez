@@ -72,7 +72,7 @@ export default () => {
 ### Styling
 
 - ✅ Preferir Tailwind CSS para estilos utilitarios
-- ✅ Usar Styled Components para lógica compleja de estilos
+- ✅ Usar clases y variables CSS para estilos complejos
 - ✅ Usar variables CSS para temas (ver `globals.css`)
 - ✅ Mobile-first approach
 
@@ -82,11 +82,6 @@ export default () => {
   {/* content */}
 </div>
 
-// Con Styled Components para lógica compleja
-const AnimatedBox = styled.div<{ $active: boolean }>`
-  opacity: ${({ $active }) => ($active ? 1 : 0)};
-  transition: opacity 0.3s ease;
-`;
 ```
 
 ### Animaciones
@@ -122,33 +117,18 @@ useEffect(() => {
 npm test
 
 # Watch mode
-npm run test:watch
+npm test -- --watch
 
-# Coverage
-npm run test:coverage
+# Comprobar tipos
+npm run type-check
 ```
 
 ### Guías de Testing
 
-- ✅ Testear comportamiento, no implementación
-- ✅ Usar `screen` de Testing Library
-- ✅ Preferir `userEvent` sobre `fireEvent`
-- ✅ Tests accesibles (queries por role, label)
-
-```typescript
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-
-test('button handles click', async () => {
-  const user = userEvent.setup();
-  render(<Button onClick={handleClick}>Click me</Button>);
-  
-  const button = screen.getByRole('button', { name: /click me/i });
-  await user.click(button);
-  
-  expect(handleClick).toHaveBeenCalled();
-});
-```
+- Usar Vitest (`describe`, `it`, `expect`) en archivos `*.test.ts` junto al código.
+- Probar comportamiento y reglas de contenido, URLs, traducciones y SEO.
+- React Testing Library y Playwright no están instalados. Las pruebas actuales no cubren interacciones en navegador.
+- Verificar manualmente teclado, móvil, cambio de idioma, anclas y movimiento reducido antes de publicar cambios de interfaz.
 
 ## 📐 Estructura de Archivos
 
@@ -163,8 +143,9 @@ src/
 ├── components/          # Componentes React
 │   ├── [Feature]/      # Componentes agrupados por feature
 │   └── Shared.tsx      # Componentes compartidos
-└── utils/              # Utilidades y hooks
-    └── hooks.ts
+├── i18n/               # Navegación, traducciones y SEO
+├── data/               # Proyectos y servicios
+└── lib/                # Blog, contacto, sonido y animación
 ```
 
 ## 🎨 Accesibilidad
@@ -269,8 +250,8 @@ npm run type-check
 # Build para ver errores
 npm run build
 
-# Ver bundle size
-npm run build && npx @next/bundle-analyzer
+# Ver JavaScript inicial por ruta
+npm run build
 ```
 
 ## 📚 Recursos

@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-25",
+  "page": "/",
+  "tool": "Lighthouse 12.6.0 / Chrome 156",
+  "mobile": {
+    "before": [
+      {
+        "score": 79,
+        "fcp": 1363.7032,
+        "lcp": 4223.980599999999,
+        "tbt": 311,
+        "si": 2467.2473780608657,
+        "cls": 0,
+        "bytes": 781726,
+        "mainthread": 3405.3879999999976
+      },
+      {
+        "score": 82,
+        "fcp": 1356.623,
+        "lcp": 4139.901749999999,
+        "tbt": 226,
+        "si": 1845.208204422566,
+        "cls": 0,
+        "bytes": 781732,
+        "mainthread": 2607.3279999999936
+      },
+      {
+        "score": 81,
+        "fcp": 1356.7008999999998,
+        "lcp": 4283.128374999999,
+        "tbt": 224.49999999999955,
+        "si": 1839.6342341349382,
+        "cls": 0,
+        "bytes": 781704,
+        "mainthread": 2282.104000000002
+      }
+    ],
+    "after": [
+      {
+        "score": 85,
+        "fcp": 1220.999,
+        "lcp": 3616.2472499999994,
+        "tbt": 241.00100000000066,
+        "si": 1800.7002655117985,
+        "cls": 0,
+        "bytes": 724867,
+        "mainthread": 2581.479999999997
+      },
+      {
+        "score": 82,
+        "fcp": 1212.302,
+        "lcp": 4233.830499999998,
+        "tbt": 204,
+        "si": 1785.3667668368446,
+        "cls": 0,
+        "bytes": 724813,
+        "mainthread": 2372.0320000000033
+      },
+      {
+        "score": 83,
+        "fcp": 1213.2545,
+        "lcp": 4106.331625000001,
+        "tbt": 211,
+        "si": 1778.1494051183004,
+        "cls": 0,
+        "bytes": 724813,
+        "mainthread": 2434.056000000002
+      }
+    ]
+  },
+  "desktop": {
+    "before": 99,
+    "after": 99
+  },
+  "publishedMobile": {
+    "url": "https://jesushernandez.site/",
+    "score": 76
+  },
+  "settings": {
+    "rttMs": 150,
+    "throughputKbps": 1638.4,
+    "requestLatencyMs": 562.5,
+    "downloadThroughputKbps": 1474.5600000000002,
+    "uploadThroughputKbps": 675,
+    "cpuSlowdownMultiplier": 4
+  }
+}

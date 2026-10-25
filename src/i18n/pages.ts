@@ -1,3 +1,4 @@
+import { SERVICES } from "@/data/services";
 import { WORKS } from "@/data/works";
 import { getPostKeys, getPosts } from "@/lib/blog";
 import type { Locale } from "./routing";
@@ -31,7 +32,13 @@ const latest = (dates: string[], fallback: string) => dates.sort().at(-1) ?? fal
 export const PAGES: Record<string, Page> = {
   "/": { paths: BOTH("/"), index: true, updated: "2026-10-20" },
   "/about": { paths: { en: "/about", es: esPath("/about") }, index: true, updated: "2026-10-20" },
-  "/services": { paths: { en: "/services", es: esPath("/services") }, index: true, updated: "2026-10-24" },
+  "/services": { paths: { en: "/services", es: esPath("/services") }, index: true, updated: "2026-10-25" },
+  ...Object.fromEntries(
+    SERVICES.map((id) => [
+      `/services/${id}`,
+      { paths: { en: `/services/${id}`, es: esPath(`/services/${id}`) }, index: true, updated: "2026-10-25" },
+    ]),
+  ),
   "/works": { paths: { en: "/works" }, index: true, updated: "2026-10-16" },
   // Indexed once it lists its first published post.
   "/blog": {

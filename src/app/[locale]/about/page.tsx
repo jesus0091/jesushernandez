@@ -1,3 +1,4 @@
+import { ButtonInner, buttonClass } from "@/components/PillButton";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -159,10 +160,9 @@ export default async function AboutPage({ params }: Props) {
                   target="_blank"
                   rel="me noopener noreferrer"
                   data-sfx="social"
-                  className="inline-flex items-center gap-2 rounded-full border border-black/15 px-5 py-3 text-base font-medium text-[var(--black)] transition hover:bg-black/5"
+                  className={buttonClass()}
                 >
-                  <Icon size={18} />
-                  {label}
+                  <ButtonInner icon={Icon}>{label}</ButtonInner>
                 </a>
               </li>
             ))}
@@ -171,16 +171,15 @@ export default async function AboutPage({ params }: Props) {
             <a
               href={contactHref(locale)}
               data-sfx="cta"
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--black)] px-6 py-3 text-base font-medium text-white transition hover:bg-zinc-800"
+              className={buttonClass()}
             >
-              {t("cta")}
-              <ArrowRight size={16} />
+              <ButtonInner>{t("cta")}</ButtonInner>
             </a>
             <Link
               href={pageFor("/services").paths[locale] ?? "/services"}
-              className="inline-flex items-center gap-2 rounded-full border border-black/15 px-6 py-3 text-base font-medium text-[var(--black)] transition hover:bg-black/5"
+              className={buttonClass()}
             >
-              {t("ctaServices")}
+              <ButtonInner>{t("ctaServices")}</ButtonInner>
             </Link>
           </div>
         </section>

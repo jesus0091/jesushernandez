@@ -1,5 +1,6 @@
 "use client";
 
+import { ButtonInner, buttonClass } from "@/components/PillButton";
 import { Fragment, useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
@@ -153,10 +154,9 @@ export default function WorkDetail({ work }: { work: Work }) {
                       href={l.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full border border-black/15 px-5 py-2.5 text-sm font-medium text-[var(--black)] transition hover:border-black hover:bg-black hover:text-white"
+                      className={buttonClass({ size: "sm" })}
                     >
-                      <Icon size={16} />
-                      {l.label}
+                      <ButtonInner icon={Icon} size="sm">{l.label}</ButtonInner>
                     </Link>
                   );
                 })}

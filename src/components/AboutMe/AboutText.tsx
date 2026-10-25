@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ArrowRight,
   BehanceLogo,
   GithubLogo,
   LinkedinLogo,
@@ -10,6 +9,7 @@ import React, { useLayoutEffect, useRef } from "react";
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { ButtonInner, buttonClass } from "@/components/PillButton";
 import { Link } from "@/i18n/navigation";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SectionHeading from "../motion/SectionHeading";
@@ -187,78 +187,9 @@ const AboutText: React.FC<AboutTextProps> = ({
               ))
             )}
           </p>
-          <style>{`
-            @keyframes btn-border-shine {
-              0%, 77%   { background-position: 200% 0; opacity: 0; }
-              80%       { background-position: 200% 0; opacity: 1; }
-              91%       { background-position: -100% 0; opacity: 1; }
-              94%, 100% { background-position: -100% 0; opacity: 0; }
-            }
-            .btn-border-wrap {
-              position: relative;
-              border-radius: 9999px;
-              border: 1.5px solid rgba(0,0,0,0.18);
-            }
-            .btn-border-wrap::before {
-              content: '';
-              position: absolute;
-              inset: -1.5px;
-              border-radius: 9999px;
-              padding: 1.5px;
-              background: linear-gradient(
-                90deg,
-                transparent 0%,
-                transparent 35%,
-                #ff6600 48%,
-                #ffaa00 55%,
-                transparent 68%,
-                transparent 100%
-              );
-              background-size: 300% 100%;
-              background-position: 200% 0;
-              -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-              mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-              -webkit-mask-composite: xor;
-              mask-composite: exclude;
-              animation: btn-border-shine 15s ease-in-out infinite;
-              pointer-events: none;
-            }
-            .btn-border-wrap:hover::before {
-              animation: none;
-              opacity: 0;
-            }
-            @keyframes btn-text-sweep {
-              0%, 77%   { background-position: 100% 0; }
-              91%       { background-position: 0% 0; }
-              94%, 100% { background-position: 100% 0; }
-            }
-            .btn-text-shine {
-              background: linear-gradient(
-                90deg,
-                #111 0%, #111 40%,
-                #ff6600 48%, #ffaa00 52%,
-                #111 60%, #111 100%
-              );
-              background-size: 400% 100%;
-              background-repeat: no-repeat;
-              background-position: 100% 0;
-              -webkit-background-clip: text;
-              background-clip: text;
-              -webkit-text-fill-color: transparent;
-              animation: btn-text-sweep 15s ease-in-out infinite;
-            }
-            .btn-border-wrap:hover .btn-text-shine {
-              -webkit-text-fill-color: white;
-              background: none;
-              animation: none;
-            }
-          `}</style>
-          <div className="btn-border-wrap w-fit">
-            <Link href="/works" data-sfx="cta" className="group flex flex-row items-center gap-2 px-5 py-3 rounded-full font-semibold text-base transition-colors hover:bg-black hover:text-white">
-              <span className="btn-text-shine">{t("cta")}</span>
-              <ArrowRight className="transition-transform duration-200 group-hover:translate-x-0.5" />
-            </Link>
-          </div>
+          <Link href="/works" data-sfx="cta" className={buttonClass()}>
+            <ButtonInner>{t("cta")}</ButtonInner>
+          </Link>
         </div>
       </div>
     </section>

@@ -1,5 +1,6 @@
 "use client";
 
+import { ButtonInner, buttonClass } from "@/components/PillButton";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { House, ArrowLeft } from "@/components/icons";
@@ -72,17 +73,15 @@ export default function NotFoundView({ homeHref, labels }: NotFoundViewProps) {
         >
           <Link
             href={homeHref}
-            className="group flex items-center gap-2 px-6 py-3 bg-[var(--black)] text-[var(--white)] rounded-full font-semibold transition-all hover:scale-105 hover:shadow-lg active:scale-95"
+            className={buttonClass()}
           >
-            <House size={20} />
-            {labels.home}
+            <ButtonInner icon={House}>{labels.home}</ButtonInner>
           </Link>
           <button
             onClick={() => window.history.back()}
-            className="group flex items-center gap-2 px-6 py-3 border-2 border-[var(--black)] text-[var(--black)] rounded-full font-semibold transition-all hover:scale-105 hover:shadow-lg active:scale-95"
+            className={buttonClass()}
           >
-            <ArrowLeft size={20} />
-            {labels.back}
+            <ButtonInner icon={ArrowLeft} iconSide="start">{labels.back}</ButtonInner>
           </button>
         </div>
 

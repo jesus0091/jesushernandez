@@ -1,205 +1,88 @@
-# 🎨 Jesus Hernandez - Portfolio
+# Portfolio de Jesús Hernández
 
-Portfolio personal de Jesus Hernandez, AI-Driven Engineer & Product Designer especializado en React, Next.js, y la creación de experiencias digitales pulidas.
+Portfolio personal de Product Engineering, diseño de producto y desarrollo front-end. Incluye proyectos, casos de estudio, servicios y un blog en inglés y español.
 
-![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black?style=flat-square&logo=next.js)
-![React](https://img.shields.io/badge/React-19.1.0-blue?style=flat-square&logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript)
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.1-38B2AC?style=flat-square&logo=tailwind-css)
+## Desarrollo
 
-## ✨ Características
-
-- ⚡️ **Next.js 15** con App Router
-- ⚛️ **React 19** - Última versión
-- 🎨 **Styled Components** + **Tailwind CSS 4**
-- 🌈 **GSAP** - Animaciones fluidas y complejas
-- 🌓 **Tema claro/oscuro** con persistencia
-- 📱 **100% Responsive** - Mobile-first design
-- ♿ **Accesible** - WCAG 2.1 AA compliant
-- 🔍 **SEO Optimizado** - Meta tags, Open Graph, Schema.org
-- 🧪 **Testing** - Jest + React Testing Library
-- 📦 **TypeScript** - Type-safe code
-
-## 🚀 Inicio Rápido
-
-### Prerequisitos
-
-- Node.js 18+ 
-- npm, yarn, pnpm o bun
-
-### Instalación
+Usar Node.js 22.12+ de la rama 22, o Node.js 24 LTS, y npm. Vitest 5 requiere estas versiones aunque Next.js admita versiones anteriores.
 
 ```bash
-# Clonar el repositorio
-git clone https://github.com/jesus0091/my-portfolio-web.git
-
-# Navegar al directorio
-cd my-portfolio-web
-
-# Instalar dependencias
-npm install
-# o
-yarn install
-# o
-pnpm install
-```
-
-### Desarrollo
-
-```bash
-# Iniciar servidor de desarrollo
+npm ci
 npm run dev
-
-# El sitio estará disponible en http://localhost:3000
 ```
 
-### Build para Producción
+El servidor de desarrollo está disponible en http://localhost:3000.
 
 ```bash
-# Crear build optimizado
-npm run build
-
-# Iniciar servidor de producción
-npm start
-```
-
-### Testing
-
-```bash
-# Ejecutar tests
-npm test
-
-# Tests en modo watch
+npm run lint        # ESLint
+npm run type-check  # TypeScript
+npm test           # Vitest
 npm test -- --watch
+npm run build      # Compilación de producción
+npm start          # Servir el build
+npm run test:routes # Comprobar URLs y redirects con el servidor iniciado
 ```
 
-### Linting
+## Tecnologías y estructura
 
-```bash
-# Ejecutar ESLint
-npm run lint
+- Next.js 15, App Router y React 19.
+- TypeScript estricto y Tailwind CSS 4.
+- GSAP para animaciones y Lenis para scroll.
+- next-intl para traducciones y navegación.
+- Markdown con gray-matter, marked y sugar-high para el blog.
+- Phosphor Icons y Embla Carousel.
+- Vitest para pruebas de contenido, traducciones, URLs y SEO.
+
+```text
+content/blog/{en,es}/  Artículos Markdown por idioma
+messages/{en,es}.json  Traducciones
+public/               Imágenes y vídeos
+src/app/[locale]/     Home, about, services, works, blog y lab
+src/components/       Componentes y animaciones
+src/data/             Proyectos, casos de estudio y servicios
+src/i18n/             Navegación, slugs, registro de páginas y SEO
+src/lib/              Blog, contacto, sonido y utilidades de animación
 ```
 
-## 📁 Estructura del Proyecto
+## Idiomas y contenido
 
-```
-my-portfolio-web/
-├── public/
-│   ├── images/          # Imágenes y assets
-│   └── *.svg           # Iconos SVG
-├── src/
-│   ├── app/
-│   │   ├── about/      # Página About
-│   │   ├── projects/   # Página Projects
-│   │   ├── layout.tsx  # Layout principal
-│   │   ├── page.tsx    # Página home
-│   │   ├── error.tsx   # Error boundary
-│   │   └── not-found.tsx # 404 page
-│   └── components/
-│       ├── AboutMe/    # Componentes de About
-│       ├── Projects/   # Componentes de Projects
-│       └── ...         # Componentes compartidos
-├── jest.config.js      # Configuración de Jest
-├── next.config.ts      # Configuración de Next.js
-├── tailwind.config.ts  # Configuración de Tailwind
-└── tsconfig.json       # Configuración de TypeScript
+El inglés se sirve en `/`; el español, en `/es`. El idioma se elige explícitamente, sin redirección según el navegador. Las URLs traducidas se declaran en `src/i18n/slugs.ts` y sus redirects y rewrites se configuran en `next.config.ts`.
+
+`src/i18n/pages.ts` centraliza los idiomas disponibles, la indexación y las fechas de actualización. De allí se derivan canonical, hreflang y sitemap. Al agregar una página o traducción, actualizar ese registro y los mensajes correspondientes.
+
+Los artículos viven en `content/blog/<idioma>/*.md`. Revisar un artículo existente como referencia para sus metadatos. Las traducciones comparten la clave del slug inglés mediante `alternateSlug`. Los artículos con `draft: true` se excluyen en producción. El Markdown admite HTML y debe provenir de autores de confianza; antes de aceptar contenido externo hay que incorporar sanitización.
+
+## Configuración
+
+El sitio funciona sin variables de entorno. Para habilitar Google Analytics 4, definir en `.env.local` o en el entorno del despliegue:
+
+```dotenv
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 ```
 
-## 🎨 Stack Tecnológico
+Las variables `NEXT_PUBLIC_*` son públicas y se incorporan durante el build. No guardar secretos en ellas.
 
-### Frontend
-- **Next.js 15.5.4** - React framework
-- **React 19.1.0** - UI library
-- **TypeScript 5** - Type safety
-- **Tailwind CSS 4** - Utility-first CSS
-- **Styled Components 6** - CSS-in-JS
+- Estilos y tokens: `src/app/globals.css`.
+- Fuentes y layout por idioma: `src/app/[locale]/layout.tsx`.
+- Dominio y utilidades SEO: `src/i18n/seo.ts`.
+- Correo de contacto: `src/lib/contact.ts`.
 
-### Animaciones
-- **GSAP 3.13** - Professional animations
-- **ScrollTrigger** - Scroll-based animations
+## Verificación y despliegue
 
-### Estado & Temas
-- **Context API** - Theme management
-- **localStorage** - Theme persistence
+Antes de publicar, ejecutar lint, tipos, tests y build. Las páginas se pregeneran; middleware, redirects, rewrites y headers requieren un hosting compatible con Next.js. No es un export HTML estático.
 
-### Testing
-- **Jest 30** - Testing framework
-- **React Testing Library 16** - Component testing
-- **@testing-library/jest-dom** - Custom matchers
+El proyecto incorpora enlace para saltar al contenido, controles de sonido y movimiento, y tratamiento de `prefers-reduced-motion`. Estas medidas no sustituyen una auditoría de accesibilidad. Verificar también navegación por teclado, móvil, cambio de idioma, enlaces con anclas y páginas 404 en un navegador.
 
-### Iconos
-- **@tabler/icons-react** - Icon library
+`test:routes` comprueba estados HTTP, idioma del documento, enlaces de accesibilidad, headers y redirects. Usa `BASE_URL=http://localhost:3100 npm run test:routes` para otro puerto. Requiere un servidor local ya iniciado; no ejecuta interacciones de navegador.
 
-## 🌐 Deployment
+Los logos de Skills se sirven desde un sprite SVG. Después de editar `src/components/AboutMe/skillLogoPaths.ts`, ejecutar `node scripts/generate-skill-logos.mjs` y versionar el SVG y los nombres generados. Los efectos de texto y el túnel se preparan al acercarse a la pantalla; el contenido y la altura de las secciones siguen presentes desde el servidor.
 
-El proyecto está optimizado para desplegar en:
+Las mediciones y las próximas prioridades están en [el informe de performance del 25 de octubre](reports/Performance%202026-10-25.md).
 
-- **Vercel** (recomendado) - Zero-config deployment
-- **Netlify**
-- **AWS Amplify**
-- Cualquier plataforma que soporte Next.js
+El build informa el JavaScript inicial por ruta. Para evaluar la experiencia real, medir además carga y scroll en dispositivos móviles; el tamaño del bundle por sí solo no determina el rendimiento.
 
-### Deploy en Vercel
+## Autor y licencia
 
-```bash
-# Instalar Vercel CLI
-npm i -g vercel
+Jesús Hernández · [Portfolio](https://jesushernandez.site) · [GitHub](https://github.com/jesus0091)
 
-# Deploy
-vercel
-```
-
-O conecta tu repositorio de GitHub directamente en [vercel.com](https://vercel.com)
-
-## 🔧 Configuración
-
-### Variables de Entorno
-
-Actualmente el proyecto no requiere variables de entorno. Si necesitas añadir alguna:
-
-1. Crea un archivo `.env.local`
-2. Añade tus variables:
-```env
-NEXT_PUBLIC_API_URL=https://api.example.com
-```
-
-### Personalización
-
-- **Colores**: Edita `src/app/globals.css` (variables CSS)
-- **Fuentes**: Configura en `src/app/layout.tsx`
-- **Animaciones**: Ajusta en componentes individuales con GSAP
-- **Metadata**: Actualiza en `src/app/layout.tsx`
-
-## 📝 Mejoras Implementadas
-
-✅ Eliminación de tests de práctica  
-✅ Corrección de archivos duplicados  
-✅ Nombres de funciones en páginas corregidos  
-✅ Error boundaries (error.tsx, not-found.tsx, global-error.tsx)  
-✅ Referencias de iconos corregidas  
-✅ Documentación completa  
-
-## 📄 Licencia
-
-Este proyecto es de código privado y propiedad de Jesus Hernandez.
-
-## 👤 Autor
-
-**Jesus Hernandez**
-
-- 🌐 Website: [jesushernandez.site](https://jesushernandez.site)
-- 💼 LinkedIn: [@jesushernandez91](https://www.linkedin.com/in/jesushernandez91/)
-- 🐙 GitHub: [@jesus0091](https://github.com/jesus0091)
-- 🎨 Behance: [@devjesushernandez](https://www.behance.net/devjesushernandez)
-- 📧 Email: jesushernandez120491@gmail.com
-
-## 🙏 Agradecimientos
-
-- Next.js Team por el excelente framework
-- Vercel por el hosting
-- GSAP por las animaciones profesionales
-- Comunidad de React y TypeScript
-
----
-
-**Hecho con ❤️ por Jesus Hernandez**
+Código privado, propiedad de Jesús Hernández.
