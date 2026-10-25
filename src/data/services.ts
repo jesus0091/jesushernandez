@@ -4,10 +4,9 @@
  * the name of its sketch. Spanish URLs live in src/i18n/slugs.ts.
  */
 export const SERVICES = [
-  "product-design",
   "web-development",
-  "ai-features",
-  "ai-prototype-to-production",
+  "web-apps",
+  "mobile-apps",
 ] as const;
 
 export type ServiceId = (typeof SERVICES)[number];

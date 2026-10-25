@@ -8,7 +8,7 @@ import JsonLd from "@/components/JsonLd";
 import Navbar from "@/components/Navbar";
 import SectionHeading from "@/components/motion/SectionHeading";
 import ServiceRow, { type ServiceCopy, type ServiceLabels } from "@/components/Services/ServiceRow";
-import ServiceSketch from "@/components/Services/ServiceSketch";
+import ServiceArtwork from "@/components/Services/ServiceArtwork";
 import { SERVICES, isServiceId } from "@/data/services";
 import { Link } from "@/i18n/navigation";
 import { pageFor } from "@/i18n/pages";
@@ -71,7 +71,6 @@ export default async function ServicePage({ params }: Props) {
   const s = t.raw(`items.${id}`) as Service;
   const items = t.raw("items") as Record<string, ServiceCopy>;
   const labels = t.raw("ui") as Labels;
-  const index = SERVICES.indexOf(id);
   const listPath = pageFor("/services").paths[locale] ?? "/services";
   const url = absoluteUrl(pageFor(`/services/${id}`).paths[locale]!, locale);
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -114,26 +113,17 @@ export default async function ServicePage({ params }: Props) {
 
         <header className="mt-10 grid gap-10 border-b border-[var(--color-line-1)] pb-12 md:grid-cols-12 md:items-center md:pb-16">
           <div className="flex flex-col gap-4 md:col-span-7">
-            <span className={META}>
-              {labels.number} {pad(index + 1)} / {pad(SERVICES.length)}
-            </span>
             <h1 className="font-semibold tracking-title text-[var(--black)] text-[clamp(44px,7vw,104px)] leading-[0.98] text-balance">
               {s.title}
             </h1>
             <p className="text-xl md:text-3xl text-[var(--muted)]">{s.tagline}</p>
           </div>
-          <div className="w-full max-w-[420px] md:col-span-5 md:justify-self-end">
-            <ServiceSketch id={id} play="load" />
-          </div>
+          <ServiceArtwork id={id} play="load" className="w-full max-w-[460px] md:col-span-5 md:justify-self-end" />
 
           <dl className="grid grid-cols-2 gap-6 md:col-span-7 md:max-w-lg">
             <div className="flex flex-col gap-1">
               <dt className={META}>{labels.price}</dt>
               <dd className="text-lg md:text-xl text-[var(--black)]">{labels.priceValue}</dd>
-            </div>
-            <div className="flex flex-col gap-1">
-              <dt className={META}>{labels.duration}</dt>
-              <dd className="text-lg md:text-xl text-[var(--black)]">{s.duration}</dd>
             </div>
           </dl>
           <a
@@ -206,7 +196,7 @@ export default async function ServicePage({ params }: Props) {
               <ServiceRow
                 key={other}
                 id={other}
-                index={SERVICES.indexOf(other)}
+               
                 locale={locale}
                 copy={items[other]}
                 labels={labels}

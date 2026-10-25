@@ -11,36 +11,16 @@ type Props = {
   className?: string;
 };
 
-// Three layers, drawn in order: construction guides, the object, then the
-// accent details. The guides fade back once the drawing is done.
+// Drawn in order: construction guides, then the object's planes (its body
+// and tinted panels) fade in, its lines draw, and the
+// accent details pop. The guides fade back once the drawing is done.
 const G = { "data-sk": "guide", className: "sk-guide" } as const;
+const F = { "data-sk": "plane", className: "sk-fill" } as const;
+const T = { "data-sk": "plane", className: "sk-tint" } as const;
 const L = { "data-sk": "line", className: "sk-line" } as const;
 const A = { "data-sk": "accent", className: "sk-accent" } as const;
 
 const SKETCHES: Record<ServiceId, React.ReactNode> = {
-  // A phone wireframe next to a bezier curve with its handles.
-  "product-design": (
-    <>
-      <path {...G} d="M0 12.5H240" />
-      <path {...G} d="M0 137.5H240" />
-      <path {...G} d="M130.5 0V150" />
-      <path {...G} d="M200.5 0V150" />
-      <path {...G} d="M0 112.5H120" />
-      <path {...G} d="M0 36.5H120" />
-      <rect {...L} x="130.5" y="12.5" width="70" height="125" rx="12" />
-      <rect {...L} x="140.5" y="32.5" width="50" height="34" rx="4" />
-      <path {...L} d="M140.5 78.5H190.5" />
-      <path {...L} d="M140.5 88.5H174.5" />
-      <path {...L} d="M20.5 112.5C70.5 112.5 50.5 36.5 100.5 36.5" />
-      <path {...L} d="M20.5 112.5H62.5" />
-      <path {...L} d="M100.5 36.5H58.5" />
-      <circle {...L} cx="62.5" cy="112.5" r="3" />
-      <circle {...L} cx="58.5" cy="36.5" r="3" />
-      <rect {...A} x="16.5" y="108.5" width="8" height="8" />
-      <rect {...A} x="96.5" y="32.5" width="8" height="8" />
-      <rect {...A} x="140.5" y="106.5" width="50" height="12" rx="6" />
-    </>
-  ),
   // A browser window with code brackets in it.
   "web-development": (
     <>
@@ -49,8 +29,12 @@ const SKETCHES: Record<ServiceId, React.ReactNode> = {
       <path {...G} d="M28.5 0V150" />
       <path {...G} d="M212.5 0V150" />
       <path {...G} d="M120.5 0V150" />
+      <rect {...F} x="28.5" y="18.5" width="184" height="114" rx="8" />
+      <path {...T} d="M28.5 38.5V26.5A8 8 0 0 1 36.5 18.5H204.5A8 8 0 0 1 212.5 26.5V38.5Z" />
+      <rect {...T} x="44.5" y="112.5" width="48" height="8" rx="4" />
       <rect {...L} x="28.5" y="18.5" width="184" height="114" rx="8" />
       <path {...L} d="M28.5 38.5H212.5" />
+      <rect {...L} x="84.5" y="23.5" width="100" height="10" rx="5" />
       <path {...L} d="M100.5 66.5L82.5 84.5L100.5 102.5" />
       <path {...L} d="M140.5 66.5L158.5 84.5L140.5 102.5" />
       <path {...L} d="M128.5 60.5L112.5 108.5" />
@@ -60,40 +44,70 @@ const SKETCHES: Record<ServiceId, React.ReactNode> = {
       <rect {...A} x="168.5" y="96.5" width="6" height="12" />
     </>
   ),
-  // A question, an answer, and the spark that wrote it.
-  "ai-features": (
+  // A dashboard: sidebar, two stat cards and a bar chart.
+  "web-apps": (
     <>
-      <path {...G} d="M0 24.5H240" />
-      <path {...G} d="M0 126.5H240" />
-      <path {...G} d="M40.5 0V150" />
-      <path {...G} d="M204.5 0V150" />
-      <circle {...G} cx="40.5" cy="104.5" r="22" />
-      <path {...L} d="M118.5 24.5H196.5A8 8 0 0 1 204.5 32.5V52.5A8 8 0 0 1 196.5 60.5H132.5L118.5 70.5Z" />
-      <path {...L} d="M132.5 42.5H188.5" />
-      <path {...L} d="M76.5 82.5H180.5A8 8 0 0 1 188.5 90.5V118.5A8 8 0 0 1 180.5 126.5H76.5A8 8 0 0 1 68.5 118.5V90.5A8 8 0 0 1 76.5 82.5Z" />
-      <path {...L} d="M82.5 98.5H172.5" />
-      <path {...L} d="M82.5 110.5H140.5" />
-      <path {...A} d="M40.5 88.5C42.5 100.5 44.5 102.5 56.5 104.5C44.5 106.5 42.5 108.5 40.5 120.5C38.5 108.5 36.5 106.5 24.5 104.5C36.5 102.5 38.5 100.5 40.5 88.5Z" />
-      <circle {...A} cx="62.5" cy="78.5" r="3" />
+      <path {...G} d="M0 18.5H240" />
+      <path {...G} d="M0 132.5H240" />
+      <path {...G} d="M28.5 0V150" />
+      <path {...G} d="M212.5 0V150" />
+      <path {...G} d="M72.5 0V150" />
+      <rect {...F} x="28.5" y="18.5" width="184" height="114" rx="8" />
+      <path {...T} d="M28.5 26.5A8 8 0 0 1 36.5 18.5H72.5V132.5H36.5A8 8 0 0 1 28.5 124.5Z" />
+      <rect {...T} x="84.5" y="30.5" width="56" height="26" rx="4" />
+      <rect {...T} x="146.5" y="30.5" width="56" height="26" rx="4" />
+      <rect {...T} x="90.5" y="98.5" width="12" height="22" />
+      <rect {...T} x="110.5" y="84.5" width="12" height="36" />
+      <rect {...T} x="130.5" y="92.5" width="12" height="28" />
+      <rect {...T} x="150.5" y="76.5" width="12" height="44" />
+      <rect {...L} x="28.5" y="18.5" width="184" height="114" rx="8" />
+      <path {...L} d="M72.5 18.5V132.5" />
+      <path {...L} d="M40.5 38.5H60.5" />
+      <path {...L} d="M40.5 50.5H56.5" />
+      <path {...L} d="M40.5 62.5H60.5" />
+      <circle {...L} cx="50.5" cy="116.5" r="6" />
+      <rect {...L} x="84.5" y="30.5" width="56" height="26" rx="4" />
+      <rect {...L} x="146.5" y="30.5" width="56" height="26" rx="4" />
+      <path {...L} d="M154.5 48.5H180.5" />
+      <path {...L} d="M84.5 120.5H202.5" />
+      <rect {...L} x="90.5" y="98.5" width="12" height="22" />
+      <rect {...L} x="110.5" y="84.5" width="12" height="36" />
+      <rect {...L} x="130.5" y="92.5" width="12" height="28" />
+      <rect {...L} x="150.5" y="76.5" width="12" height="44" />
+      <path {...L} d="M96.5 88.5L116.5 74.5L136.5 82.5L156.5 66.5L176.5 58.5" />
+      <rect {...A} x="170.5" y="68.5" width="12" height="52" />
+      <rect {...A} x="92.5" y="40.5" width="22" height="6" rx="3" />
     </>
   ),
-  // A hand-drawn prototype, an arrow, and the same box built straight.
-  "ai-prototype-to-production": (
+  // A phone home screen, a new notification, and the store download beside it.
+  "mobile-apps": (
     <>
-      <path {...G} d="M0 34.5H240" />
-      <path {...G} d="M0 116.5H240" />
-      <path {...G} d="M20.5 0V150" />
-      <path {...G} d="M220.5 0V150" />
-      <path {...L} d="M22 37C40 33 64 36 92 34.5C95 56 92 86 94 115C70 118 44 114 21 117C18 92 23 62 22 37Z" />
-      <path {...L} d="M34 56C48 54 62 57 78 55" />
-      <path {...L} d="M34 70C44 72 56 69 66 71" />
-      <path {...L} d="M108.5 75.5H132.5" />
-      <path {...L} d="M124.5 67.5L132.5 75.5L124.5 83.5" />
-      <rect {...L} x="146.5" y="34.5" width="74" height="82" rx="6" />
-      <path {...L} d="M158.5 54.5H208.5" />
-      <path {...L} d="M158.5 66.5H190.5" />
-      <circle {...A} cx="183.5" cy="94.5" r="12" />
-      <path className="sk-line sk-on-accent" data-sk="accent" d="M177.5 94.5L181.5 98.5L189.5 90.5" />
+      <path {...G} d="M0 12.5H240" />
+      <path {...G} d="M0 137.5H240" />
+      <path {...G} d="M104.5 0V150" />
+      <path {...G} d="M174.5 0V150" />
+      <path {...G} d="M0 108.5H90" />
+      <circle {...T} cx="60.5" cy="72.5" r="30" />
+      <rect {...F} x="104.5" y="12.5" width="70" height="125" rx="12" />
+      <rect {...T} x="112.5" y="96.5" width="54" height="22" rx="5" />
+      <rect {...L} x="104.5" y="12.5" width="70" height="125" rx="12" />
+      <path {...L} d="M130.5 21.5H148.5" />
+      <rect {...L} x="114.5" y="36.5" width="12" height="12" rx="3" />
+      <rect {...L} x="133.5" y="36.5" width="12" height="12" rx="3" />
+      <rect {...L} x="152.5" y="36.5" width="12" height="12" rx="3" />
+      <rect {...L} x="114.5" y="55.5" width="12" height="12" rx="3" />
+      <rect {...L} x="133.5" y="55.5" width="12" height="12" rx="3" />
+      <rect {...L} x="152.5" y="55.5" width="12" height="12" rx="3" />
+      <rect {...L} x="114.5" y="74.5" width="12" height="12" rx="3" />
+      <rect {...L} x="112.5" y="96.5" width="54" height="22" rx="5" />
+      <path {...L} d="M120.5 104.5H150.5" />
+      <path {...L} d="M120.5 111.5H138.5" />
+      <path {...L} d="M128.5 128.5H150.5" />
+      <path {...L} d="M60.5 52.5V88.5" />
+      <path {...L} d="M46.5 74.5L60.5 88.5L74.5 74.5" />
+      <path {...L} d="M44.5 96.5H76.5" />
+      <rect {...A} x="133.5" y="74.5" width="12" height="12" rx="3" />
+      <circle {...A} cx="164.5" cy="36.5" r="5" />
     </>
   ),
 };
@@ -109,6 +123,7 @@ export default function ServiceSketch({ id, play = "scroll", className = "" }: P
 
     const ctx = gsap.context(() => {
       const guides = svg.querySelectorAll('[data-sk="guide"]');
+      const planes = svg.querySelectorAll('[data-sk="plane"]');
       const lines = svg.querySelectorAll('[data-sk="line"]');
       const accents = svg.querySelectorAll('[data-sk="accent"]');
 
@@ -120,6 +135,7 @@ export default function ServiceSketch({ id, play = "scroll", className = "" }: P
       // Scrubbed, durations are proportions of the scroll distance; played, seconds.
       const k = play === "load" ? 1.6 : 1;
       tl.fromTo(guides, { drawSVG: "0%", opacity: 1 }, { drawSVG: "100%", opacity: 1, duration: 0.3 * k, stagger: 0.04 * k, ease: "none" })
+        .fromTo(planes, { opacity: 0 }, { opacity: 1, duration: 0.3 * k, stagger: 0.04 * k, ease: "none" }, 0.15 * k)
         .fromTo(lines, { drawSVG: "0%" }, { drawSVG: "100%", duration: 0.3 * k, stagger: 0.05 * k, ease: "power1.inOut" }, 0.2 * k)
         .fromTo(
           accents,

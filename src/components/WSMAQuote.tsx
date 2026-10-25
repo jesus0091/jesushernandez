@@ -140,16 +140,17 @@ export default function WSMAQuote() {
         )
         .to({}, { duration: 0.01 }, total - 0.01);
 
-      // 2. Exit: the projects section slides up over this one instead of
+      // 2. Exit: the next section slides up over this one instead of
       //    pushing it: the y offset cancels the scroll so it stays put and the
       //    next section stacks on top of it. The pin keeps the wrapper in
       //    place, so the section only offsets from 0 within it.
-      const projects = document.getElementById("projects");
+      // Whichever section follows on the page marks itself with data-covers-quote.
+      const next = document.querySelector<HTMLElement>("[data-covers-quote]");
       // Phones skip the tunnel (its SVG redraw per scroll frame stutters there)
       // and the phrase only blurs out under the next section, without receding.
       const phone = !window.matchMedia("(min-width: 768px)").matches;
       const tunnel = phone ? null : tunnelRef.current;
-      if (projects) {
+      if (next) {
         const rails = Array.from(tunnel?.querySelectorAll<SVGLineElement>("[data-rail]") ?? []);
         const frames = Array.from(tunnel?.querySelectorAll<SVGRectElement>("[data-frame]") ?? []);
         // p: 0 → 1 over the exit. Rails draw out from the vanishing point,
@@ -181,7 +182,7 @@ export default function WSMAQuote() {
           .timeline({
             defaults: { ease: "none" },
             scrollTrigger: {
-              trigger: projects,
+              trigger: next,
               start: "top bottom",
               end: "top top",
               scrub: true,
@@ -207,9 +208,9 @@ export default function WSMAQuote() {
             0
           );
         // Still behind the navbar while covered: stop counting as dark once
-        // the projects section reaches the navbar.
+        // the next section reaches the navbar.
         ScrollTrigger.create({
-          trigger: projects,
+          trigger: next,
           start: "top 36px",
           onEnter: () => (section.dataset.navDark = "false"),
           onLeaveBack: () => (section.dataset.navDark = ""),

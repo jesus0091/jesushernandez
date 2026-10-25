@@ -10,6 +10,8 @@ const routes = [
   ["/services", "en", 200],
   ["/es/servicios", "es", 200],
   ["/es/servicios/desarrollo-web", "es", 200],
+  ["/services/mobile-apps", "en", 200],
+  ["/es/servicios/desarrollo-de-aplicaciones-web", "es", 200],
   ["/blog", "en", 200],
   ["/works/unknown-project", "en", 404],
   ["/es/services/unknown-service", "es", 404],
@@ -36,6 +38,8 @@ for (const [path, destination] of [
   ["/es/services", "/es/servicios"],
   ["/es/services/web-development", "/es/servicios/desarrollo-web"],
   ["/projects", "/works"],
+  ["/services/ai-features", "/services/web-apps"],
+  ["/es/servicios/diseno-de-producto-ux-ui", "/es/servicios"],
 ]) {
   const response = await fetch(new URL(path, base), { redirect: "manual", signal: AbortSignal.timeout(15000) });
   assert.equal(response.status, 308, `${path}: permanent redirect`);

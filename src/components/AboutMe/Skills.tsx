@@ -143,7 +143,7 @@ export default function Skills() {
               {c.skills.map((s) => {
                 const label = c.key === "soft" ? t(`softItems.${s}`) : s;
                 return (
-                  <li key={s} data-tag className="rounded-chip bg-black/[0.05] px-2.5 py-1 font-mono text-sm text-[var(--color-ink-2)]">
+                  <li key={s} data-tag className="rounded-chip bg-[color-mix(in_srgb,var(--color-bg),black_8%)] px-2.5 py-1 font-mono text-sm text-[var(--color-ink-2)]">
                     <span data-tag-text data-text={label}>
                       {label}
                     </span>

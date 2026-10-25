@@ -8,15 +8,21 @@ export const LOCALIZED_SLUGS: { en: string; es: string }[] = [
   { en: "/about", es: "/sobre-mi" },
   { en: "/services", es: "/servicios" },
   // One page per service (src/data/services.ts).
-  { en: "/services/product-design", es: "/servicios/diseno-de-producto-ux-ui" },
   { en: "/services/web-development", es: "/servicios/desarrollo-web" },
-  { en: "/services/ai-features", es: "/servicios/funciones-de-ia" },
-  { en: "/services/ai-prototype-to-production", es: "/servicios/prototipo-ia-a-produccion" },
+  { en: "/services/web-apps", es: "/servicios/desarrollo-de-aplicaciones-web" },
+  { en: "/services/mobile-apps", es: "/servicios/desarrollo-de-apps-moviles" },
   // Blog posts: the English slug is the route, each post's alternateSlug its
   // Spanish URL. src/lib/blog.test.ts checks this list against content/blog.
   { en: "/blog/is-vibe-coding-bad", es: "/blog/vibe-coding-en-produccion" },
   { en: "/blog/gsap-scrolltrigger-nextjs-app-router", es: "/blog/gsap-scrolltrigger-nextjs" },
   { en: "/blog/how-much-does-a-website-cost", es: "/blog/cuanto-cuesta-una-pagina-web-en-argentina" },
+];
+
+/** Service pages that no longer exist, by their old URLs, and the page that took their place. */
+export const RETIRED_SERVICES: { en: string; es: string; to: string }[] = [
+  { en: "/services/product-design", es: "/servicios/diseno-de-producto-ux-ui", to: "/services" },
+  { en: "/services/ai-features", es: "/servicios/funciones-de-ia", to: "/services/web-apps" },
+  { en: "/services/ai-prototype-to-production", es: "/servicios/prototipo-ia-a-produccion", to: "/services/web-apps" },
 ];
 
 /** Spanish path for an English one (unchanged when it isn't translated). */

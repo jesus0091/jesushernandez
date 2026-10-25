@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import HomePage from "@/components/HomePage";
 import LatestsProjects from "@/components/Projects/LatestsProjects";
 import Navbar from "@/components/Navbar";
+import HomeServices from "@/components/Services/HomeServices";
 import WSMAQuote from "@/components/WSMAQuote";
 
 // Title, description and Open Graph come from the layout; only the URLs are per page.
@@ -45,6 +46,7 @@ export default async function LandingPage({
         <Suspense>
           <WSMAQuote />
         </Suspense>
+        <HomeServices />
         <Suspense>
           <LatestsProjects />
         </Suspense>

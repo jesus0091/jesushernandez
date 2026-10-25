@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, User, Users } from "@/components/icons";
+import { ArrowRight, User, Users } from "@/components/icons";
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
@@ -79,7 +79,7 @@ export default function ProjectCard({ project }: { project: Project }) {
             aria-hidden
             className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--black)] text-white opacity-0 translate-y-1 transition-[opacity,translate] duration-300 ease-out group-hover:opacity-100 group-hover:translate-y-0"
           >
-            <ArrowUpRight size={16} />
+            <ArrowRight size={16} />
           </span>
         </div>
       </article>

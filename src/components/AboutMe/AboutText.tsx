@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ArrowRight,
   BehanceLogo,
   GithubLogo,
   LinkedinLogo,
@@ -128,6 +129,11 @@ const AboutText: React.FC<AboutTextProps> = ({
               className="object-cover object-[50%_20%] md:object-top"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
+            {/* Film grain over the portrait, like the rest of the page. */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 bg-[image:var(--grain-image)] bg-[size:var(--grain-size)_var(--grain-size)] opacity-75 mix-blend-overlay"
+            />
             <div className="absolute bottom-0 left-0 right-0 flex flex-row gap-1 p-3 md:p-4 justify-end">
               <Link
                 href="https://www.linkedin.com/in/jesushernandez91/"
@@ -188,7 +194,7 @@ const AboutText: React.FC<AboutTextProps> = ({
             )}
           </p>
           <Link href="/works" data-sfx="cta" className={buttonClass()}>
-            <ButtonInner>{t("cta")}</ButtonInner>
+            <ButtonInner icon={ArrowRight}>{t("cta")}</ButtonInner>
           </Link>
         </div>
       </div>

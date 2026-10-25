@@ -4,6 +4,7 @@ import { ArrowRight } from "@/components/icons";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import SectionLabel from "@/components/SectionLabel";
+import TunnelGlow from "@/components/motion/TunnelGlow";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternatesFor, robotsFor, shareFor } from "@/i18n/seo";
@@ -36,13 +37,17 @@ export default async function BlogPage({ params }: Props) {
     <>
       <Navbar />
       <main id="main-content" className="mx-auto min-h-svh w-full max-w-[1280px] px-6 pt-32 pb-24 md:px-8 md:pt-40">
-        <header className="flex max-w-4xl flex-col gap-4">
-          <SectionLabel animate="none">{t("label")}</SectionLabel>
-          <h1 className="font-semibold tracking-title text-[var(--black)] text-[clamp(40px,6.5vw,96px)] leading-[1.02] text-balance">
-            {t("title")}
-            <span className="sr-only">{t("titleTopic")}</span>
-          </h1>
-          <p className="max-w-2xl text-base md:text-lg text-[var(--muted)]">{t("lead")}</p>
+        {/* The intro on the left, a small square of the works and services pixel grid on the right. */}
+        <header className="grid gap-10 md:grid-cols-12 md:items-end">
+          <div className="flex flex-col gap-4 md:col-span-8">
+            <SectionLabel animate="none">{t("label")}</SectionLabel>
+            <h1 className="font-semibold tracking-title text-[var(--black)] text-[clamp(40px,6.5vw,96px)] leading-[1.02] text-balance">
+              {t("title")}
+              <span className="sr-only">{t("titleTopic")}</span>
+            </h1>
+            <p className="max-w-2xl text-base md:text-lg text-[var(--muted)]">{t("lead")}</p>
+          </div>
+          <TunnelGlow className="hidden aspect-square w-full max-w-[340px] md:col-span-4 md:block md:justify-self-end" />
         </header>
 
         {posts.length === 0 ? (

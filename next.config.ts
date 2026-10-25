@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import path from "path";
-import { LOCALIZED_SLUGS } from "./src/i18n/slugs";
+import { LOCALIZED_SLUGS, RETIRED_SERVICES, esPath } from "./src/i18n/slugs";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -28,6 +28,13 @@ const nextConfig: NextConfig = {
       // Old standalone page, now /works.
       { source: `${prefix}/projects`, destination: `${prefix}/works`, permanent: true },
     ]).concat(
+      // Services folded into others: design is part of every service, AI part of web apps.
+      RETIRED_SERVICES.flatMap(({ en, es, to }) => [
+        { source: en, destination: to, permanent: true },
+        { source: `/es${en}`, destination: `/es${esPath(to)}`, permanent: true },
+        { source: `/es${es}`, destination: `/es${esPath(to)}`, permanent: true },
+      ]),
+    ).concat(
       // Spanish pages have Spanish URLs: the English-path one redirects there.
       LOCALIZED_SLUGS.map(({ en, es }) => ({ source: `/es${en}`, destination: `/es${es}`, permanent: true })),
     );

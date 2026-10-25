@@ -179,7 +179,7 @@ export default async function AboutPage({ params }: Props) {
               href={pageFor("/services").paths[locale] ?? "/services"}
               className={buttonClass()}
             >
-              <ButtonInner>{t("ctaServices")}</ButtonInner>
+              <ButtonInner icon={ArrowRight}>{t("ctaServices")}</ButtonInner>
             </Link>
           </div>
         </section>

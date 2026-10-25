@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import { ArrowUpRight } from "@/components/icons";
+import { ArrowRight } from "@/components/icons";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { WORKS } from "@/data/works";
@@ -50,16 +50,12 @@ export default function WorksList() {
       <ul ref={gridRef} className="mx-auto max-w-[1280px] px-6 md:px-8 border-b border-[var(--color-line-2)]">
         {WORKS.map((work) => (
           <li key={work.id} className="work-card border-t border-[var(--color-line-2)]">
-            {/* One row per project: index, a large cover, then category, name and
+            {/* One row per project: a large cover, then category, name and
                 role, and the arrow. Below md the cover goes full width above the text. */}
             <Link
               href={`/works/${work.id}`}
-              className="group grid grid-cols-1 gap-5 py-8 md:grid-cols-[2.5rem_minmax(0,440px)_1fr_auto] md:items-center md:gap-10 md:py-10"
+              className="group grid grid-cols-1 gap-5 py-8 md:grid-cols-[minmax(0,440px)_1fr_auto] md:items-center md:gap-10 md:py-10"
             >
-              <span className="hidden md:block self-start font-mono text-sm text-[var(--color-ink-4)] transition-colors duration-300 group-hover:text-[var(--color-accent)]">
-                {work.index}
-              </span>
-
               {/* Covers are exported at 1600×707. */}
               <div className="relative aspect-[1600/707] w-full overflow-hidden rounded-2xl bg-zinc-100">
                 <div data-zoom className="absolute inset-0">
@@ -87,9 +83,9 @@ export default function WorksList() {
 
               <span
                 aria-hidden
-                className="hidden md:inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--color-line-2)] text-[var(--black)] transition-[background-color,border-color,color,rotate] duration-300 group-hover:rotate-45 group-hover:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] group-hover:text-white"
+                className="hidden md:inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--color-line-2)] text-[var(--black)] transition-[background-color,border-color,color,translate] duration-300 group-hover:translate-x-1 group-hover:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] group-hover:text-white"
               >
-                <ArrowUpRight size={20} />
+                <ArrowRight size={20} />
               </span>
             </Link>
           </li>

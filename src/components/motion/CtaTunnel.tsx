@@ -11,6 +11,8 @@ export const TUNNEL_STOPS =
 
 // The still card's light (the ride draws its own, in ShaderTunnel).
 const BACKGROUND = `radial-gradient(circle at 50% 50%, ${TUNNEL_STOPS})`;
+// Where that light rests on the card, as a share of its width and height: low and to the right.
+const GLOW_REST = { x: 0.88, y: 1.05 };
 
 /**
  * CTA card that, once centered, grows to fill the screen and then flies the
@@ -33,7 +35,8 @@ export default function CtaTunnel({
     if (still || prefersReducedMotion()) setAnimated(false);
   }, [still]);
 
-  // Still card: the orange glow trails the pointer and drifts back on leave.
+  // Still card: the orange glow rests low in a corner, leans toward the
+  // pointer and drifts back on leave.
   useLayoutEffect(() => {
     const card = cardRef.current;
     const glow = cardGlowRef.current;
@@ -45,8 +48,9 @@ export default function CtaTunnel({
 
     const onMove = (e: PointerEvent) => {
       const rect = card.getBoundingClientRect();
-      xTo(e.clientX - rect.left - rect.width / 2);
-      yTo(e.clientY - rect.top - rect.height / 2);
+      // Offsets from the resting corner, halved so the light leans rather than follows.
+      xTo((e.clientX - rect.left - rect.width * GLOW_REST.x) * 0.5);
+      yTo((e.clientY - rect.top - rect.height * GLOW_REST.y) * 0.5);
     };
     const onLeave = () => {
       xTo(0);
@@ -69,11 +73,18 @@ export default function CtaTunnel({
           ref={cardRef}
           className="relative overflow-hidden rounded-card bg-[#01020c] py-8 md:py-10"
         >
-          {/* A square bigger than the card that fades to the card color at
-              its edge, so moving it never shows a seam. */}
+          {/* A faint plum haze from the opposite corner, so the dark has depth. */}
           <div
             aria-hidden
-            className="absolute left-1/2 top-1/2 aspect-square w-[max(116%,640px)] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "radial-gradient(60% 80% at 0% 0%, rgba(46,33,99,0.35), transparent 70%)" }}
+          />
+          {/* A square that fades to the card color at its edge, so moving it
+              never shows a seam; it rests in the lower right corner. */}
+          <div
+            aria-hidden
+            className="absolute aspect-square w-[max(70%,460px)] -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-80"
+            style={{ left: `${GLOW_REST.x * 100}%`, top: `${GLOW_REST.y * 100}%` }}
           >
             {/* Own element for the pointer offset: GSAP would overwrite the centering. */}
             <div

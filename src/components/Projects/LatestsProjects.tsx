@@ -1,7 +1,7 @@
 "use client";
 
 import { ButtonInner, buttonClass } from "@/components/PillButton";
-import { BehanceLogo, BookOpenText, FlowArrow, GithubLogo, PenNib, Question } from "@/components/icons";
+import { ArrowRight, BehanceLogo, BookOpenText, FlowArrow, GithubLogo, PenNib, Question } from "@/components/icons";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useTranslations } from "next-intl";
@@ -305,7 +305,7 @@ export default function LatestProjects() {
     <section
       ref={sectionRef}
       id="projects"
-      // Opaque, above the section before it: it slides over "What sets me apart".
+      // Opaque, like the sections around it.
       className="grain-surface z-10 w-full pt-28 pb-24 md:py-32"
     >
       {/* Header inside container */}
@@ -330,7 +330,7 @@ export default function LatestProjects() {
 
           <div className="hidden shrink-0 md:block">
             <Link href="/works" data-sfx="cta" className={buttonClass()}>
-              <ButtonInner>{t("viewAll")}</ButtonInner>
+              <ButtonInner icon={ArrowRight}>{t("viewAll")}</ButtonInner>
             </Link>
           </div>
         </div>
@@ -420,7 +420,7 @@ export default function LatestProjects() {
               style={{ visibility: "hidden", opacity: 0 }}
               className={buttonClass({ className: "shrink-0" })}
             >
-              <ButtonInner>{t("viewAll")}</ButtonInner>
+              <ButtonInner icon={ArrowRight}>{t("viewAll")}</ButtonInner>
             </Link>
           </div>
         )}
@@ -438,7 +438,7 @@ export default function LatestProjects() {
               href="/works"
               className={buttonClass({ size: "sm", className: "md:hidden" })}
             >
-              <ButtonInner size="sm">{t("viewAll")}</ButtonInner>
+              <ButtonInner icon={ArrowRight} size="sm">{t("viewAll")}</ButtonInner>
             </Link>
           </div>
         </div>
