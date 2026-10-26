@@ -367,6 +367,18 @@ body::after {
   background-image: var(--grain-image-flat);
   background-size: var(--grain-size) var(--grain-size);
 }
+/* Touch screens: the grain scrolls with the page instead. A fixed full-screen
+   layer under content with no background of its own makes Safari iOS
+   re-composite the whole viewport on every scroll frame, which stutters.
+   The grain is noise, so nobody can tell it moves. */
+@media (pointer: coarse) {
+  body {
+    position: relative;
+  }
+  body::after {
+    position: absolute;
+  }
+}
 
 /* An opaque page-colored surface for sections that slide over others. It
    covers the body::after grain, so it carries its own copy of it. Lives in
