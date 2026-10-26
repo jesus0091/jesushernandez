@@ -26,7 +26,10 @@ export default function SmoothScroll() {
   }, [pathname]);
 
   useEffect(() => {
-    if (prefersReducedMotion()) return;
+    // Touch screens keep the browser's own scroll, untouched: Lenis only
+    // smooths the wheel, and moving the scroll from JS (normalizeScroll)
+    // loses the native momentum and lags whenever the main thread is busy.
+    if (prefersReducedMotion() || isTouchScreen()) return;
     const gsap = setupGsap();
 
     const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1.1, anchors: true });
@@ -37,15 +40,7 @@ export default function SmoothScroll() {
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
 
-    // Touch screens scroll natively (Lenis only smooths the wheel). There,
-    // scroll on the JS thread so pinned sections stay in sync with the finger
-    // and the address bar stops sliding in and out mid-animation, which is
-    // what resizes the viewport and makes Safari iOS jump.
-    const touch = isTouchScreen();
-    if (touch) ScrollTrigger.normalizeScroll(true);
-
     return () => {
-      if (touch) ScrollTrigger.normalizeScroll(false);
       gsap.ticker.remove(tick);
       lenis.destroy();
       setLenis(null);
